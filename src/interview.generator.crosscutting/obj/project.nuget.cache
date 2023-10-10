@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "Y/WCFeI5/Kw509u+wJh39eYLeqmrtezlWTeif0NChVKdjvfHkbTXFFljOX5xAKpfZmvjHOmbaQK3wIyjPmGssw==",
+  "dgSpecHash": "K35WzaiiIQcG+EzzUa2+imsCBT7YBKXrED167aDWcmkGEIzBtik8mJyDGDGiZq00O685Em39ng0oGnyEE23shQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\andre\\OneDrive\\Área de Trabalho\\Nova pasta (2)\\interview.generator\\src\\interview.generator.crosscutting\\interview.generator.crosscutting.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\andre\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\7.0.0\\microsoft.extensions.dependencyinjection.abstractions.7.0.0.nupkg.sha512"
+  ],
   "logs": []
 }
