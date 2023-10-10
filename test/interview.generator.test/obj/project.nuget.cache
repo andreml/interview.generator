@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "phDd+bGtlXjjQDqDnneweHQpQBYCEcQexy/uhjpmT4fQs5mibqsS3JylhhRsgdk06PFtLRKPIeJhrweesm1+bA==",
+  "dgSpecHash": "4xtW27AE6NgOJOzOWrW/dCq2G6JTRknhW6wdi0TCxvivhC6YKoVSFr5JrdX0sam5bz02Tu+ceBoabgdofN2A5g==",
   "success": true,
-  "projectFilePath": "C:\\Users\\andre\\OneDrive\\Área de Trabalho\\Nova pasta (2)\\interview.generator\\interview.generator.test\\interview.generator.test.csproj",
+  "projectFilePath": "C:\\Users\\andre\\OneDrive\\Área de Trabalho\\Nova pasta (2)\\interview.generator\\test\\interview.generator.test\\interview.generator.test.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\andre\\.nuget\\packages\\coverlet.collector\\3.1.2\\coverlet.collector.3.1.2.nupkg.sha512",
     "C:\\Users\\andre\\.nuget\\packages\\microsoft.codecoverage\\17.3.2\\microsoft.codecoverage.17.3.2.nupkg.sha512",

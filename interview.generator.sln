@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "interview.generator.infraes
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{A3991794-A2B4-4F70-A5A9-7541764B1CD7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "interview.generator.test", "interview.generator.test\interview.generator.test.csproj", "{D88869E1-952C-4EBA-B9C2-14EEF9574DA2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "interview.generator.test", "test\interview.generator.test\interview.generator.test.csproj", "{D88869E1-952C-4EBA-B9C2-14EEF9574DA2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
