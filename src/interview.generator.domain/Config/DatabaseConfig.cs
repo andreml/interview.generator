@@ -6,5 +6,6 @@
         public string MinPool { get; set; }
         public string MaxPool { get; set; }
         public string Pass { get; set; }
+        public string User { get; set; }
     }
 }

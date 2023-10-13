@@ -1,10 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "K35WzaiiIQcG+EzzUa2+imsCBT7YBKXrED167aDWcmkGEIzBtik8mJyDGDGiZq00O685Em39ng0oGnyEE23shQ==",
+  "dgSpecHash": "W0nhuY0znPn3Czf5EtJ4gNRLBXiktSji/Ky9zuo5xuDWe37mrOw2Gk57Qt53XVeugMf1146WW+v/O/hxHIUEjg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\andre\\OneDrive\\Área de Trabalho\\Nova pasta (2)\\interview.generator\\src\\interview.generator.crosscutting\\interview.generator.crosscutting.csproj",
+  "projectFilePath": "C:\\Users\\219638\\source\\repos\\interview.generator\\src\\interview.generator.crosscutting\\interview.generator.crosscutting.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\andre\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\7.0.0\\microsoft.extensions.dependencyinjection.abstractions.7.0.0.nupkg.sha512"
+    "C:\\Users\\219638\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\7.0.0\\microsoft.extensions.dependencyinjection.abstractions.7.0.0.nupkg.sha512",
+    "C:\\Users\\219638\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
+    "C:\\Users\\219638\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.5.0\\swashbuckle.aspnetcore.swagger.6.5.0.nupkg.sha512",
+    "C:\\Users\\219638\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.5.0\\swashbuckle.aspnetcore.swaggergen.6.5.0.nupkg.sha512"
   ],
   "logs": []
 }
