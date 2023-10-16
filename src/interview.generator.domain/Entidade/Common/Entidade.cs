@@ -1,4 +1,4 @@
-﻿namespace interview.generator.domain.Entidade
+﻿namespace interview.generator.domain.Entidade.Common
 {
     public class Entidade
     {

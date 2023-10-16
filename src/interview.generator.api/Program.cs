@@ -1,4 +1,9 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using interview.generator.crosscutting.InjecaoDependencia;
+using interview.generator.domain.Entidade;
+using Microsoft.AspNetCore.Mvc;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,6 +11,13 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddRepository();
 builder.Services.AddSwaggerConfiguration();
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddScoped<IValidator<Usuario>, UsuarioValidator>();
+builder.Services.AddMvc(options =>
+{
+    options.Filters.Add(typeof(ValidateModelStateAttributeCollectionExtension));
+});
+builder.Services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });
 
 var app = builder.Build();
 
@@ -18,6 +30,7 @@ if (app.Environment.IsDevelopment())
         options.RoutePrefix = "swagger";
     });
 }
+
 
 app.UseHttpsRedirection();
 

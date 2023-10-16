@@ -1,10 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "vhI81Cy1yTr3fmzLmB4mT2okHq5fPzj73xdmTwQXWj7Norfr7JfACDDtUZAyBa9XQA24DmirX/kJ7FathCh0Vw==",
+  "dgSpecHash": "FDnSL2WTSeyhcXxtIvdaO6mrwlDk8wJbweizn30qdQGvg6oQvAUj/Tr0PeEZbAdsrICEi1y9J7yfT3bsj/DlGA==",
   "success": true,
   "projectFilePath": "C:\\Users\\219638\\source\\repos\\interview.generator\\src\\interview.generator.crosscutting\\interview.generator.crosscutting.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\219638\\.nuget\\packages\\fluentvalidation\\11.7.1\\fluentvalidation.11.7.1.nupkg.sha512",
+    "C:\\Users\\219638\\.nuget\\packages\\fluentvalidation.aspnetcore\\11.3.0\\fluentvalidation.aspnetcore.11.3.0.nupkg.sha512",
+    "C:\\Users\\219638\\.nuget\\packages\\fluentvalidation.dependencyinjectionextensions\\11.5.1\\fluentvalidation.dependencyinjectionextensions.11.5.1.nupkg.sha512",
     "C:\\Users\\219638\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\7.0.0\\microsoft.extensions.dependencyinjection.abstractions.7.0.0.nupkg.sha512",
     "C:\\Users\\219638\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
     "C:\\Users\\219638\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.5.0\\swashbuckle.aspnetcore.swagger.6.5.0.nupkg.sha512",

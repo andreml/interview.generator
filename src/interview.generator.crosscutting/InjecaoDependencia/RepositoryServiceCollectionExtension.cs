@@ -15,6 +15,11 @@ namespace interview.generator.crosscutting.InjecaoDependencia
             service.AddSingleton<IUsuarioService, UsuarioService>();
             service.AddSingleton<IUsuarioRepositorio, UsuarioRepositorio>();
             service.AddScoped<IValidator<Usuario>, UsuarioValidator>();
+
+            service.AddSingleton<IPerfilService, PerfilService>();
+            service.AddSingleton<IPerfilRepositorio, PerfilRepositorio>();
+            service.AddScoped<IValidator<Perfil>, PerfilValidator>();
+
             return service;
         }
     }

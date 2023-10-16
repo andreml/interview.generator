@@ -9,24 +9,24 @@ namespace interview.generator.api.Controllers
     [ApiController]
     [Route("[controller]")]
     [Produces("application/json")]
-    public class UsuarioController : ControllerBase
+    public class PerfilController : ControllerBase
     {
-        readonly IUsuarioService _usuarioService;
-        public UsuarioController(IUsuarioService usuarioService)
+        readonly IPerfilService _perfilService;
+        public PerfilController(IPerfilService perfilService)
         {
-            _usuarioService = usuarioService;
+            _perfilService = perfilService;
         }
 
         [HttpGet("ObterTodos")]
-        public async Task<IActionResult> ObterUsuariosAsync()
+        public async Task<IActionResult> ObterPerfilsAsync()
         {
             try
             {
-                return StatusCode((int)HttpStatusCode.OK, new ResponseSucesso<IEnumerable<Usuario>>()
+                return StatusCode((int)HttpStatusCode.OK, new ResponseSucesso<IEnumerable<Perfil>>()
                 {
                     Codigo = (int)HttpStatusCode.OK,
                     Mensagem = "Consulta realizado com sucesso",
-                    Data = await _usuarioService.ListarUsuarios()
+                    Data = await _perfilService.ListarPerfils()
                 });
             }
             catch (Exception e)
@@ -45,11 +45,11 @@ namespace interview.generator.api.Controllers
         {
             try
             {
-                return StatusCode((int)HttpStatusCode.OK, new ResponseSucesso<Usuario>()
+                return StatusCode((int)HttpStatusCode.OK, new ResponseSucesso<Perfil>()
                 {
                     Codigo = (int)HttpStatusCode.OK,
                     Mensagem = "Consulta realizado com sucesso",
-                    Data = await _usuarioService.ObterUsuario(id)
+                    Data = await _perfilService.ObterPerfil(id)
                 });
             }
             catch (Exception e)
@@ -63,14 +63,14 @@ namespace interview.generator.api.Controllers
             }
         }
 
-        [HttpPost("AdicionarUsuario")]
-        public async Task<IActionResult> AdicionarUsuario(Usuario usuario)
+        [HttpPost("AdicionarPerfil")]
+        public async Task<IActionResult> AdicionarPerfil(Perfil Perfil)
         {
             try
             {
-                await _usuarioService.CadastrarUsuario(usuario);
+                await _perfilService.CadastrarPerfil(Perfil);
 
-                return StatusCode((int)HttpStatusCode.OK, new ResponseSucesso<Usuario>()
+                return StatusCode((int)HttpStatusCode.OK, new ResponseSucesso<Perfil>()
                 {
                     Codigo = (int)HttpStatusCode.OK,
                     Mensagem = "Consulta realizado com sucesso"
@@ -87,14 +87,14 @@ namespace interview.generator.api.Controllers
             }
         }
 
-        [HttpPut("AlterarUsuario")]
-        public async Task<IActionResult> AlterarUsuario(Usuario usuario)
+        [HttpPut("AlterarPerfil")]
+        public async Task<IActionResult> AlterarPerfil(Perfil Perfil)
         {
             try
             {
-                await _usuarioService.AlterarUsuario(usuario);
+                await _perfilService.AlterarPerfil(Perfil);
 
-                return StatusCode((int)HttpStatusCode.OK, new ResponseSucesso<Usuario>()
+                return StatusCode((int)HttpStatusCode.OK, new ResponseSucesso<Perfil>()
                 {
                     Codigo = (int)HttpStatusCode.OK,
                     Mensagem = "Consulta realizado com sucesso"

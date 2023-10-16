@@ -1,10 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "KIBr+yO3fMazDBMBBhkxPvkROkF2rBHEVemJ54QXNRI7xSDbvfft49tfOs3K4tI/bnyLCb7gCtPiXUd6li8zkw==",
+  "dgSpecHash": "ceyEQSmRJQUTXACqW9MZkMaSHXI4KFHp9/XFsbKCIBjCUjHpSU5Fg3ncezCDP0zUMhPvBFr3POtgvUk4FgFRLg==",
   "success": true,
   "projectFilePath": "C:\\Users\\219638\\source\\repos\\interview.generator\\src\\interview.generator.api\\interview.generator.api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\219638\\.nuget\\packages\\fluentvalidation\\11.7.1\\fluentvalidation.11.7.1.nupkg.sha512",
+    "C:\\Users\\219638\\.nuget\\packages\\fluentvalidation.aspnetcore\\11.3.0\\fluentvalidation.aspnetcore.11.3.0.nupkg.sha512",
+    "C:\\Users\\219638\\.nuget\\packages\\fluentvalidation.dependencyinjectionextensions\\11.5.1\\fluentvalidation.dependencyinjectionextensions.11.5.1.nupkg.sha512",
     "C:\\Users\\219638\\.nuget\\packages\\microsoft.aspnetcore.openapi\\7.0.4\\microsoft.aspnetcore.openapi.7.0.4.nupkg.sha512",
     "C:\\Users\\219638\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
     "C:\\Users\\219638\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\7.0.0\\microsoft.extensions.dependencyinjection.abstractions.7.0.0.nupkg.sha512",
