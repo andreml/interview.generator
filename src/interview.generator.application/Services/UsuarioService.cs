@@ -1,32 +1,42 @@
 ﻿using interview.generator.application.Interfaces;
 using interview.generator.domain.Entidade;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using interview.generator.domain.Repositorio;
 
 namespace interview.generator.application.Services
 {
     public class UsuarioService : IUsuarioService
     {
-        Task<IEnumerable<Usuario>> IUsuarioService.ListarUsuarios()
+        private readonly IUsuarioRepositorio _repositorio;
+        public UsuarioService(IUsuarioRepositorio repositorio)
         {
-            var usuarios = new List<Usuario>();
-            usuarios.Add(new Usuario()
-            {
-                Cpf = "99999999",
-                Id = 1,
-                Nome = "Andre",
-                PerfilId = "1"
-            });
-
-            return Task.FromResult(usuarios.AsEnumerable());
+            _repositorio = repositorio;
         }
 
-        Task<Usuario> IUsuarioService.ObterUsuario(string cpf)
+        public async Task AlterarUsuario(Usuario usuario)
         {
-            throw new NotImplementedException();
+            await _repositorio.Alterar(usuario);
+        }
+
+        public async Task CadastrarUsuario(Usuario usuario)
+        {
+            await _repositorio.Adicionar(usuario);
+        }
+
+        public async Task ExcluirUsuario(int id)
+        {
+            await _repositorio.Excluir(id);
+        }
+
+        public async Task<IEnumerable<Usuario>> ListarUsuarios()
+        {
+            var usuarios = _repositorio.ObterTodos().Result;
+            return await Task.FromResult(usuarios);
+        }
+
+        public async Task<Usuario> ObterUsuario(int id)
+        {
+            var usuario = _repositorio.ObterPorId(id).Result;
+            return await Task.FromResult(usuario);
         }
     }
 }

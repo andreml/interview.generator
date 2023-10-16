@@ -1,6 +1,6 @@
 ﻿namespace interview.generator.domain.Entidade
 {
-    public class Candidato : CommonEntity
+    public class Candidato : Entidade
     {
         public string Nome { get; set; }
         public string Cpf { get; set; }

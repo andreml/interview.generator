@@ -2,6 +2,19 @@
   "version": 3,
   "targets": {
     "net7.0": {
+      "FluentValidation/11.7.1": {
+        "type": "package",
+        "compile": {
+          "lib/net7.0/FluentValidation.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net7.0/FluentValidation.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Microsoft.AspNetCore.OpenApi/7.0.4": {
         "type": "package",
         "dependencies": {
@@ -124,13 +137,28 @@
           "Microsoft.AspNetCore.App"
         ]
       },
+      "interview.generator.application/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "dependencies": {
+          "interview.generator.domain": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/interview.generator.application.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/interview.generator.application.dll": {}
+        }
+      },
       "interview.generator.crosscutting/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "7.0.0",
           "Swashbuckle.AspNetCore.SwaggerGen": "6.5.0",
-          "interview.generator.domain": "1.0.0"
+          "interview.generator.application": "1.0.0",
+          "interview.generator.domain": "1.0.0",
+          "interview.generator.infraestructure": "1.0.0"
         },
         "compile": {
           "bin/placeholder/interview.generator.crosscutting.dll": {}
@@ -142,16 +170,55 @@
       "interview.generator.domain/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v7.0",
+        "dependencies": {
+          "FluentValidation": "11.7.1"
+        },
         "compile": {
           "bin/placeholder/interview.generator.domain.dll": {}
         },
         "runtime": {
           "bin/placeholder/interview.generator.domain.dll": {}
         }
+      },
+      "interview.generator.infraestructure/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "dependencies": {
+          "interview.generator.domain": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/interview.generator.infraestructure.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/interview.generator.infraestructure.dll": {}
+        }
       }
     }
   },
   "libraries": {
+    "FluentValidation/11.7.1": {
+      "sha512": "w9Al4gls6iVGFbTd/NPOPlwzqDTghH+ntL4c4FYUatc+LeybpIwhYArLykZJP/VjF2n3ihj3ws+1yd7KR5lQlg==",
+      "type": "package",
+      "path": "fluentvalidation/11.7.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "fluent-validation-icon.png",
+        "fluentvalidation.11.7.1.nupkg.sha512",
+        "fluentvalidation.nuspec",
+        "lib/net5.0/FluentValidation.dll",
+        "lib/net5.0/FluentValidation.xml",
+        "lib/net6.0/FluentValidation.dll",
+        "lib/net6.0/FluentValidation.xml",
+        "lib/net7.0/FluentValidation.dll",
+        "lib/net7.0/FluentValidation.xml",
+        "lib/netstandard2.0/FluentValidation.dll",
+        "lib/netstandard2.0/FluentValidation.xml",
+        "lib/netstandard2.1/FluentValidation.dll",
+        "lib/netstandard2.1/FluentValidation.xml"
+      ]
+    },
     "Microsoft.AspNetCore.OpenApi/7.0.4": {
       "sha512": "1zlq5/xtbC9AyNHK2EBaL2RuCepoWHAXSxN68io/nndYLOTz/tgGmwtJvDZkUzFYooAXaNlavzcRlgS4muqgOA==",
       "type": "package",
@@ -528,6 +595,11 @@
         "swashbuckle.aspnetcore.swaggerui.nuspec"
       ]
     },
+    "interview.generator.application/1.0.0": {
+      "type": "project",
+      "path": "../interview.generator.application/interview.generator.application.csproj",
+      "msbuildProject": "../interview.generator.application/interview.generator.application.csproj"
+    },
     "interview.generator.crosscutting/1.0.0": {
       "type": "project",
       "path": "../interview.generator.crosscutting/interview.generator.crosscutting.csproj",
@@ -537,6 +609,11 @@
       "type": "project",
       "path": "../interview.generator.domain/interview.generator.domain.csproj",
       "msbuildProject": "../interview.generator.domain/interview.generator.domain.csproj"
+    },
+    "interview.generator.infraestructure/1.0.0": {
+      "type": "project",
+      "path": "../interview.generator.infraestructure/interview.generator.infraestructure.csproj",
+      "msbuildProject": "../interview.generator.infraestructure/interview.generator.infraestructure.csproj"
     }
   },
   "projectFileDependencyGroups": {

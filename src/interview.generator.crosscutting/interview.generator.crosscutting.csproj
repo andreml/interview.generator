@@ -12,7 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\interview.generator.application\interview.generator.application.csproj" />
     <ProjectReference Include="..\interview.generator.domain\interview.generator.domain.csproj" />
+    <ProjectReference Include="..\interview.generator.infraestructure\interview.generator.infraestructure.csproj" />
   </ItemGroup>
 
 </Project>

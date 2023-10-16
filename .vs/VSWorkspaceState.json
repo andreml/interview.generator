@@ -1,7 +1,10 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\src",
+    "\\src\\interview.generator.domain",
+    "\\src\\interview.generator.domain\\Entidade"
   ],
-  "SelectedNode": "\\interview.generator.sln",
+  "SelectedNode": "\\src\\interview.generator.domain\\Entidade\\Perfil.cs",
   "PreviewInSolutionExplorer": false
 }
