@@ -1,6 +1,6 @@
 ﻿namespace interview.generator.domain.Utils
 {
-    public static class Utility
+    public static class ValidateDocument
     {
         public static bool IsCpf(string document)
         {

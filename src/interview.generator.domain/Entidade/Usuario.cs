@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using interview.generator.domain.Utils;
 
 namespace interview.generator.domain.Entidade
 {
@@ -13,7 +14,7 @@ namespace interview.generator.domain.Entidade
         public UsuarioValidator()
         {
             RuleFor(x => x.Cpf).NotNull().WithMessage("Cpf é obrigatório");
-            RuleFor(x => x.Cpf).Must(document => Utils.Utility.IsCpf(document)).WithMessage("Documento inválido");
+            RuleFor(x => x.Cpf).Must(document => ValidateDocument.IsCpf(document)).WithMessage("Documento inválido");
             RuleFor(x => x.Nome).NotNull().WithMessage("Nome é obrigatório"); ;
             RuleFor(x => x.PerfilId).NotNull().WithMessage("Perfil é obrigatório");
         }
