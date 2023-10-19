@@ -12,7 +12,7 @@ namespace interview.generator.test.Infraestructure
             var TipoQuestionarios = new TipoQuestionario()
             {
                 Descricao = "Nova descricao",
-                Id = 1
+                Id = Guid.NewGuid()
             };
 
             await mockRepositorio.Object.Adicionar(TipoQuestionarios);
@@ -27,7 +27,7 @@ namespace interview.generator.test.Infraestructure
             var TipoQuestionarios = new TipoQuestionario()
             {
                 Descricao = "Nova descricao",
-                Id = 1
+                Id = Guid.NewGuid()
             };
 
             await mockRepositorio.Object.Adicionar(TipoQuestionarios);
@@ -41,7 +41,7 @@ namespace interview.generator.test.Infraestructure
         [Fact]
         public async void ConsultarTipoQuestionarioNaoCadastrado()
         {
-            var result = await mockRepositorio.Object.ObterPorId(99999);
+            var result = await mockRepositorio.Object.ObterPorId(Guid.Empty);
             Assert.True(result is null);
         }
 
@@ -51,14 +51,14 @@ namespace interview.generator.test.Infraestructure
             var TipoQuestionarios = new TipoQuestionario()
             {
                 Descricao = "Nova descricao",
-                Id = 1
+                Id = Guid.NewGuid()
             };
             await mockRepositorio.Object.Adicionar(TipoQuestionarios);
 
             var TipoQuestionarios1 = new TipoQuestionario()
             {
                 Descricao = "Nova descricao",
-                Id = 2
+                Id = Guid.NewGuid()
             };
 
             await mockRepositorio.Object.Adicionar(TipoQuestionarios1);

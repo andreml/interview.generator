@@ -22,7 +22,7 @@ namespace interview.generator.application.Services
             await _repositorio.Adicionar(usuario);
         }
 
-        public async Task ExcluirUsuario(int id)
+        public async Task ExcluirUsuario(Guid id)
         {
             await _repositorio.Excluir(id);
         }
@@ -33,7 +33,7 @@ namespace interview.generator.application.Services
             return await Task.FromResult(usuarios);
         }
 
-        public async Task<Usuario> ObterUsuario(int id)
+        public async Task<Usuario> ObterUsuario(Guid id)
         {
             var usuario = _repositorio.ObterPorId(id).Result;
             return await Task.FromResult(usuario);

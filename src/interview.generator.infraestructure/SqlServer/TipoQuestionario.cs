@@ -34,7 +34,7 @@ namespace interview.generator.infraestructure.SqlServer
             return Task.CompletedTask;
         }
 
-        public Task Excluir(int id)
+        public Task Excluir(Guid id)
         {
             if (tipoQuestionario.Count > 0)
             {
@@ -45,7 +45,7 @@ namespace interview.generator.infraestructure.SqlServer
             return Task.CompletedTask;
         }
 
-        public async Task<TipoQuestionario> ObterPorId(int id)
+        public async Task<TipoQuestionario> ObterPorId(Guid id)
         {
             return await Task.FromResult(tipoQuestionario.FirstOrDefault(x => x.Id.Equals(id)));
         }

@@ -12,7 +12,7 @@ namespace interview.generator.test.Infraestructure
             var Perfis = new Perfil()
             {
                 Descricao = "Nova descricao",
-                Id = 1
+                Id = Guid.NewGuid(),
             };
 
             await mockRepositorio.Object.Adicionar(Perfis);
@@ -27,7 +27,7 @@ namespace interview.generator.test.Infraestructure
             var Perfis = new Perfil()
             {
                 Descricao = "Nova descricao",
-                Id = 1
+                Id = Guid.NewGuid()
             };
 
             await mockRepositorio.Object.Adicionar(Perfis);
@@ -41,7 +41,7 @@ namespace interview.generator.test.Infraestructure
         [Fact]
         public async void ConsultarPerfilNaoCadastrado()
         {
-            var result = await mockRepositorio.Object.ObterPorId(99999);
+            var result = await mockRepositorio.Object.ObterPorId(Guid.Empty);
             Assert.True(result is null);
         }
 
@@ -51,7 +51,7 @@ namespace interview.generator.test.Infraestructure
             var Perfis = new Perfil()
             {
                 Descricao = "Nova descricao",
-                Id = 1
+                Id = Guid.NewGuid()
             };
 
             await mockRepositorio.Object.Adicionar(Perfis);
@@ -59,7 +59,7 @@ namespace interview.generator.test.Infraestructure
             var Perfis1 = new Perfil()
             {
                 Descricao = "Nova descricao 2",
-                Id = 2
+                Id = Guid.NewGuid()
             };
 
             await mockRepositorio.Object.Adicionar(Perfis1);
