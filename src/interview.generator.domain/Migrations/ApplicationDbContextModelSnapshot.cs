@@ -55,6 +55,10 @@ namespace interview.generator.domain.Migrations
                         .IsRequired()
                         .HasColumnType("VARCHAR(100)");
 
+                    b.Property<string>("UsuarioId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("AreaConhecimento");
@@ -82,21 +86,6 @@ namespace interview.generator.domain.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Avaliacao");
-                });
-
-            modelBuilder.Entity("interview.generator.domain.Entidade.Perfil", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Descricao")
-                        .IsRequired()
-                        .HasColumnType("VARCHAR(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Perfil");
                 });
 
             modelBuilder.Entity("interview.generator.domain.Entidade.Pergunta", b =>
@@ -223,8 +212,8 @@ namespace interview.generator.domain.Migrations
                         .IsRequired()
                         .HasColumnType("VARCHAR(100)");
 
-                    b.Property<Guid>("PerfilId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("Perfil")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

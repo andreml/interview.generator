@@ -12,7 +12,7 @@ using interview.generator.domain.Repositorio;
 namespace interview.generator.domain.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231019005736_Initial")]
+    [Migration("20231019225021_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -58,6 +58,10 @@ namespace interview.generator.domain.Migrations
                         .IsRequired()
                         .HasColumnType("VARCHAR(100)");
 
+                    b.Property<string>("UsuarioId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("AreaConhecimento");
@@ -85,21 +89,6 @@ namespace interview.generator.domain.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Avaliacao");
-                });
-
-            modelBuilder.Entity("interview.generator.domain.Entidade.Perfil", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Descricao")
-                        .IsRequired()
-                        .HasColumnType("VARCHAR(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Perfil");
                 });
 
             modelBuilder.Entity("interview.generator.domain.Entidade.Pergunta", b =>
@@ -226,8 +215,8 @@ namespace interview.generator.domain.Migrations
                         .IsRequired()
                         .HasColumnType("VARCHAR(100)");
 
-                    b.Property<Guid>("PerfilId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("Perfil")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
