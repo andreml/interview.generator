@@ -1,7 +1,7 @@
 ﻿namespace interview.generator.domain.Entidade.Common
 {
-    public class Entidade
+    public class EntidadeBase
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
     }
 }

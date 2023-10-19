@@ -1,10 +1,15 @@
 ﻿using FluentValidation;
+using interview.generator.domain.Entidade.Common;
 
 namespace interview.generator.domain.Entidade
 {
-    public class Perfil : interview.generator.domain.Entidade.Common.Entidade
+    public class Perfil : EntidadeBase
     {
         public string Descricao { get; set; }
+
+        public Perfil()
+        {   
+        }
     }
 
     public class PerfilValidator : AbstractValidator<Perfil>

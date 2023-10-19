@@ -12,9 +12,9 @@ namespace interview.generator.test.Infraestructure
             var usuarios = new Usuario()
             {
                 Cpf = "12345679811",
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Nome = "Andre Teste 1",
-                PerfilId = "1"
+                PerfilId = Guid.NewGuid()
             };
 
             await mockRepositorio.Object.Adicionar(usuarios);
@@ -29,9 +29,9 @@ namespace interview.generator.test.Infraestructure
             var usuarios = new Usuario()
             {
                 Cpf = "12345679811",
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Nome = "Andre Teste 1",
-                PerfilId = "1"
+                PerfilId = Guid.NewGuid()
             };
 
             await mockRepositorio.Object.Adicionar(usuarios);
@@ -45,7 +45,7 @@ namespace interview.generator.test.Infraestructure
         [Fact]
         public async void ConsultarUsuarioNaoCadastrado()
         {
-            var result = await mockRepositorio.Object.ObterPorId(99999);
+            var result = await mockRepositorio.Object.ObterPorId(Guid.Empty);
             Assert.True(result is null);
         }
 
@@ -55,18 +55,18 @@ namespace interview.generator.test.Infraestructure
             var usuarios = new Usuario()
             {
                 Cpf = "12345679811",
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Nome = "Andre Teste 1",
-                PerfilId = "1"
+                PerfilId = Guid.NewGuid()
             };
             await mockRepositorio.Object.Adicionar(usuarios);
 
             var usuarios1 = new Usuario()
             {
                 Cpf = "12345679811",
-                Id = 1,
+                Id = Guid.NewGuid(),
                 Nome = "Andre Teste 1",
-                PerfilId = "1"
+                PerfilId = Guid.NewGuid()
             };
 
             await mockRepositorio.Object.Adicionar(usuarios1);

@@ -1,58 +1,52 @@
 ﻿using interview.generator.domain.Entidade;
 using interview.generator.domain.Repositorio;
+using Microsoft.EntityFrameworkCore;
 
 namespace interview.generator.infraestructure.SqlServer
 {
     public class UsuarioRepositorio : IUsuarioRepositorio
     {
-        List<Usuario> usuarios;
-        public UsuarioRepositorio()
+        protected ApplicationDbContext _context;
+        protected DbSet<Usuario> _dbSet;
+        public UsuarioRepositorio(ApplicationDbContext context)
         {
-            this.usuarios = new List<Usuario>();
+            _context = context;
+            _dbSet = _context.Set<Usuario>();
         }
         public Task Adicionar(Usuario entity)
         {
-            usuarios.Add(entity);
+            _context.Usuario.Add(entity);
+            _context.SaveChanges();
             return Task.CompletedTask;
         }
 
         public Task Alterar(Usuario entity)
         {
-            if (usuarios.Count > 0)
-            {
-                foreach (var usuario in usuarios)
-                {
-                    if (usuario.Id == entity.Id)
-                    {
-                        usuarios.Remove(usuario);
-                        usuarios.Add(entity);
-                        break;
-                    }
-                }
-            }
-
+            _dbSet.Update(entity);
+            _context.SaveChanges();
             return Task.CompletedTask;
         }
 
-        public Task Excluir(int id)
+        public Task Excluir(Guid id)
         {
-            if (usuarios.Count > 0)
-            {
-                var result = usuarios.Where(x => x.Id == id).FirstOrDefault();
-                if (result != null) usuarios.Remove(result);
-            }
+            var result = ObterPorId(id).Result;
+            if (result is null) throw new Exception("Usuario não encontrado");
 
+            _dbSet.Remove(result);
             return Task.CompletedTask;
         }
 
-        public async Task<Usuario> ObterPorId(int id)
+        public async Task<Usuario> ObterPorId(Guid id)
         {
-            return await Task.FromResult(usuarios.FirstOrDefault(x => x.Id.Equals(id)));
+            var result = _dbSet.FirstOrDefaultAsync(u => u.Id.Equals(id)).Result;
+            if (result is null) throw new Exception("Usuario não encontrado");
+            return await Task.FromResult(result);
         }
 
         public async Task<IEnumerable<Usuario>> ObterTodos()
         {
-            return await Task.FromResult(usuarios);
+            var result = _dbSet.ToListAsync().Result;
+            return await Task.FromResult(result);
         }
     }
 }

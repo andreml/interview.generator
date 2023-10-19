@@ -4,10 +4,10 @@ namespace interview.generator.application.Interfaces
 {
     public interface IUsuarioService
     {
-        Task<Usuario> ObterUsuario(int id);
+        Task<Usuario> ObterUsuario(Guid id);
         Task<IEnumerable<Usuario>> ListarUsuarios();
         Task CadastrarUsuario(Usuario usuario);
         Task AlterarUsuario(Usuario usuario);
-        Task ExcluirUsuario(int id);
+        Task ExcluirUsuario(Guid id);
     }
 }

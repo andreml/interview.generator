@@ -22,7 +22,7 @@ namespace interview.generator.application.Services
             await _repositorio.Adicionar(Perfil);
         }
 
-        public async Task ExcluirPerfil(int id)
+        public async Task ExcluirPerfil(Guid id)
         {
             await _repositorio.Excluir(id);
         }
@@ -33,7 +33,7 @@ namespace interview.generator.application.Services
             return await Task.FromResult(Perfils);
         }
 
-        public async Task<Perfil> ObterPerfil(int id)
+        public async Task<Perfil> ObterPerfil(Guid id)
         {
             var Perfil = _repositorio.ObterPorId(id).Result;
             return await Task.FromResult(Perfil);

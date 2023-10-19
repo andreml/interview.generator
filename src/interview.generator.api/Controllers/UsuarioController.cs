@@ -41,7 +41,7 @@ namespace interview.generator.api.Controllers
         }
 
         [HttpGet("ObterPorId/{id}")]
-        public async Task<IActionResult> ObterPorId(int id)
+        public async Task<IActionResult> ObterPorId(Guid id)
         {
             try
             {
