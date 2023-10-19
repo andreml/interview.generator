@@ -19,8 +19,8 @@ namespace interview.generator.domain.Entidade.Mappings
                 .IsRequired()
                 .HasColumnType("VARCHAR(100)");
 
-            builder
-                .Property(x => x.PerfilId)
+            builder.Property(u => u.Perfil)
+                .HasConversion<int>()
                 .IsRequired();
         }
     }

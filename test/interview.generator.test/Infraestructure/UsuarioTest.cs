@@ -1,4 +1,5 @@
 using interview.generator.domain.Entidade;
+using interview.generator.domain.Enums;
 using interview.generator.infraestructure.SqlServer;
 
 namespace interview.generator.test.Infraestructure
@@ -14,7 +15,7 @@ namespace interview.generator.test.Infraestructure
                 Cpf = "12345679811",
                 Id = Guid.NewGuid(),
                 Nome = "Andre Teste 1",
-                PerfilId = Guid.NewGuid()
+                Perfil = Perfil.Avaliador
             };
 
             await mockRepositorio.Object.Adicionar(usuarios);
@@ -31,7 +32,7 @@ namespace interview.generator.test.Infraestructure
                 Cpf = "12345679811",
                 Id = Guid.NewGuid(),
                 Nome = "Andre Teste 1",
-                PerfilId = Guid.NewGuid()
+                Perfil = Perfil.Avaliador
             };
 
             await mockRepositorio.Object.Adicionar(usuarios);
@@ -57,7 +58,7 @@ namespace interview.generator.test.Infraestructure
                 Cpf = "12345679811",
                 Id = Guid.NewGuid(),
                 Nome = "Andre Teste 1",
-                PerfilId = Guid.NewGuid()
+                Perfil = Perfil.Candidato
             };
             await mockRepositorio.Object.Adicionar(usuarios);
 
@@ -66,7 +67,7 @@ namespace interview.generator.test.Infraestructure
                 Cpf = "12345679811",
                 Id = Guid.NewGuid(),
                 Nome = "Andre Teste 1",
-                PerfilId = Guid.NewGuid()
+                Perfil = Perfil.Avaliador
             };
 
             await mockRepositorio.Object.Adicionar(usuarios1);

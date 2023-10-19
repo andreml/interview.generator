@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using interview.generator.domain.Entidade.Common;
+using interview.generator.domain.Enums;
 using interview.generator.domain.Utils;
 
 namespace interview.generator.domain.Entidade
@@ -8,7 +9,7 @@ namespace interview.generator.domain.Entidade
     {
         public string Cpf { get; set; }
         public string Nome { get; set; }
-        public Guid PerfilId { get; set; }
+        public Perfil Perfil { get; set; }
 
         public Usuario()
         {
@@ -22,7 +23,7 @@ namespace interview.generator.domain.Entidade
             RuleFor(x => x.Cpf).NotNull().WithMessage("Cpf é obrigatório");
             RuleFor(x => x.Cpf).Must(document => ValidateDocument.IsCpf(document)).WithMessage("Documento inválido");
             RuleFor(x => x.Nome).NotNull().WithMessage("Nome é obrigatório"); ;
-            RuleFor(x => x.PerfilId).NotNull().WithMessage("Perfil é obrigatório");
+            RuleFor(x => x.Perfil).NotNull().WithMessage("Perfil é obrigatório");
         }
     }
 }
