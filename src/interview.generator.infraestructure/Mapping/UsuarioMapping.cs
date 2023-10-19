@@ -1,7 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using interview.generator.domain.Entidade;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace interview.generator.domain.Entidade.Mappings
+namespace interview.generator.infraestructure.Mapping
 {
     public class UsuarioMapping : IEntityTypeConfiguration<Usuario>
     {
