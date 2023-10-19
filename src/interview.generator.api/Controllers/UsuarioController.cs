@@ -1,4 +1,5 @@
-﻿using interview.generator.application.Interfaces;
+﻿using interview.generator.application.DTO;
+using interview.generator.application.Interfaces;
 using interview.generator.domain.Entidade;
 using interview.generator.domain.Entidade.Common;
 using Microsoft.AspNetCore.Mvc;
@@ -64,16 +65,26 @@ namespace interview.generator.api.Controllers
         }
 
         [HttpPost("AdicionarUsuario")]
-        public async Task<IActionResult> AdicionarUsuario(Usuario usuario)
+        public async Task<IActionResult> AdicionarUsuario(AdicionarUsuarioDTO usuario)
         {
             try
             {
+                var validation = new AdicionarUsuarioDTOValidator().Validate(usuario);
+                if (!validation.IsValid)
+                {
+                    return StatusCode((int)HttpStatusCode.BadRequest, new ResponseErro()
+                    {
+                        Codigo = (int)HttpStatusCode.BadRequest,
+                        Mensagem = string.Join("; ", validation.Errors.Select(x => x.ErrorMessage))
+                    });
+                }
+
                 await _usuarioService.CadastrarUsuario(usuario);
 
-                return StatusCode((int)HttpStatusCode.OK, new ResponseSucesso<Usuario>()
+                return StatusCode((int)HttpStatusCode.Created, new ResponseSucesso<AdicionarUsuarioDTO>()
                 {
                     Codigo = (int)HttpStatusCode.OK,
-                    Mensagem = "Consulta realizado com sucesso"
+                    Mensagem = "Usuário adicionado com sucesso!"
                 });
             }
             catch (Exception e)

@@ -1,4 +1,5 @@
-﻿using interview.generator.application.Interfaces;
+﻿using interview.generator.application.DTO;
+using interview.generator.application.Interfaces;
 using interview.generator.domain.Entidade;
 using interview.generator.domain.Repositorio;
 
@@ -17,8 +18,15 @@ namespace interview.generator.application.Services
             await _repositorio.Alterar(usuario);
         }
 
-        public async Task CadastrarUsuario(Usuario usuario)
+        public async Task CadastrarUsuario(AdicionarUsuarioDTO usuarioDto)
         {
+            var usuario = new Usuario()
+            {
+                Cpf = usuarioDto.Cpf,
+                Nome = usuarioDto.Nome,
+                Perfil = usuarioDto.Perfil
+            };
+
             await _repositorio.Adicionar(usuario);
         }
 

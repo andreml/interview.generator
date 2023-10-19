@@ -1,4 +1,5 @@
-﻿using interview.generator.domain.Entidade;
+﻿using interview.generator.application.DTO;
+using interview.generator.domain.Entidade;
 
 namespace interview.generator.application.Interfaces
 {
@@ -6,7 +7,7 @@ namespace interview.generator.application.Interfaces
     {
         Task<Usuario> ObterUsuario(Guid id);
         Task<IEnumerable<Usuario>> ListarUsuarios();
-        Task CadastrarUsuario(Usuario usuario);
+        Task CadastrarUsuario(AdicionarUsuarioDTO usuario);
         Task AlterarUsuario(Usuario usuario);
         Task ExcluirUsuario(Guid id);
     }

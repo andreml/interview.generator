@@ -5,54 +5,60 @@ namespace interview.generator.infraestructure.SqlServer
 {
     public class UsuarioRepositorio : IUsuarioRepositorio
     {
-        List<Usuario> usuarios;
-        public UsuarioRepositorio()
+        private readonly ApplicationDbContext _context;
+
+        public UsuarioRepositorio(ApplicationDbContext context)
         {
-            this.usuarios = new List<Usuario>();
+            _context = context;
         }
+
         public Task Adicionar(Usuario entity)
         {
-            usuarios.Add(entity);
+            _context.Usuario.Add(entity);
+            _context.SaveChanges();
+
             return Task.CompletedTask;
         }
 
         public Task Alterar(Usuario entity)
         {
-            if (usuarios.Count > 0)
-            {
-                foreach (var usuario in usuarios)
-                {
-                    if (usuario.Id == entity.Id)
-                    {
-                        usuarios.Remove(usuario);
-                        usuarios.Add(entity);
-                        break;
-                    }
-                }
-            }
+            throw new NotImplementedException();
+            //if (usuarios.Count > 0)
+            //{
+            //    foreach (var usuario in usuarios)
+            //    {
+            //        if (usuario.Id == entity.Id)
+            //        {
+            //            usuarios.Remove(usuario);
+            //            usuarios.Add(entity);
+            //            break;
+            //        }
+            //    }
+            //}
 
-            return Task.CompletedTask;
+            //return Task.CompletedTask;
         }
 
         public Task Excluir(Guid id)
         {
-            if (usuarios.Count > 0)
-            {
-                var result = usuarios.Where(x => x.Id == id).FirstOrDefault();
-                if (result != null) usuarios.Remove(result);
-            }
+            //if (usuarios.Count > 0)
+            //{
+            //    var result = usuarios.Where(x => x.Id == id).FirstOrDefault();
+            //    if (result != null) usuarios.Remove(result);
+            //}
 
             return Task.CompletedTask;
         }
 
         public async Task<Usuario> ObterPorId(Guid id)
         {
-            return await Task.FromResult(usuarios.FirstOrDefault(x => x.Id.Equals(id)));
+            //return await Task.FromResult(usuarios.FirstOrDefault(x => x.Id.Equals(id)));
+            throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Usuario>> ObterTodos()
+        public Task<IEnumerable<Usuario>> ObterTodos()
         {
-            return await Task.FromResult(usuarios);
+            throw new NotImplementedException();
         }
     }
 }

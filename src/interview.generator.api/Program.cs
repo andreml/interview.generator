@@ -12,7 +12,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddRepository();
 builder.Services.AddSwaggerConfiguration();
 builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddScoped<IValidator<Usuario>, UsuarioValidator>();
 builder.Services.AddMvc(options =>
 {
     options.Filters.Add(typeof(ValidateModelStateAttributeCollectionExtension));
