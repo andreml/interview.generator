@@ -18,7 +18,7 @@ namespace interview.generator.api.Controllers
         }
 
         [HttpGet("ObterTodos")]
-        public async Task<IActionResult> ObterUsuariosAsync()
+        public async Task<IActionResult> ObterUsuarios()
         {
             try
             {
@@ -35,7 +35,7 @@ namespace interview.generator.api.Controllers
                 {
                     Codigo = (int)HttpStatusCode.BadRequest,
                     Mensagem = e.Message,
-                    Excecao = ""
+                    Excecao = "Erro ao obter os usuários"
                 });
             }
         }
@@ -48,7 +48,7 @@ namespace interview.generator.api.Controllers
                 return StatusCode((int)HttpStatusCode.OK, new ResponseSucesso<Usuario>()
                 {
                     Codigo = (int)HttpStatusCode.OK,
-                    Mensagem = "Consulta realizado com sucesso",
+                    Mensagem = "Consulta realizada com sucesso",
                     Data = await _usuarioService.ObterUsuario(id)
                 });
             }
@@ -58,7 +58,7 @@ namespace interview.generator.api.Controllers
                 {
                     Codigo = (int)HttpStatusCode.BadRequest,
                     Mensagem = e.Message,
-                    Excecao = ""
+                    Excecao = "Erro ao realizar a consulta"
                 });
             }
         }
@@ -69,11 +69,10 @@ namespace interview.generator.api.Controllers
             try
             {
                 await _usuarioService.CadastrarUsuario(usuario);
-
                 return StatusCode((int)HttpStatusCode.OK, new ResponseSucesso<Usuario>()
                 {
                     Codigo = (int)HttpStatusCode.OK,
-                    Mensagem = "Consulta realizado com sucesso"
+                    Mensagem = "Usuário incluído com sucesso"
                 });
             }
             catch (Exception e)
@@ -82,7 +81,7 @@ namespace interview.generator.api.Controllers
                 {
                     Codigo = (int)HttpStatusCode.BadRequest,
                     Mensagem = e.Message,
-                    Excecao = ""
+                    Excecao = "Erro ao incluir o usuário"
                 });
             }
         }
@@ -93,11 +92,10 @@ namespace interview.generator.api.Controllers
             try
             {
                 await _usuarioService.AlterarUsuario(usuario);
-
                 return StatusCode((int)HttpStatusCode.OK, new ResponseSucesso<Usuario>()
                 {
                     Codigo = (int)HttpStatusCode.OK,
-                    Mensagem = "Consulta realizado com sucesso"
+                    Mensagem = "Usuário alterado com sucesso"
                 });
             }
             catch (Exception e)
@@ -106,7 +104,30 @@ namespace interview.generator.api.Controllers
                 {
                     Codigo = (int)HttpStatusCode.BadRequest,
                     Mensagem = e.Message,
-                    Excecao = ""
+                    Excecao = "Erro ao alterar o usuário"
+                });
+            }
+        }
+
+        [HttpDelete("ExcluirUsuario")]
+        public async Task<IActionResult> ExcluirUsuario(Guid id)
+        {
+            try
+            {
+                await _usuarioService.ExcluirUsuario(id);
+                return StatusCode((int)HttpStatusCode.OK, new ResponseSucesso<Usuario>()
+                {
+                    Codigo = (int)HttpStatusCode.OK,
+                    Mensagem = "Usuário excluído com sucesso"
+                });
+            }
+            catch (Exception e)
+            {
+                return StatusCode((int)HttpStatusCode.BadRequest, new ResponseErro()
+                {
+                    Codigo = (int)HttpStatusCode.BadRequest,
+                    Mensagem = e.Message,
+                    Excecao = "Erro ao excluir o usuário"
                 });
             }
         }
