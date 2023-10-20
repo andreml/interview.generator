@@ -8,7 +8,6 @@ namespace interview.generator.domain.Entidade
         public Guid UsuarioCriacaoId { get; set; }
         public Guid TipoQuestionarioId { get; set; }
         public DateTime DataCriacao { get; set; }
-        public decimal NotaDeCorte { get; set; }
 
         public Questionario()
         {
