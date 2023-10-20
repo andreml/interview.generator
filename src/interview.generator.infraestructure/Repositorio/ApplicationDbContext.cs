@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace interview.generator.domain.Repositorio
+namespace interview.generator.infraestructure.Repositorio
 {
     public class ApplicationDbContext : DbContext
     {
@@ -16,7 +16,6 @@ namespace interview.generator.domain.Repositorio
         public DbSet<Alternativa> Alternativa { get; set; }
         public DbSet<AreaConhecimento> AreaConhecimento { get; set; }
         public DbSet<Avaliacao> Avaliacao { get; set; }
-        public DbSet<Perfil> Perfil { get; set; }
         public DbSet<Pergunta> Pergunta { get; set; }
         public DbSet<PerguntaQuestionario> PerguntaQuestionario { get; set; }
         public DbSet<Questionario> Questionario { get; set; }

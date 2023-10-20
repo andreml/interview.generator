@@ -1,4 +1,4 @@
-﻿using interview.generator.domain.Repositorio;
+﻿using interview.generator.infraestructure.Repositorio;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace interview.generator.crosscutting.InjecaoDependencia

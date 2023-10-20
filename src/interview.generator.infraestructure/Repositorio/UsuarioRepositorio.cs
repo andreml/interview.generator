@@ -2,7 +2,7 @@
 using interview.generator.domain.Repositorio;
 using Microsoft.EntityFrameworkCore;
 
-namespace interview.generator.infraestructure.SqlServer
+namespace interview.generator.infraestructure.Repositorio
 {
     public class UsuarioRepositorio : IUsuarioRepositorio
     {

@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using interview.generator.domain.Repositorio;
+using interview.generator.infraestructure.Repositorio;
 
 #nullable disable
 
-namespace interview.generator.domain.Migrations
+namespace interview.generator.infraestructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -82,21 +82,6 @@ namespace interview.generator.domain.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Avaliacao");
-                });
-
-            modelBuilder.Entity("interview.generator.domain.Entidade.Perfil", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Descricao")
-                        .IsRequired()
-                        .HasColumnType("VARCHAR(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Perfil");
                 });
 
             modelBuilder.Entity("interview.generator.domain.Entidade.Pergunta", b =>
@@ -202,7 +187,7 @@ namespace interview.generator.domain.Migrations
 
                     b.Property<string>("Descricao")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -223,8 +208,8 @@ namespace interview.generator.domain.Migrations
                         .IsRequired()
                         .HasColumnType("VARCHAR(100)");
 
-                    b.Property<Guid>("PerfilId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("Perfil")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

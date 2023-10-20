@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace interview.generator.domain.Migrations
+namespace interview.generator.infraestructure.Migrations
 {
     /// <inheritdoc />
     public partial class Initial : Migration
@@ -36,18 +36,6 @@ namespace interview.generator.domain.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Avaliacao", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Perfil",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Descricao = table.Column<string>(type: "VARCHAR(100)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Perfil", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -86,7 +74,7 @@ namespace interview.generator.domain.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Descricao = table.Column<string>(type: "VARCHAR(100)", nullable: false)
+                    Descricao = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -100,7 +88,7 @@ namespace interview.generator.domain.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Cpf = table.Column<string>(type: "VARCHAR(11)", nullable: false),
                     Nome = table.Column<string>(type: "VARCHAR(100)", nullable: false),
-                    PerfilId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    Perfil = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -188,9 +176,6 @@ namespace interview.generator.domain.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Alternativa");
-
-            migrationBuilder.DropTable(
-                name: "Perfil");
 
             migrationBuilder.DropTable(
                 name: "PerguntaQuestionario");
