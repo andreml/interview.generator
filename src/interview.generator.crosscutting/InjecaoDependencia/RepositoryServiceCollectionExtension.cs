@@ -2,6 +2,7 @@
 using interview.generator.application.Services;
 using interview.generator.domain.Repositorio;
 using interview.generator.infraestructure.Repositorio;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace interview.generator.crosscutting.InjecaoDependencia
@@ -12,6 +13,7 @@ namespace interview.generator.crosscutting.InjecaoDependencia
         {
             service.AddSingleton<IUsuarioService, UsuarioService>();
             service.AddSingleton<IUsuarioRepositorio, UsuarioRepositorio>();
+            service.AddSingleton<ILoginService, LoginService>();
 
             return service;
         }

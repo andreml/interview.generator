@@ -2,6 +2,8 @@
 using interview.generator.application.Interfaces;
 using interview.generator.domain.Entidade;
 using interview.generator.domain.Entidade.Common;
+using interview.generator.domain.Enum;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -19,6 +21,7 @@ namespace interview.generator.api.Controllers
         }
 
         [HttpGet("ObterTodos")]
+        [Authorize(Roles = $"{Perfis.Avaliador}")]
         public async Task<IActionResult> ObterUsuariosAsync()
         {
             try

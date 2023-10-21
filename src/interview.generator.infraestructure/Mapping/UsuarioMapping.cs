@@ -23,6 +23,16 @@ namespace interview.generator.infraestructure.Mapping
             builder.Property(u => u.Perfil)
                 .HasConversion<int>()
                 .IsRequired();
+
+            builder
+                .Property(x => x.Login)
+                .IsRequired()
+                .HasColumnType("VARCHAR(30)");
+
+            builder
+                .Property(x => x.Senha)
+                .IsRequired()
+                .HasColumnType("VARCHAR(500)");
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using interview.generator.domain.Entidade;
 using interview.generator.domain.Repositorio;
+using interview.generator.domain.Utils;
 using interview.generator.infraestructure.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -48,6 +49,11 @@ namespace interview.generator.infraestructure.Repositorio
         {
             var result = _dbSet.ToListAsync().Result;
             return await Task.FromResult(result);
+        }
+
+        public Task<Usuario?> ObterUsuarioPorLoginESenha(string login, string senha)
+        {
+            return  _dbSet.FirstOrDefaultAsync(u => u.Login == login && u.Senha == Encryptor.Encrypt(senha));
         }
 
         public async Task<Usuario?> ObterUsuarioPorCpf(string cpf)

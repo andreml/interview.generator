@@ -5,5 +5,7 @@ namespace interview.generator.domain.Repositorio
     public interface IUsuarioRepositorio : ICommonRepository<Usuario>
     {
         Task<Usuario?> ObterUsuarioPorCpf(string cpf);
+        Task<Usuario?> ObterUsuarioPorLoginESenha(string nome, string senha);
+
     }
 }

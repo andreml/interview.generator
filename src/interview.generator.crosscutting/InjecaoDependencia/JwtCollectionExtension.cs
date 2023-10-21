@@ -13,9 +13,11 @@ namespace interview.generator.crosscutting.InjecaoDependencia
 {
     public static class JwtCollectionExtension
     {
+
         public static IServiceCollection AddJwtConfiguration(this IServiceCollection services, IConfiguration Configuration)
         {
-            var key = Encoding.ASCII.GetBytes(Encryptor.Decrypt(Configuration["Secret:Key"]));
+
+            var key = Encoding.ASCII.GetBytes(Configuration["Secret:Key"]);
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

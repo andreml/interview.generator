@@ -3,12 +3,17 @@ using interview.generator.application.Interfaces;
 using interview.generator.domain.Entidade;
 using interview.generator.domain.Entidade.Common;
 using interview.generator.domain.Repositorio;
+using interview.generator.domain.Utils;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Identity.Client.Utils.Windows;
+using System.Text.RegularExpressions;
 
 namespace interview.generator.application.Services
 {
     public class UsuarioService : IUsuarioService
     {
         private readonly IUsuarioRepositorio _repositorio;
+        
         public UsuarioService(IUsuarioRepositorio repositorio)
         {
             _repositorio = repositorio;
@@ -32,7 +37,7 @@ namespace interview.generator.application.Services
 
             var usuarioPorCpf = _repositorio.ObterUsuarioPorCpf(usuario.Cpf);
 
-            if(usuarioPorCpf != null)
+            if (usuarioPorCpf != null)
             {
                 response.AddErro("Já existe um usuário com este cpf.");
                 return response;
@@ -43,6 +48,8 @@ namespace interview.generator.application.Services
                 Nome = usuario.Nome,
                 Perfil = usuario.Perfil,
                 Cpf = usuario.Cpf,
+                Login = usuario.Login,
+                Senha = Encryptor.Encrypt(usuario.Senha)
             };
 
             await _repositorio.Adicionar(novoUsuario);

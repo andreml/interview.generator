@@ -14,6 +14,9 @@ builder.Services.AddValidators();
 builder.Services.AddSwaggerConfiguration();
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddContextConfig();
+builder.Configuration.AddJsonFile("appsettings.json").Build();
+builder.Services.AddJwtConfiguration(builder.Configuration);
+
 builder.Services.AddMvc(options =>
 {
     options.Filters.Add(typeof(ValidateModelStateAttributeCollectionExtension));
@@ -31,7 +34,6 @@ if (app.Environment.IsDevelopment())
         options.RoutePrefix = "swagger";
     });
 }
-
 
 app.UseHttpsRedirection();
 

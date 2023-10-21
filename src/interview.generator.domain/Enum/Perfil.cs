@@ -8,4 +8,10 @@ namespace interview.generator.domain.Enum
         Avaliador = 1,
         Candidato = 2
     }
+
+    public static class Perfis
+    {
+        public const string Avaliador = "Avaliador";
+        public const string Candidato = "Candidato";
+    }
 }

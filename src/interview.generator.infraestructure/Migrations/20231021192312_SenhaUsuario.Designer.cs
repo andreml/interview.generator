@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using interview.generator.infraestructure.Context;
 
@@ -11,9 +12,11 @@ using interview.generator.infraestructure.Context;
 namespace interview.generator.infraestructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231021192312_SenhaUsuario")]
+    partial class SenhaUsuario
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -203,7 +206,7 @@ namespace interview.generator.infraestructure.Migrations
 
                     b.Property<string>("Login")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(30)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nome")
                         .IsRequired()
@@ -214,7 +217,7 @@ namespace interview.generator.infraestructure.Migrations
 
                     b.Property<string>("Senha")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
