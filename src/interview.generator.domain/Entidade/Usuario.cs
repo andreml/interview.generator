@@ -12,5 +12,12 @@ namespace interview.generator.domain.Entidade
         public Usuario()
         {
         }
+
+        public void Atualizar(string cpf, string nome, Perfil perfil)
+        {
+            Cpf = cpf;
+            Nome = nome;
+            Perfil = perfil;
+        }
     }
 }

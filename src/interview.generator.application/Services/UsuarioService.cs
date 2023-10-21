@@ -14,11 +14,25 @@ namespace interview.generator.application.Services
             _repositorio = repositorio;
         }
 
-        public async Task<ResponseBase> AlterarUsuario(Usuario usuario)
+        public async Task<ResponseBase> AlterarUsuario(AlterarUsuarioDto usuarioDto)
         {
             var response = new ResponseBase();
 
-            //Adicionar validações
+            var usuario = await _repositorio.ObterPorId(usuarioDto.Id);
+            if(usuario == null)
+            {
+                response.AddErro("Usuário não encontrado");
+                return response;
+            }
+
+            var usuarioPorCpf = await _repositorio.ObterUsuarioPorCpf(usuarioDto.Cpf);
+            if(usuarioPorCpf != null && usuarioPorCpf.Id != usuario.Id)
+            {
+                response.AddErro("Já existe um usuário com este CPF");
+                return response;
+            }
+
+            usuario.Atualizar(usuarioDto.Cpf, usuarioDto.Nome, usuarioDto.Perfil);
 
             await _repositorio.Alterar(usuario);
 
@@ -34,7 +48,7 @@ namespace interview.generator.application.Services
 
             if(usuarioPorCpf != null)
             {
-                response.AddErro("Já existe um usuário com este cpf.");
+                response.AddErro("Já existe um usuário com este CPF.");
                 return response;
             }
 

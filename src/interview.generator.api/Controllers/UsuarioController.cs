@@ -79,7 +79,7 @@ namespace interview.generator.api.Controllers
         }
 
         [HttpPut("AlterarUsuario")]
-        public async Task<IActionResult> AlterarUsuario(Usuario usuario)
+        public async Task<IActionResult> AlterarUsuario(AlterarUsuarioDto usuario)
         {
             try
             {
