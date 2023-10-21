@@ -1,5 +1,6 @@
 ﻿using interview.generator.domain.Entidade;
 using interview.generator.domain.Repositorio;
+using interview.generator.infraestructure.Context;
 using Microsoft.EntityFrameworkCore;
 
 namespace interview.generator.infraestructure.Repositorio

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace interview.generator.infraestructure.Repositorio
+namespace interview.generator.infraestructure.Context
 {
     public class ApplicationDbContext : DbContext
     {
