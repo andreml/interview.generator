@@ -1,5 +1,4 @@
-﻿using interview.generator.domain.Entidade.Common;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Net;
 
@@ -16,18 +15,7 @@ namespace interview.generator.crosscutting.InjecaoDependencia
                         .Select(v => v.ErrorMessage)
                         .ToList();
 
-                string message = string.Empty;
-
-                foreach (var item in errors) message += " " + item;
-
-                var responseObj = new ResponseErro()
-                {
-                    Codigo = (int)HttpStatusCode.BadRequest,
-                    Mensagem = message,
-                    Excecao = "Ocorreu um erro"
-                };
-
-                context.Result = new JsonResult(responseObj) { StatusCode = (int)HttpStatusCode.BadRequest };
+                context.Result = new JsonResult(errors) { StatusCode = (int)HttpStatusCode.BadRequest };
             }
         }
     }

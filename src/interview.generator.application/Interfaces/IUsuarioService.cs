@@ -1,13 +1,15 @@
-﻿using interview.generator.domain.Entidade;
+﻿using interview.generator.application.Dto;
+using interview.generator.domain.Entidade;
+using interview.generator.domain.Entidade.Common;
 
 namespace interview.generator.application.Interfaces
 {
     public interface IUsuarioService
     {
-        Task<Usuario> ObterUsuario(Guid id);
-        Task<IEnumerable<Usuario>> ListarUsuarios();
-        Task CadastrarUsuario(Usuario usuario);
-        Task AlterarUsuario(Usuario usuario);
-        Task ExcluirUsuario(Guid id);
+        Task<ResponseBase<Usuario>> ObterUsuario(Guid id);
+        Task<ResponseBase<IEnumerable<Usuario>>> ListarUsuarios();
+        Task<ResponseBase> CadastrarUsuario(AddUsuarioDto usuario);
+        Task<ResponseBase> AlterarUsuario(Usuario usuario);
+        Task<ResponseBase> ExcluirUsuario(Guid id);
     }
 }

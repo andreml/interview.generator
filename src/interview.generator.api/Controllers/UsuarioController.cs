@@ -1,4 +1,5 @@
-﻿using interview.generator.application.Interfaces;
+﻿using interview.generator.application.Dto;
+using interview.generator.application.Interfaces;
 using interview.generator.domain.Entidade;
 using interview.generator.domain.Entidade.Common;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +10,7 @@ namespace interview.generator.api.Controllers
     [ApiController]
     [Route("[controller]")]
     [Produces("application/json")]
-    public class UsuarioController : ControllerBase
+    public class UsuarioController : BaseController
     {
         readonly IUsuarioService _usuarioService;
         public UsuarioController(IUsuarioService usuarioService)
@@ -22,12 +23,9 @@ namespace interview.generator.api.Controllers
         {
             try
             {
-                return StatusCode((int)HttpStatusCode.OK, new ResponseSucesso<IEnumerable<Usuario>>()
-                {
-                    Codigo = (int)HttpStatusCode.OK,
-                    Mensagem = "Consulta realizado com sucesso",
-                    Data = await _usuarioService.ListarUsuarios()
-                });
+                var result = await _usuarioService.ListarUsuarios();
+
+                return Response(result);
             }
             catch (Exception e)
             {
@@ -45,12 +43,9 @@ namespace interview.generator.api.Controllers
         {
             try
             {
-                return StatusCode((int)HttpStatusCode.OK, new ResponseSucesso<Usuario>()
-                {
-                    Codigo = (int)HttpStatusCode.OK,
-                    Mensagem = "Consulta realizado com sucesso",
-                    Data = await _usuarioService.ObterUsuario(id)
-                });
+                var result = await _usuarioService.ObterUsuario(id);
+
+                return Response(result);
             }
             catch (Exception e)
             {
@@ -64,17 +59,13 @@ namespace interview.generator.api.Controllers
         }
 
         [HttpPost("AdicionarUsuario")]
-        public async Task<IActionResult> AdicionarUsuario(Usuario usuario)
+        public async Task<IActionResult> AdicionarUsuario(AddUsuarioDto usuario)
         {
             try
             {
-                await _usuarioService.CadastrarUsuario(usuario);
+                var result = await _usuarioService.CadastrarUsuario(usuario);
 
-                return StatusCode((int)HttpStatusCode.OK, new ResponseSucesso<Usuario>()
-                {
-                    Codigo = (int)HttpStatusCode.OK,
-                    Mensagem = "Consulta realizado com sucesso"
-                });
+                return Response(result);
             }
             catch (Exception e)
             {
@@ -92,13 +83,9 @@ namespace interview.generator.api.Controllers
         {
             try
             {
-                await _usuarioService.AlterarUsuario(usuario);
+                var result = await _usuarioService.AlterarUsuario(usuario);
 
-                return StatusCode((int)HttpStatusCode.OK, new ResponseSucesso<Usuario>()
-                {
-                    Codigo = (int)HttpStatusCode.OK,
-                    Mensagem = "Consulta realizado com sucesso"
-                });
+                return Response(result);
             }
             catch (Exception e)
             {

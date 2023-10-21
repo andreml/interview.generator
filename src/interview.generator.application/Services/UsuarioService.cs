@@ -1,5 +1,7 @@
-﻿using interview.generator.application.Interfaces;
+﻿using interview.generator.application.Dto;
+using interview.generator.application.Interfaces;
 using interview.generator.domain.Entidade;
+using interview.generator.domain.Entidade.Common;
 using interview.generator.domain.Repositorio;
 
 namespace interview.generator.application.Services
@@ -12,31 +14,77 @@ namespace interview.generator.application.Services
             _repositorio = repositorio;
         }
 
-        public async Task AlterarUsuario(Usuario usuario)
+        public async Task<ResponseBase> AlterarUsuario(Usuario usuario)
         {
+            var response = new ResponseBase();
+
+            //Adicionar validações
+
             await _repositorio.Alterar(usuario);
+
+            response.AddData("Usuário alterado com sucesso!");
+            return response;
         }
 
-        public async Task CadastrarUsuario(Usuario usuario)
+        public async Task<ResponseBase> CadastrarUsuario(AddUsuarioDto usuario)
         {
-            await _repositorio.Adicionar(usuario);
+            var response = new ResponseBase();
+
+            var usuarioPorCpf = _repositorio.ObterUsuarioPorCpf(usuario.Cpf);
+
+            if(usuarioPorCpf != null)
+            {
+                response.AddErro("Já existe um usuário com este cpf.");
+                return response;
+            }
+
+            var novoUsuario = new Usuario()
+            {
+                Nome = usuario.Nome,
+                Perfil = usuario.Perfil,
+                Cpf = usuario.Cpf,
+            };
+
+            await _repositorio.Adicionar(novoUsuario);
+
+            response.AddData("Usuário adicionado com sucesso!");
+
+            return response;
         }
 
-        public async Task ExcluirUsuario(Guid id)
+        public async Task<ResponseBase> ExcluirUsuario(Guid id)
         {
+            var response = new ResponseBase();
+
+            //Adicionar validações
+
             await _repositorio.Excluir(id);
+
+            response.AddData("Usuário excluído com sucesso!");
+
+            return response;
         }
 
-        public async Task<IEnumerable<Usuario>> ListarUsuarios()
+        public async Task<ResponseBase<IEnumerable<Usuario>>> ListarUsuarios()
         {
-            var usuarios = _repositorio.ObterTodos().Result;
-            return await Task.FromResult(usuarios);
+            var response = new ResponseBase<IEnumerable<Usuario>>();
+
+            var usuarios = await _repositorio.ObterTodos();
+
+            response.AddData(usuarios);
+
+            return response;
         }
 
-        public async Task<Usuario> ObterUsuario(Guid id)
+        public async Task<ResponseBase<Usuario>> ObterUsuario(Guid id)
         {
-            var usuario = _repositorio.ObterPorId(id).Result;
-            return await Task.FromResult(usuario);
+            var response = new ResponseBase<Usuario>();
+
+            var usuario = await _repositorio.ObterPorId(id);
+
+            response.AddData(usuario);
+
+            return response;
         }
     }
 }

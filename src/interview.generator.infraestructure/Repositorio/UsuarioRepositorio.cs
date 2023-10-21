@@ -49,5 +49,10 @@ namespace interview.generator.infraestructure.Repositorio
             var result = _dbSet.ToListAsync().Result;
             return await Task.FromResult(result);
         }
+
+        public async Task<Usuario?> ObterUsuarioPorCpf(string cpf)
+        {
+            return await _dbSet.FirstOrDefaultAsync(u => u.Cpf == cpf);
+        }
     }
 }

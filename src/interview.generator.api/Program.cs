@@ -10,9 +10,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddRepository();
+builder.Services.AddValidators();
 builder.Services.AddSwaggerConfiguration();
 builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddScoped<IValidator<Usuario>, UsuarioValidator>();
 builder.Services.AddContextConfig();
 builder.Services.AddMvc(options =>
 {

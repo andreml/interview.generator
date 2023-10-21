@@ -1,7 +1,5 @@
-﻿using FluentValidation;
-using interview.generator.domain.Entidade.Common;
+﻿using interview.generator.domain.Entidade.Common;
 using interview.generator.domain.Enum;
-using interview.generator.domain.Utils;
 
 namespace interview.generator.domain.Entidade
 {
@@ -13,16 +11,6 @@ namespace interview.generator.domain.Entidade
 
         public Usuario()
         {
-        }
-    }
-
-    public class UsuarioValidator : AbstractValidator<Usuario>
-    {
-        public UsuarioValidator()
-        {
-            RuleFor(x => x.Cpf).NotNull().WithMessage("Cpf é obrigatório");
-            RuleFor(x => x.Cpf).Must(document => ValidateDocument.IsCpf(document)).WithMessage("Documento inválido");
-            RuleFor(x => x.Nome).NotNull().WithMessage("Nome é obrigatório");
         }
     }
 }
