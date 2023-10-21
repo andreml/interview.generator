@@ -38,11 +38,9 @@ namespace interview.generator.infraestructure.Repositorio
             return Task.CompletedTask;
         }
 
-        public async Task<Usuario> ObterPorId(Guid id)
+        public async Task<Usuario?> ObterPorId(Guid id)
         {
-            var result = _dbSet.FirstOrDefaultAsync(u => u.Id.Equals(id)).Result;
-            if (result is null) throw new Exception("Usuario não encontrado");
-            return await Task.FromResult(result);
+            return await _dbSet.FirstOrDefaultAsync(u => u.Id.Equals(id));
         }
 
         public async Task<IEnumerable<Usuario>> ObterTodos()

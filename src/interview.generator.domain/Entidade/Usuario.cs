@@ -30,5 +30,11 @@ namespace interview.generator.domain.Entidade
             }
         }
 
+        public void Atualizar(string cpf, string nome, Perfil perfil)
+        {
+            Cpf = cpf;
+            Nome = nome;
+            Perfil = perfil;
+        }
     }
 }

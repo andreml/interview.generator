@@ -36,7 +36,7 @@ namespace interview.generator.api.Controllers
                 {
                     Codigo = (int)HttpStatusCode.BadRequest,
                     Mensagem = e.Message,
-                    Excecao = ""
+                    Excecao = "Erro ao obter os usuários"
                 });
             }
         }
@@ -56,7 +56,7 @@ namespace interview.generator.api.Controllers
                 {
                     Codigo = (int)HttpStatusCode.BadRequest,
                     Mensagem = e.Message,
-                    Excecao = ""
+                    Excecao = "Erro ao realizar a consulta"
                 });
             }
         }
@@ -76,13 +76,13 @@ namespace interview.generator.api.Controllers
                 {
                     Codigo = (int)HttpStatusCode.BadRequest,
                     Mensagem = e.Message,
-                    Excecao = ""
+                    Excecao = "Erro ao incluir o usuário"
                 });
             }
         }
 
         [HttpPut("AlterarUsuario")]
-        public async Task<IActionResult> AlterarUsuario(Usuario usuario)
+        public async Task<IActionResult> AlterarUsuario(AlterarUsuarioDto usuario)
         {
             try
             {
@@ -96,7 +96,7 @@ namespace interview.generator.api.Controllers
                 {
                     Codigo = (int)HttpStatusCode.BadRequest,
                     Mensagem = e.Message,
-                    Excecao = ""
+                    Excecao = "Erro ao excluir o usuário"
                 });
             }
         }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using interview.generator.infraestructure.Context;
 
@@ -11,9 +12,11 @@ using interview.generator.infraestructure.Context;
 namespace interview.generator.infraestructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231021173502_AddUsuarioIdNaAreaConhecimento")]
+    partial class AddUsuarioIdNaAreaConhecimento
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -204,20 +207,12 @@ namespace interview.generator.infraestructure.Migrations
                         .IsRequired()
                         .HasColumnType("VARCHAR(11)");
 
-                    b.Property<string>("Login")
-                        .IsRequired()
-                        .HasColumnType("VARCHAR(30)");
-
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("VARCHAR(100)");
 
                     b.Property<int>("Perfil")
                         .HasColumnType("int");
-
-                    b.Property<string>("Senha")
-                        .IsRequired()
-                        .HasColumnType("VARCHAR(500)");
 
                     b.HasKey("Id");
 
