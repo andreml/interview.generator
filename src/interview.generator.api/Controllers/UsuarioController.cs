@@ -19,7 +19,7 @@ namespace interview.generator.api.Controllers
         }
 
         [HttpGet("ObterTodos")]
-        public async Task<IActionResult> ObterUsuariosAsync()
+        public async Task<IActionResult> ObterUsuarios()
         {
             try
             {
@@ -33,7 +33,7 @@ namespace interview.generator.api.Controllers
                 {
                     Codigo = (int)HttpStatusCode.BadRequest,
                     Mensagem = e.Message,
-                    Excecao = ""
+                    Excecao = "Erro ao obter os usuários"
                 });
             }
         }
@@ -53,7 +53,7 @@ namespace interview.generator.api.Controllers
                 {
                     Codigo = (int)HttpStatusCode.BadRequest,
                     Mensagem = e.Message,
-                    Excecao = ""
+                    Excecao = "Erro ao realizar a consulta"
                 });
             }
         }
@@ -73,7 +73,7 @@ namespace interview.generator.api.Controllers
                 {
                     Codigo = (int)HttpStatusCode.BadRequest,
                     Mensagem = e.Message,
-                    Excecao = ""
+                    Excecao = "Erro ao incluir o usuário"
                 });
             }
         }
@@ -93,7 +93,7 @@ namespace interview.generator.api.Controllers
                 {
                     Codigo = (int)HttpStatusCode.BadRequest,
                     Mensagem = e.Message,
-                    Excecao = ""
+                    Excecao = "Erro ao excluir o usuário"
                 });
             }
         }
