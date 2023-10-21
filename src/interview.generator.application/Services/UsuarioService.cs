@@ -96,7 +96,7 @@ namespace interview.generator.application.Services
 
             var usuario = await _repositorio.ObterPorId(id);
 
-            response.AddData(usuario);
+            response.AddData(usuario!);
 
             return response;
         }
