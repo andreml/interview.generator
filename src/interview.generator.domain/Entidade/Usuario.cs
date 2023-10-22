@@ -25,7 +25,7 @@ namespace interview.generator.domain.Entidade
             Senha = Encryptor.Encrypt(senha);
         }
 
-        public DateTime VerificaValidadeTokenCandidato()
+        public DateTime VerificaValidadeTokenUsuario()
         {
             switch (this.Perfil)
             {
