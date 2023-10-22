@@ -11,10 +11,6 @@ namespace interview.generator.infraestructure.Mapping
             builder.HasKey(x => x.Id);
 
             builder
-                .Property(x => x.AreaConhecimentoId)
-                .IsRequired();
-
-            builder
                 .Property(x => x.Descricao)
                 .IsRequired()
                 .HasColumnType("VARCHAR(1000)");

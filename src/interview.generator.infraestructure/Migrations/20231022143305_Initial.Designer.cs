@@ -12,7 +12,7 @@ using interview.generator.infraestructure.Context;
 namespace interview.generator.infraestructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231020005956_Initial")]
+    [Migration("20231022143305_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -57,6 +57,9 @@ namespace interview.generator.infraestructure.Migrations
                     b.Property<string>("Descricao")
                         .IsRequired()
                         .HasColumnType("VARCHAR(100)");
+
+                    b.Property<Guid>("UsuarioId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -146,9 +149,6 @@ namespace interview.generator.infraestructure.Migrations
                         .IsRequired()
                         .HasColumnType("VARCHAR(200)");
 
-                    b.Property<decimal>("NotaDeCorte")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<Guid>("TipoQuestionarioId")
                         .HasColumnType("uniqueidentifier");
 
@@ -207,12 +207,20 @@ namespace interview.generator.infraestructure.Migrations
                         .IsRequired()
                         .HasColumnType("VARCHAR(11)");
 
+                    b.Property<string>("Login")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(30)");
+
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("VARCHAR(100)");
 
                     b.Property<int>("Perfil")
                         .HasColumnType("int");
+
+                    b.Property<string>("Senha")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(500)");
 
                     b.HasKey("Id");
 

@@ -16,7 +16,8 @@ namespace interview.generator.infraestructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Descricao = table.Column<string>(type: "VARCHAR(100)", nullable: false)
+                    Descricao = table.Column<string>(type: "VARCHAR(100)", nullable: false),
+                    UsuarioId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -61,8 +62,7 @@ namespace interview.generator.infraestructure.Migrations
                     Nome = table.Column<string>(type: "VARCHAR(200)", nullable: false),
                     UsuarioCriacaoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TipoQuestionarioId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DataCriacao = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    NotaDeCorte = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    DataCriacao = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -88,7 +88,9 @@ namespace interview.generator.infraestructure.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Cpf = table.Column<string>(type: "VARCHAR(11)", nullable: false),
                     Nome = table.Column<string>(type: "VARCHAR(100)", nullable: false),
-                    Perfil = table.Column<int>(type: "int", nullable: false)
+                    Perfil = table.Column<int>(type: "int", nullable: false),
+                    Login = table.Column<string>(type: "VARCHAR(30)", nullable: false),
+                    Senha = table.Column<string>(type: "VARCHAR(500)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -100,9 +102,9 @@ namespace interview.generator.infraestructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AreaConhecimentoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Descricao = table.Column<string>(type: "VARCHAR(1000)", nullable: false),
-                    UsuarioCriacaoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    UsuarioCriacaoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AreaConhecimentoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {

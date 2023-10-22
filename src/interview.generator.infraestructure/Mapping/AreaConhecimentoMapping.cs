@@ -18,7 +18,7 @@ namespace interview.generator.infraestructure.Mapping
             builder
                 .HasMany(x => x.Perguntas)
                 .WithOne(x => x.AreaConhecimento)
-                .HasForeignKey(x => x.AreaConhecimentoId);
+                .HasForeignKey("AreaConhecimentoId");
         }
     }
 }
