@@ -62,7 +62,7 @@ namespace interview.generator.api.Controllers
         }
 
         [HttpPost("AdicionarUsuario")]
-        public async Task<IActionResult> AdicionarUsuario(AddUsuarioDto usuario)
+        public async Task<IActionResult> AdicionarUsuario(AdicionarUsuarioDto usuario)
         {
             try
             {

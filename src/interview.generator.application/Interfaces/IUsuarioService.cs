@@ -8,7 +8,7 @@ namespace interview.generator.application.Interfaces
     {
         Task<ResponseBase<Usuario>> ObterUsuario(Guid id);
         Task<ResponseBase<IEnumerable<Usuario>>> ListarUsuarios();
-        Task<ResponseBase> CadastrarUsuario(AddUsuarioDto usuario);
+        Task<ResponseBase> CadastrarUsuario(AdicionarUsuarioDto usuario);
         Task<ResponseBase> AlterarUsuario(AlterarUsuarioDto usuario);
         Task<ResponseBase> ExcluirUsuario(Guid id);
     }

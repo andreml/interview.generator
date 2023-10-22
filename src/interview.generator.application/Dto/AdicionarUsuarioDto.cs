@@ -4,9 +4,9 @@ using interview.generator.domain.Utils;
 
 namespace interview.generator.application.Dto
 {
-    public class AddUsuarioDto
+    public class AdicionarUsuarioDto
     {
-        public AddUsuarioDto(string cpf, string nome, Perfil perfil, string login, string senha)
+        public AdicionarUsuarioDto(string cpf, string nome, Perfil perfil, string login, string senha)
         {
             Cpf = cpf;
             Nome = nome;
@@ -22,7 +22,7 @@ namespace interview.generator.application.Dto
         public string Senha { get; set; }
     }
 
-    public class AddUsuarioDtoValidator : AbstractValidator<AddUsuarioDto>
+    public class AddUsuarioDtoValidator : AbstractValidator<AdicionarUsuarioDto>
     {
         public AddUsuarioDtoValidator()
         {

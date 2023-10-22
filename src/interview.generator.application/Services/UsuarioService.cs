@@ -54,7 +54,7 @@ namespace interview.generator.application.Services
             return response;
         }
 
-        public async Task<ResponseBase> CadastrarUsuario(AddUsuarioDto usuario)
+        public async Task<ResponseBase> CadastrarUsuario(AdicionarUsuarioDto usuario)
         {
             var response = new ResponseBase();
 
