@@ -42,12 +42,7 @@ namespace interview.generator.api.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode((int)HttpStatusCode.BadRequest, new ResponseErro()
-                {
-                    Codigo = (int)HttpStatusCode.BadRequest,
-                    Mensagem = e.Message,
-                    Excecao = "Erro ao obter perguntas"
-                });
+                return ResponseErro(e.Message, "Erro ao obter perguntas");
             }
         }
 
@@ -70,12 +65,7 @@ namespace interview.generator.api.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode((int)HttpStatusCode.BadRequest, new ResponseErro()
-                {
-                    Codigo = (int)HttpStatusCode.BadRequest,
-                    Mensagem = "Erro ao incluir pergunta",
-                    Excecao = e.Message
-                });
+                return ResponseErro(e.Message, "Erro ao adicionar perguntas");
             }
         }
 
@@ -98,12 +88,7 @@ namespace interview.generator.api.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode((int)HttpStatusCode.BadRequest, new ResponseErro()
-                {
-                    Codigo = (int)HttpStatusCode.BadRequest,
-                    Mensagem = "Erro ao alterar pergunta",
-                    Excecao = e.Message
-                });
+                return ResponseErro(e.Message, "Erro ao alterar pergunta");
             }
         }
     }

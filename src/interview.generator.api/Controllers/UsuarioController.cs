@@ -1,10 +1,8 @@
 ﻿using interview.generator.application.Dto;
 using interview.generator.application.Interfaces;
-using interview.generator.domain.Entidade.Common;
 using interview.generator.domain.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
 
 namespace interview.generator.api.Controllers
 {
@@ -31,12 +29,7 @@ namespace interview.generator.api.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode((int)HttpStatusCode.BadRequest, new ResponseErro()
-                {
-                    Codigo = (int)HttpStatusCode.BadRequest,
-                    Mensagem = e.Message,
-                    Excecao = "Erro ao obter os usuários"
-                });
+                return ResponseErro(e.Message, "Erro ao obter os usuários");
             }
         }
 
@@ -51,12 +44,7 @@ namespace interview.generator.api.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode((int)HttpStatusCode.BadRequest, new ResponseErro()
-                {
-                    Codigo = (int)HttpStatusCode.BadRequest,
-                    Mensagem = e.Message,
-                    Excecao = "Erro ao realizar a consulta"
-                });
+                return ResponseErro(e.Message, "Erro ao realizar a consulta");
             }
         }
 
@@ -71,12 +59,7 @@ namespace interview.generator.api.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode((int)HttpStatusCode.BadRequest, new ResponseErro()
-                {
-                    Codigo = (int)HttpStatusCode.BadRequest,
-                    Mensagem = e.Message,
-                    Excecao = "Erro ao incluir o usuário"
-                });
+                return ResponseErro(e.Message, "Erro ao adicionar usuário");
             }
         }
 
@@ -95,12 +78,7 @@ namespace interview.generator.api.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode((int)HttpStatusCode.BadRequest, new ResponseErro()
-                {
-                    Codigo = (int)HttpStatusCode.BadRequest,
-                    Mensagem = e.Message,
-                    Excecao = "Erro ao excluir o usuário"
-                });
+                return ResponseErro(e.Message, "Erro ao excluir o usuário");
             }
         }
     }
