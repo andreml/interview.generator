@@ -61,7 +61,7 @@ namespace interview.generator.infraestructure.Repositorio
 
         public async Task<bool> ExisteUsuarioPorLogin(string login)
         {
-            return await _dbSet.AnyAsync(u => u.Login.Equals(login, StringComparison.OrdinalIgnoreCase));
+            return await _dbSet.AnyAsync(u => u.Login == login);
         }
     }
 }
