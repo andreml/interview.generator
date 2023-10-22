@@ -22,9 +22,9 @@ namespace interview.generator.application.Dto
         public string Senha { get; set; }
     }
 
-    public class AddUsuarioDtoValidator : AbstractValidator<AdicionarUsuarioDto>
+    public class AdicionarUsuarioDtoValidator : AbstractValidator<AdicionarUsuarioDto>
     {
-        public AddUsuarioDtoValidator()
+        public AdicionarUsuarioDtoValidator()
         {
             RuleFor(x => x.Cpf).NotNull().WithMessage("Cpf é obrigatório");
 
