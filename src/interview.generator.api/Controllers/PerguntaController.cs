@@ -78,5 +78,33 @@ namespace interview.generator.api.Controllers
                 });
             }
         }
+
+        /// <summary>
+        /// Adiciona nova pergunta
+        /// </summary>
+        [HttpPost("AlterarPergunta")]
+        [Authorize(Roles = $"{Perfis.Avaliador}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> AlterarPergunta(AlterarPerguntaDto pergunta)
+        {
+            try
+            {
+                var usuarioId = ObterUsuarioIdLogado();
+
+                var result = await _perguntaService.AlterarPergunta(pergunta, usuarioId);
+
+                return Response(result);
+            }
+            catch (Exception e)
+            {
+                return StatusCode((int)HttpStatusCode.BadRequest, new ResponseErro()
+                {
+                    Codigo = (int)HttpStatusCode.BadRequest,
+                    Mensagem = "Erro ao alterar pergunta",
+                    Excecao = e.Message
+                });
+            }
+        }
     }
 }

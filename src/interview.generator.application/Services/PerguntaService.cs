@@ -18,6 +18,44 @@ namespace interview.generator.application.Services
             _areaConhecimentoRepositorio = areaConhecimentoRepositorio;
         }
 
+        public async Task<ResponseBase> AlterarPergunta(AlterarPerguntaDto perguntaDto, Guid usuarioId)
+        {
+            var response = new ResponseBase();
+
+            var pergunta = await _perguntaRepositorio.ObterPerguntaPorId(usuarioId, perguntaDto.Id);
+
+            if(pergunta == null)
+            {
+                response.AddErro("Pergunta não encontrada");
+                return response;
+            }
+
+            var areaConhecimento = await _areaConhecimentoRepositorio.ObterPorIdEUsuarioId(perguntaDto.AreaConhecimentoId, usuarioId);
+
+            if (areaConhecimento == null)
+            {
+                response.AddErro("Id de areaConhecimendo inválido");
+                return response;
+            }
+
+            //TODO: Validar se existem questionários com a pergunta
+
+            //TODO: Obter ou Criar AreaConhecimento
+
+            pergunta.Descricao = perguntaDto.Descricao;
+            pergunta.AreaConhecimento = areaConhecimento;
+
+            pergunta.RemoverAlternativas();
+
+            foreach (var alternativa in perguntaDto.Alternativas)
+                pergunta.AdicionarAlternativa(new Alternativa(alternativa.Descricao, alternativa.Correta));
+
+            await _perguntaRepositorio.Alterar(pergunta);
+
+            response.AddData("Pergunta alterada com sucesso!");
+            return response;
+        }
+
         public async Task<ResponseBase> CadastrarPergunta(AdicionarPerguntaDto pergunta, Guid usuarioId)
         {
             var response = new ResponseBase();
@@ -30,14 +68,13 @@ namespace interview.generator.application.Services
             }
 
             var areaConhecimento = await _areaConhecimentoRepositorio.ObterPorIdEUsuarioId(pergunta.AreaConhecimentoId, usuarioId);
-
             if(areaConhecimento == null)
             {
                 response.AddErro("Id de areaConhecimendo inválido");
                 return response;
             }
 
-            //verificar se areaConhecimentoExiste
+            //TODO: Obter ou Criar AreaConhecimento
 
             var novaPergunta = new Pergunta(areaConhecimento, pergunta.Descricao, usuarioId);
 
@@ -55,6 +92,9 @@ namespace interview.generator.application.Services
             var response = new ResponseBase<IEnumerable<PerguntaViewModel>>();
 
             var perguntas = _perguntaRepositorio.ObterPerguntas(userId, perguntaId, areaConhecimento, descricao);
+
+            if(perguntas.Count() == 0)
+                return response;
 
             var perguntasViewModel =
                 perguntas
