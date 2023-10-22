@@ -19,6 +19,29 @@ namespace interview.generator.api.Controllers
             _perguntaService = perguntaService;
         }
 
+        [HttpGet("ObterTodos")]
+        [Authorize(Roles = $"{Perfis.Avaliador}")]
+        public IActionResult ObterUsuariosAsync()
+        {
+            try
+            {
+                var userId = ObterUsuarioIdLogado();
+
+                var result = _perguntaService.ListarPerguntasPorUsuario(userId);
+
+                return Response(result);
+            }
+            catch (Exception e)
+            {
+                return StatusCode((int)HttpStatusCode.BadRequest, new ResponseErro()
+                {
+                    Codigo = (int)HttpStatusCode.BadRequest,
+                    Mensagem = e.Message,
+                    Excecao = "Erro ao obter perguntas"
+                });
+            }
+        }
+
         [HttpPost("AdicionarPergunta")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
         public async Task<IActionResult> AdicionarUsuario(AdicionarPerguntaDto pergunta)

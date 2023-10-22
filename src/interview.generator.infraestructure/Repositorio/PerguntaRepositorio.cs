@@ -20,31 +20,18 @@ namespace interview.generator.infraestructure.Repositorio
             await _context.Pergunta.AddAsync(entity);
             await _context.SaveChangesAsync();
         }
-
-        public Task Alterar(Pergunta entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task Excluir(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<bool> ExistePorDescricao(string descricao, Guid usuarioId)
         {
             return await _context.Pergunta.AnyAsync(x => x.UsuarioCriacaoId == usuarioId 
                                                          && x.Descricao == descricao);
         }
 
-        public Task<Pergunta?> ObterPorId(Guid id)
+        public IEnumerable<Pergunta> ObterTodasPorUsuarioId(Guid usuarioId)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<Pergunta>> ObterTodos()
-        {
-            throw new NotImplementedException();
+            return _context.Pergunta
+                        .Include(x => x.AreaConhecimento)
+                        .Include(x => x.Alternativas)
+                        .Where(x => x.UsuarioCriacaoId == usuarioId);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using interview.generator.application.Dto;
 using interview.generator.application.Interfaces;
+using interview.generator.application.ViewModels;
 using interview.generator.domain.Entidade;
 using interview.generator.domain.Entidade.Common;
 using interview.generator.domain.Repositorio;
@@ -46,6 +47,27 @@ namespace interview.generator.application.Services
             await _perguntaRepositorio.Adicionar(novaPergunta);
 
             response.AddData("Pergunta adicionada com sucesso!");
+            return response;
+        }
+
+        public ResponseBase<IEnumerable<PerguntaViewModel>> ListarPerguntasPorUsuario(Guid userId)
+        {
+            var response = new ResponseBase<IEnumerable<PerguntaViewModel>>();
+
+            var perguntas = _perguntaRepositorio.ObterTodasPorUsuarioId(userId);
+
+            var perguntasViewModel =
+                perguntas
+                    .Select(p => new PerguntaViewModel()
+                    {
+                        Id = p.Id,
+                        Areaconhecimento = p.AreaConhecimento.Descricao,
+                        Descricao = p.Descricao,
+                        Alternativas = p.Alternativas.Select(a => new AlternativaViewModel(a.Descricao, a.Correta)).ToList()
+                    });
+
+            response.AddData(perguntasViewModel);
+
             return response;
         }
     }
