@@ -1,8 +1,6 @@
-﻿using Azure.Core;
-using interview.generator.domain.Entidade.Common;
+﻿using interview.generator.domain.Entidade.Common;
 using interview.generator.domain.Enum;
 using interview.generator.domain.Utils;
-using System.Security.Claims;
 
 namespace interview.generator.domain.Entidade
 {
