@@ -47,7 +47,7 @@ namespace interview.generator.application.Services
                 }
             }
 
-            usuario.Atualizar(usuarioDto.Cpf, usuarioDto.Nome, usuarioDto.Perfil, usuarioDto.Login, usuarioDto.Senha);
+            usuario.Atualizar(usuarioDto.Cpf, usuarioDto.Nome, usuarioDto.Login, usuarioDto.Senha);
 
             await _repositorio.Alterar(usuario);
 

@@ -38,11 +38,10 @@ namespace interview.generator.domain.Entidade
             }
         }
 
-        public void Atualizar(string cpf, string nome, Perfil perfil, string login, string senha)
+        public void Atualizar(string cpf, string nome, string login, string senha)
         {
             Cpf = cpf;
             Nome = nome;
-            Perfil = perfil;
             Login = login;
             Senha = Encryptor.Encrypt(senha);
         }

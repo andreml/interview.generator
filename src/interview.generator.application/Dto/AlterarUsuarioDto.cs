@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using interview.generator.domain.Enum;
 using interview.generator.domain.Utils;
 
 namespace interview.generator.application.Dto
@@ -9,7 +8,6 @@ namespace interview.generator.application.Dto
         public Guid Id { get; set; }
         public string Cpf { get; set; } = default!;
         public string Nome { get; set; } = default!;
-        public Perfil Perfil { get; set; } = default!;
         public string Login { get; set; } = default!;
         public string Senha { get; set; } = default!;
     }
