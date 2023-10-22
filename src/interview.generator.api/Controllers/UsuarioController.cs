@@ -1,6 +1,5 @@
 ﻿using interview.generator.application.Dto;
 using interview.generator.application.Interfaces;
-using interview.generator.domain.Entidade;
 using interview.generator.domain.Entidade.Common;
 using interview.generator.domain.Enum;
 using Microsoft.AspNetCore.Authorization;
@@ -81,11 +80,15 @@ namespace interview.generator.api.Controllers
             }
         }
 
+        [Authorize]
         [HttpPut("AlterarUsuario")]
         public async Task<IActionResult> AlterarUsuario(AlterarUsuarioDto usuario)
         {
             try
             {
+                if (ObterUsuarioIdLogado() != usuario.Id)
+                    return Unauthorized();
+
                 var result = await _usuarioService.AlterarUsuario(usuario);
 
                 return Response(result);
