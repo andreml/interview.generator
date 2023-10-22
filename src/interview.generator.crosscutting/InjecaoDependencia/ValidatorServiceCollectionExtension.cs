@@ -8,7 +8,7 @@ namespace interview.generator.crosscutting.InjecaoDependencia
     {
         public static IServiceCollection AddValidators(this IServiceCollection service)
         {
-            service.AddScoped<IValidator<AdicionarUsuarioDto>, AddUsuarioDtoValidator>();
+            service.AddScoped<IValidator<AdicionarUsuarioDto>, AdicionarUsuarioDtoValidator>();
             service.AddScoped<IValidator<AlterarUsuarioDto>, AlterarUsuarioDtoValidator>();
 
             return service;
