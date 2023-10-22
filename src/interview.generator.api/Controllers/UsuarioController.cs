@@ -1,5 +1,6 @@
 ﻿using interview.generator.application.Dto;
 using interview.generator.application.Interfaces;
+using interview.generator.application.ViewModels;
 using interview.generator.domain.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,8 +18,13 @@ namespace interview.generator.api.Controllers
             _usuarioService = usuarioService;
         }
 
+        /// <summary>
+        /// Obtém todos os usuários (Necessário estar autenticado com usuário Avaliador)
+        /// </summary>
         [HttpGet("ObterTodos")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
+        [ProducesResponseType(typeof(IEnumerable<UsuarioViewModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> ObterUsuariosAsync()
         {
             try
@@ -33,7 +39,14 @@ namespace interview.generator.api.Controllers
             }
         }
 
+        /// <summary>
+        /// Obtém usuário por Id
+        /// </summary>
+        /// <param name="id">Id do usuário</param>
+        /// <returns></returns>
         [HttpGet("ObterPorId/{id}")]
+        [ProducesResponseType(typeof(UsuarioViewModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> ObterPorId(Guid id)
         {
             try
@@ -48,7 +61,13 @@ namespace interview.generator.api.Controllers
             }
         }
 
+        /// <summary>
+        /// Adicionar um novo usuário
+        /// </summary>
+        /// <returns></returns>
         [HttpPost("AdicionarUsuario")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AdicionarUsuario(AdicionarUsuarioDto usuario)
         {
             try
@@ -63,8 +82,14 @@ namespace interview.generator.api.Controllers
             }
         }
 
+        /// <summary>
+        /// Altera um usuário existente
+        /// </summary>
+        /// <returns></returns>
         [Authorize]
         [HttpPut("AlterarUsuario")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AlterarUsuario(AlterarUsuarioDto usuario)
         {
             try
