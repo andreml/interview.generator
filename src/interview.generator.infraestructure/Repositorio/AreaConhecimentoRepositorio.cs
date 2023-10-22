@@ -34,7 +34,7 @@ namespace interview.generator.infraestructure.Repositorio
             var result = ObterPorId(id).Result;
             if (result is null) throw new Exception("Area de conhecimento não encontrada");
 
-            _dbSet.Remove(result);
+            _context.Remove(result);
             return Task.CompletedTask;
         }
 

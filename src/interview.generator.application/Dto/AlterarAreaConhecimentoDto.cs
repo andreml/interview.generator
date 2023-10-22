@@ -10,6 +10,6 @@ namespace interview.generator.application.Dto
     {
         public string Descricao { get; set; } = default!;
 
-        public Guid Id { get; set; } = default!;
+        public Guid Id { get; set; }
     }
 }

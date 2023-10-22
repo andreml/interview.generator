@@ -11,7 +11,7 @@ using System.Net;
 
 namespace interview.generator.api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class AreaConhecimentoController : BaseController
     {
@@ -117,9 +117,6 @@ namespace interview.generator.api.Controllers
         {
             try
             {
-                //if (ObterUsuarioIdLogado() != usuario.Id)
-                //    return Unauthorized();
-
                 var result = await _areaConhecimentoService.ExcluirAreaConhecimento(id);
 
                 return Response(result);
