@@ -50,11 +50,11 @@ namespace interview.generator.application.Services
             return response;
         }
 
-        public ResponseBase<IEnumerable<PerguntaViewModel>> ListarPerguntasPorUsuario(Guid userId)
+        public ResponseBase<IEnumerable<PerguntaViewModel>> ListarPerguntas(Guid userId, Guid perguntaId, string? areaConhecimento, string? descricao)
         {
             var response = new ResponseBase<IEnumerable<PerguntaViewModel>>();
 
-            var perguntas = _perguntaRepositorio.ObterTodasPorUsuarioId(userId);
+            var perguntas = _perguntaRepositorio.ObterPerguntas(userId, perguntaId, areaConhecimento, descricao);
 
             var perguntasViewModel =
                 perguntas

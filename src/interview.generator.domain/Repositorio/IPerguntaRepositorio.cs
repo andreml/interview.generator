@@ -6,6 +6,6 @@ namespace interview.generator.domain.Repositorio
     {
         Task Adicionar(Pergunta entity);
         Task<bool> ExistePorDescricao(string descricao, Guid usuarioId);
-        IEnumerable<Pergunta> ObterTodasPorUsuarioId(Guid usuarioId);
+        IEnumerable<Pergunta> ObterPerguntas(Guid usuarioId, Guid perguntaId, string? areaConhecimento, string? descricao);
     }
 }

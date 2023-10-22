@@ -26,12 +26,17 @@ namespace interview.generator.infraestructure.Repositorio
                                                          && x.Descricao == descricao);
         }
 
-        public IEnumerable<Pergunta> ObterTodasPorUsuarioId(Guid usuarioId)
+        public IEnumerable<Pergunta> ObterPerguntas(Guid usuarioId, Guid perguntaId, string? areaConhecimento, string? descricao)
         {
             return _context.Pergunta
                         .Include(x => x.AreaConhecimento)
                         .Include(x => x.Alternativas)
-                        .Where(x => x.UsuarioCriacaoId == usuarioId);
+                        .Where(x =>
+                            x.UsuarioCriacaoId == usuarioId
+                            && (perguntaId == Guid.Empty || x.Id == perguntaId)
+                            && (areaConhecimento == null || x.AreaConhecimento.Descricao.Contains(areaConhecimento!))
+                            && (descricao == null || x.Descricao.Contains(descricao!))
+                        );
         }
     }
 }

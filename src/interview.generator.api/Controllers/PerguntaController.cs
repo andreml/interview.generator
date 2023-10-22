@@ -19,15 +19,15 @@ namespace interview.generator.api.Controllers
             _perguntaService = perguntaService;
         }
 
-        [HttpGet("ObterTodos")]
+        [HttpGet("ObterPerguntas")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
-        public IActionResult ObterUsuariosAsync()
+        public IActionResult ObterPerguntas([FromQuery] Guid perguntaId, [FromQuery] string? areaConhecimento, [FromQuery] string? descricao)
         {
             try
             {
                 var userId = ObterUsuarioIdLogado();
 
-                var result = _perguntaService.ListarPerguntasPorUsuario(userId);
+                var result = _perguntaService.ListarPerguntas(userId, perguntaId, areaConhecimento, descricao);
 
                 return Response(result);
             }
