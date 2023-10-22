@@ -3,10 +3,6 @@ using interview.generator.application.Interfaces;
 using interview.generator.domain.Entidade;
 using interview.generator.domain.Entidade.Common;
 using interview.generator.domain.Repositorio;
-using interview.generator.domain.Utils;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Identity.Client.Utils.Windows;
-using System.Text.RegularExpressions;
 
 namespace interview.generator.application.Services
 {
@@ -30,14 +26,27 @@ namespace interview.generator.application.Services
                 return response;
             }
 
-            var usuarioPorCpf = await _repositorio.ObterUsuarioPorCpf(usuarioDto.Cpf);
-            if(usuarioPorCpf != null && usuarioPorCpf.Id != usuario.Id)
+            if (!usuarioDto.Cpf.Equals(usuario.Cpf))
             {
-                response.AddErro("Já existe um usuário com este CPF");
-                return response;
+                var usuarioPorCpf = await _repositorio.ExisteUsuarioPorCpf(usuarioDto.Cpf);
+                if (usuarioPorCpf)
+                {
+                    response.AddErro("Já existe um usuário com este CPF");
+                    return response;
+                }
             }
 
-            usuario.Atualizar(usuarioDto.Cpf, usuarioDto.Nome, usuarioDto.Perfil);
+            if (!usuarioDto.Login.Equals(usuario.Login))
+            {
+                var usuarioPorLogin = await _repositorio.ExisteUsuarioPorLogin(usuarioDto.Login);
+                if (usuarioPorLogin)
+                {
+                    response.AddErro("Já existe um usuário com este Login");
+                    return response;
+                }
+            }
+
+            usuario.Atualizar(usuarioDto.Cpf, usuarioDto.Nome, usuarioDto.Perfil, usuarioDto.Login, usuarioDto.Senha);
 
             await _repositorio.Alterar(usuario);
 
@@ -49,22 +58,21 @@ namespace interview.generator.application.Services
         {
             var response = new ResponseBase();
 
-            var usuarioPorCpf = _repositorio.ObterUsuarioPorCpf(usuario.Cpf);
-
-            if (usuarioPorCpf != null)
+            var usuarioPorCpf = await _repositorio.ExisteUsuarioPorCpf(usuario.Cpf);
+            if (usuarioPorCpf)
             {
                 response.AddErro("Já existe um usuário com este CPF.");
                 return response;
             }
 
-            var novoUsuario = new Usuario()
+            var usuarioPorLogin = await _repositorio.ExisteUsuarioPorLogin(usuario.Login);
+            if (usuarioPorLogin)
             {
-                Nome = usuario.Nome,
-                Perfil = usuario.Perfil,
-                Cpf = usuario.Cpf,
-                Login = usuario.Login,
-                Senha = Encryptor.Encrypt(usuario.Senha)
-            };
+                response.AddErro("Já existe um usuário com este Login.");
+                return response;
+            }
+
+            var novoUsuario = new Usuario(usuario.Cpf, usuario.Nome, usuario.Perfil, usuario.Login, usuario.Senha);
 
             await _repositorio.Adicionar(novoUsuario);
 
