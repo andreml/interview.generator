@@ -56,5 +56,8 @@ namespace interview.generator.api.Controllers
 
             return StatusCode((int)status, result.Data);
         }
+
+        protected Guid ObterUsuarioIdLogado() =>
+            Guid.Parse(User.Claims.FirstOrDefault(x => x.Type == "Id")!.Value);
     }
 }
