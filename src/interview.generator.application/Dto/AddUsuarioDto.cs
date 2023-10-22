@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
 using interview.generator.domain.Enum;
 using interview.generator.domain.Utils;
-using System.Net.Mail;
 
 namespace interview.generator.application.Dto
 {
@@ -16,8 +15,8 @@ namespace interview.generator.application.Dto
             Senha = senha;
         }
 
-        public string Cpf { get; set; } = default!;
-        public string Nome { get; set; } = default!;
+        public string Cpf { get; set; }
+        public string Nome { get; set; }
         public Perfil Perfil { get; set; }
         public string Login { get; set; }
         public string Senha { get; set; }
@@ -28,8 +27,27 @@ namespace interview.generator.application.Dto
         public AddUsuarioDtoValidator()
         {
             RuleFor(x => x.Cpf).NotNull().WithMessage("Cpf é obrigatório");
-            RuleFor(x => x.Cpf).Must(document => ValidateDocument.IsCpf(document)).WithMessage("Documento inválido");
-            RuleFor(x => x.Nome).NotNull().WithMessage("Nome é obrigatório");
+
+            RuleFor(x => x.Cpf).Must(ValidateDocument.IsCpf).WithMessage("Documento inválido");
+
+            RuleFor(x => x.Nome)
+                .NotNull()
+                .NotEmpty()
+                .WithMessage("Nome é obrigatório")
+                .MaximumLength(30)
+                .WithMessage("Login deve ter até 100 caracteres");
+
+            RuleFor(x => x.Login)
+                .NotNull()
+                .NotEmpty()
+                .WithMessage("Login é obrigatório")
+                .MaximumLength(30)
+                .WithMessage("Login deve ter até 30 caracteres");
+
+            RuleFor(x => x.Senha)
+                .NotNull()
+                .NotEmpty()
+                .WithMessage("Senha é obrigatória");
         }
     }
 }
