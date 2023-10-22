@@ -12,4 +12,4 @@ services:
         SA_PASSWORD: "interview@2023"
         ACCEPT_EULA: "Y"
     networks:
-      - 127.0.0.1
+      - interviewgenerator-network
