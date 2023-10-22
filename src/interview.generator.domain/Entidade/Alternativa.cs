@@ -11,5 +11,11 @@ namespace interview.generator.domain.Entidade
         public Alternativa()
         {    
         }
+
+        public Alternativa(string descricao, bool correta)
+        {
+            Correta = correta;
+            Descricao = descricao;
+        }
     }
 }
