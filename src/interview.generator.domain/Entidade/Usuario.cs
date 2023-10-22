@@ -1,6 +1,7 @@
 ﻿using Azure.Core;
 using interview.generator.domain.Entidade.Common;
 using interview.generator.domain.Enum;
+using interview.generator.domain.Utils;
 using System.Security.Claims;
 
 namespace interview.generator.domain.Entidade
@@ -17,6 +18,15 @@ namespace interview.generator.domain.Entidade
         {
         }
 
+        public Usuario(string cpf, string nome, Perfil perfil, string login, string senha)
+        {
+            Cpf = cpf;
+            Nome = nome;
+            Perfil = perfil;
+            Login = login;
+            Senha = Encryptor.Encrypt(senha);
+        }
+
         public DateTime VerificaValidadeTokenCandidato()
         {
             switch (this.Perfil)
@@ -30,11 +40,13 @@ namespace interview.generator.domain.Entidade
             }
         }
 
-        public void Atualizar(string cpf, string nome, Perfil perfil)
+        public void Atualizar(string cpf, string nome, Perfil perfil, string login, string senha)
         {
             Cpf = cpf;
             Nome = nome;
             Perfil = perfil;
+            Login = login;
+            Senha = Encryptor.Encrypt(senha);
         }
     }
 }
