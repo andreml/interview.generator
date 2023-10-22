@@ -1,5 +1,6 @@
 ﻿using interview.generator.application.Dto;
 using interview.generator.application.Interfaces;
+using interview.generator.application.ViewModels;
 using interview.generator.domain.Entidade.Common;
 using interview.generator.domain.Enum;
 using Microsoft.AspNetCore.Authorization;
@@ -19,8 +20,16 @@ namespace interview.generator.api.Controllers
             _perguntaService = perguntaService;
         }
 
+        /// <summary>
+        /// Obtém perguntas cadastradas pelo usuário (Avaliador)
+        /// </summary>
+        /// <param name="perguntaId">Id da Pergunta (Opcional)</param>
+        /// <param name="areaConhecimento">Area de conhecimento (Opcional)</param>
+        /// <param name="descricao">Pergunta (Opcional)</param>
         [HttpGet("ObterPerguntas")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
+        [ProducesResponseType(typeof(IEnumerable<PerguntaViewModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public IActionResult ObterPerguntas([FromQuery] Guid perguntaId, [FromQuery] string? areaConhecimento, [FromQuery] string? descricao)
         {
             try
@@ -42,9 +51,14 @@ namespace interview.generator.api.Controllers
             }
         }
 
+        /// <summary>
+        /// Adiciona nova pergunta
+        /// </summary>
         [HttpPost("AdicionarPergunta")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
-        public async Task<IActionResult> AdicionarUsuario(AdicionarPerguntaDto pergunta)
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> AdicionarPergunta(AdicionarPerguntaDto pergunta)
         {
             try
             {

@@ -2,7 +2,7 @@
 {
     public class PerguntaViewModel
     {
-        public Guid Id { get; set; } = default!;
+        public Guid Id { get; set; }
         public string Areaconhecimento { get; set; } = default!;
         public string Descricao { get; set; } = default!;
         public ICollection<AlternativaViewModel> Alternativas { get; set; } = default!;

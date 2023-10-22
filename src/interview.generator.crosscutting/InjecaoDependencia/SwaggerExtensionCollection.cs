@@ -9,6 +9,10 @@ namespace interview.generator.crosscutting.InjecaoDependencia
         {
             services.AddSwaggerGen(c =>
             {
+                var xmlFile = "interview.generator.api.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+
                 c.SwaggerDoc("v1", new OpenApiInfo()
                 {
                     Title = "Interview Generator API",
