@@ -1,11 +1,6 @@
 ﻿using interview.generator.application.Dto;
-using interview.generator.domain.Entidade.Common;
 using interview.generator.domain.Entidade;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using interview.generator.domain.Entidade.Common;
 
 namespace interview.generator.application.Interfaces
 {
@@ -17,5 +12,6 @@ namespace interview.generator.application.Interfaces
         Task<ResponseBase> AlterarAreaConhecimento(AlterarAreaConhecimentoDto areaConhecimento, Guid usuarioId);
         Task<ResponseBase> ExcluirAreaConhecimento(Guid id);
         Task<ResponseBase<AreaConhecimento>> ObterAreaConhecimentoPorDescricao(string descricao);
+        Task<AreaConhecimento> ObterOuCriarAreaConhecimento(Guid usuarioId, string descricao);
     }
 }

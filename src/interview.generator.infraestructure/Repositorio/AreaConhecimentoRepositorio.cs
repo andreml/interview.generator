@@ -53,6 +53,11 @@ namespace interview.generator.infraestructure.Repositorio
             return await _context.AreaConhecimento.FirstOrDefaultAsync(x => x.Id == id && x.UsuarioId == usuarioId);
         }
 
+        public async Task<AreaConhecimento?> ObterPorDescricaoEUsuarioId(string descricao, Guid usuarioId)
+        {
+            return await _context.AreaConhecimento.FirstOrDefaultAsync(x => x.Descricao == descricao && x.UsuarioId == usuarioId);
+        }
+
         public async Task<IEnumerable<AreaConhecimento>> ObterTodos()
         {
             var result = _dbSet.ToListAsync().Result;

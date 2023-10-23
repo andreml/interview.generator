@@ -3,12 +3,6 @@ using interview.generator.application.Interfaces;
 using interview.generator.domain.Entidade;
 using interview.generator.domain.Entidade.Common;
 using interview.generator.domain.Repositorio;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace interview.generator.application.Services
 {
@@ -106,5 +100,19 @@ namespace interview.generator.application.Services
 
             return response;
         }
+        public async Task<AreaConhecimento> ObterOuCriarAreaConhecimento(Guid usuarioId, string descricao)
+        {
+            var areaConhecimento = await _areaConhecimentoRepositorio.ObterPorDescricaoEUsuarioId(descricao, usuarioId);
+
+            if (areaConhecimento != null)
+                return areaConhecimento;
+
+            areaConhecimento = new AreaConhecimento { Descricao = descricao, UsuarioId = usuarioId };
+
+            await _areaConhecimentoRepositorio.Adicionar(areaConhecimento);
+
+            return areaConhecimento;
+        }
+
     }
 }

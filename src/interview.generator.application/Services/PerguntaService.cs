@@ -12,10 +12,13 @@ namespace interview.generator.application.Services
         private readonly IPerguntaRepositorio _perguntaRepositorio;
         private readonly IAreaConhecimentoRepositorio _areaConhecimentoRepositorio;
 
-        public PerguntaService(IPerguntaRepositorio perguntaRepositorio, IAreaConhecimentoRepositorio areaConhecimentoRepositorio)
+        private readonly IAreaConhecimentoService _areaConhecimentoService;
+
+        public PerguntaService(IPerguntaRepositorio perguntaRepositorio, IAreaConhecimentoRepositorio areaConhecimentoRepositorio, IAreaConhecimentoService areaConhecimentoService)
         {
             _perguntaRepositorio = perguntaRepositorio;
             _areaConhecimentoRepositorio = areaConhecimentoRepositorio;
+            _areaConhecimentoService = areaConhecimentoService;
         }
 
         public async Task<ResponseBase> AlterarPergunta(AlterarPerguntaDto perguntaDto, Guid usuarioId)
@@ -30,17 +33,9 @@ namespace interview.generator.application.Services
                 return response;
             }
 
-            var areaConhecimento = await _areaConhecimentoRepositorio.ObterPorIdEUsuarioId(perguntaDto.AreaConhecimentoId, usuarioId);
-
-            if (areaConhecimento == null)
-            {
-                response.AddErro("Id de areaConhecimendo inválido");
-                return response;
-            }
+            var areaConhecimento = await _areaConhecimentoService.ObterOuCriarAreaConhecimento(usuarioId, perguntaDto.AreaConhecimento);
 
             //TODO: Validar se existem questionários com a pergunta
-
-            //TODO: Obter ou Criar AreaConhecimento
 
             pergunta.Descricao = perguntaDto.Descricao;
             pergunta.AreaConhecimento = areaConhecimento;
@@ -67,14 +62,7 @@ namespace interview.generator.application.Services
                 return response;
             }
 
-            var areaConhecimento = await _areaConhecimentoRepositorio.ObterPorIdEUsuarioId(pergunta.AreaConhecimentoId, usuarioId);
-            if(areaConhecimento == null)
-            {
-                response.AddErro("Id de areaConhecimendo inválido");
-                return response;
-            }
-
-            //TODO: Obter ou Criar AreaConhecimento
+            var areaConhecimento = await _areaConhecimentoService.ObterOuCriarAreaConhecimento(usuarioId, pergunta.AreaConhecimento);
 
             var novaPergunta = new Pergunta(areaConhecimento, pergunta.Descricao, usuarioId);
 

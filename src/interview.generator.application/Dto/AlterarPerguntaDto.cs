@@ -6,7 +6,7 @@ namespace interview.generator.application.Dto
     {
         public Guid Id { get; set; }
         public string Descricao { get; set; } = default!;
-        public Guid AreaConhecimentoId { get; set; } = default!;
+        public string AreaConhecimento { get; set; } = default!;
         public ICollection<AlterarAlternativaDto> Alternativas { get; set; } = default!;
     }
 
@@ -27,9 +27,10 @@ namespace interview.generator.application.Dto
                 .NotNull().NotEmpty().WithMessage("Descricao é obrigatório")
                 .MaximumLength(1000).WithMessage("Descrição deve ter até 1000 caracteres");
 
-            RuleFor(x => x.AreaConhecimentoId)
+            RuleFor(x => x.AreaConhecimento)
                 .NotNull().NotEmpty()
-                .WithMessage("AreaConhecimentoId é obrigatória");
+                .WithMessage("AreaConhecimento é obrigatória")
+                .MaximumLength(100).WithMessage("AreaConhecimento deve tera até 100 caracteres");
 
 
             RuleFor(x => x.Alternativas)
