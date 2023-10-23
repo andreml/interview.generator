@@ -51,7 +51,9 @@ namespace interview.generator.api.Controllers
         {
             try
             {
-                var result = await _areaConhecimentoService.ListarAreasConhecimento();
+                var usuarioId = ObterUsuarioIdLogado();
+
+                var result = await _areaConhecimentoService.ListarAreasConhecimento(usuarioId);
 
                 return Response(result);
             }

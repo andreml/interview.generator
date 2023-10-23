@@ -1,5 +1,6 @@
 ﻿using interview.generator.application.Dto;
 using interview.generator.application.Interfaces;
+using interview.generator.application.ViewModels;
 using interview.generator.domain.Entidade;
 using interview.generator.domain.Entidade.Common;
 using interview.generator.domain.Repositorio;
@@ -80,38 +81,58 @@ namespace interview.generator.application.Services
             return response;
         }
 
-        public async Task<ResponseBase<IEnumerable<AreaConhecimento>>> ListarAreasConhecimento()
+        public async Task<ResponseBase<IEnumerable<AreaConhecimentoViewModel>>> ListarAreasConhecimento(Guid usuarioId)
         {
-            var response = new ResponseBase<IEnumerable<AreaConhecimento>>();
+            var response = new ResponseBase<IEnumerable<AreaConhecimentoViewModel>>();
 
-            var usuarios = await _areaConhecimentoRepositorio.ObterTodos();
+            var areasConhecimento = await _areaConhecimentoRepositorio.ObterTodosPorUsuarioIdComPerguntas(usuarioId);
 
-            response.AddData(usuarios);
+            if (areasConhecimento == null)
+                return response;
+
+            var areasViewModel = areasConhecimento
+                                    .Select(x => new AreaConhecimentoViewModel(x.Id, x.Descricao, x.Perguntas!.Count))
+                                    .ToList();
+
+            response.AddData(areasViewModel);
 
             return response;
         }
 
-        public async Task<ResponseBase<AreaConhecimento>> ObterAreaConhecimento(Guid id)
+        public async Task<ResponseBase<AreaConhecimentoViewModel>> ObterAreaConhecimento(Guid id)
         {
-            var response = new ResponseBase<AreaConhecimento>();
+            var response = new ResponseBase<AreaConhecimentoViewModel>();
 
             var areaConhecimento = await _areaConhecimentoRepositorio.ObterPorId(id);
 
-            response.AddData(areaConhecimento!);
+            if (areaConhecimento == null)
+                return response;
+
+            response.AddData(new AreaConhecimentoViewModel(
+                                        areaConhecimento.Id,
+                                        areaConhecimento.Descricao,
+                                        areaConhecimento.Perguntas!.Count));
 
             return response;
         }
 
-        public async Task<ResponseBase<AreaConhecimento>> ObterAreaConhecimentoPorDescricao(string descricao)
+        public async Task<ResponseBase<AreaConhecimentoViewModel>> ObterAreaConhecimentoPorDescricao(string descricao)
         {
-            var response = new ResponseBase<AreaConhecimento>();
+            var response = new ResponseBase<AreaConhecimentoViewModel>();
 
             var areaConhecimento = await _areaConhecimentoRepositorio.ObterPorDescricao(descricao);
 
-            response.AddData(areaConhecimento!);
+            if (areaConhecimento == null)
+                return response;
+
+            response.AddData(new AreaConhecimentoViewModel(
+                                        areaConhecimento.Id, 
+                                        areaConhecimento.Descricao, 
+                                        areaConhecimento.Perguntas!.Count));
 
             return response;
         }
+
         public async Task<AreaConhecimento> ObterOuCriarAreaConhecimento(Guid usuarioId, string descricao)
         {
             var areaConhecimento = await _areaConhecimentoRepositorio.ObterPorDescricaoEUsuarioId(descricao, usuarioId);

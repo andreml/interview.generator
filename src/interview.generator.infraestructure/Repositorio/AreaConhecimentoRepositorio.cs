@@ -40,7 +40,9 @@ namespace interview.generator.infraestructure.Repositorio
 
         public async Task<AreaConhecimento?> ObterPorDescricao(string descricao)
         {
-            return await _context.AreaConhecimento.FirstOrDefaultAsync(x => x.Descricao == descricao);
+            return await _context.AreaConhecimento
+                                .Include(x => x.Perguntas)
+                                .FirstOrDefaultAsync(x => x.Descricao == descricao);
         }
 
         public async Task<AreaConhecimento?> ObterPorId(Guid id)
@@ -69,6 +71,14 @@ namespace interview.generator.infraestructure.Repositorio
         {
             var result = _dbSet.ToListAsync().Result;
             return await Task.FromResult(result);
+        }
+
+        public async Task<IEnumerable<AreaConhecimento>> ObterTodosPorUsuarioIdComPerguntas(Guid usuarioId)
+        {
+            return await _dbSet
+                            .Include(x => x.Perguntas)
+                            .Where(x => x.UsuarioId == usuarioId)
+                            .ToListAsync();
         }
     }
 }
