@@ -57,11 +57,6 @@ namespace interview.generator.infraestructure.Repositorio
                             .FirstOrDefaultAsync(u => u.Id.Equals(id));
         }
 
-        public async Task<AreaConhecimento?> ObterPorIdEUsuarioId(Guid id, Guid usuarioId)
-        {
-            return await _context.AreaConhecimento.FirstOrDefaultAsync(x => x.Id == id && x.UsuarioId == usuarioId);
-        }
-
         public async Task<AreaConhecimento?> ObterPorDescricaoEUsuarioId(string descricao, Guid usuarioId)
         {
             return await _context.AreaConhecimento.FirstOrDefaultAsync(x => x.Descricao == descricao && x.UsuarioId == usuarioId);
@@ -73,11 +68,13 @@ namespace interview.generator.infraestructure.Repositorio
             return await Task.FromResult(result);
         }
 
-        public async Task<IEnumerable<AreaConhecimento>> ObterTodosPorUsuarioIdComPerguntas(Guid usuarioId)
+        public async Task<IEnumerable<AreaConhecimento>> ObterAreaConhecimentoComPerguntas(Guid usuarioId, Guid areaConhecimentoId, string? descricao)
         {
             return await _dbSet
                             .Include(x => x.Perguntas)
-                            .Where(x => x.UsuarioId == usuarioId)
+                            .Where(x => x.UsuarioId == usuarioId
+                                    && (areaConhecimentoId == Guid.Empty || areaConhecimentoId == x.Id)
+                                    && (string.IsNullOrEmpty(descricao) || x.Descricao.Contains(descricao)))
                             .ToListAsync();
         }
     }

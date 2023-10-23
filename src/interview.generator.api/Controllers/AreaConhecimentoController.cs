@@ -35,15 +35,21 @@ namespace interview.generator.api.Controllers
             }
         }
 
-        [HttpGet("ObterTodos")]
+        /// <summary>
+        /// Obtém areas de conhecimento cadastradas
+        /// </summary>
+        /// <param name="areaConhecimentoId">Id da Area de Conhecimento (opcional)</param>
+        /// <param name="descricao">Descrição da Area de Conhecimento (opcional)</param>
+        /// <returns></returns>
+        [HttpGet("ObterAreasConhecimento")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
-        public async Task<IActionResult> ObterAreasConhecimentoAsync()
+        public async Task<IActionResult> ObterAreasConhecimentoAsync([FromQuery] Guid areaConhecimentoId, [FromQuery] string? descricao)
         {
             try
             {
                 var usuarioId = ObterUsuarioIdLogado();
 
-                var result = await _areaConhecimentoService.ListarAreasConhecimento(usuarioId);
+                var result = await _areaConhecimentoService.ListarAreasConhecimento(usuarioId, areaConhecimentoId, descricao);
 
                 return Response(result);
             }
@@ -51,22 +57,7 @@ namespace interview.generator.api.Controllers
             {
                 return ResponseErro(e.Message, "Erro ao obter áreas de conhecimento");
             }
-        }
-
-        [HttpGet("ObterPorId/{id}")]
-        public async Task<IActionResult> ObterPorId(Guid id)
-        {
-            try
-            {
-                var result = await _areaConhecimentoService.ObterAreaConhecimento(id);
-
-                return Response(result);
-            }
-            catch (Exception e)
-            {
-                return ResponseErro(e.Message, "Erro ao realizar a consulta");
-            }
-        }
+        }  
 
         [Authorize]
         [HttpPut("AlterarAreaConhecimento")]
