@@ -21,7 +21,7 @@ namespace interview.generator.infraestructure.Repositorio
         }
         public async Task Alterar(RespostaAvaliacao entity)
         {
-            var respostaAvaliacao = await _context.RespostaAvaliacao.FindAsync(entity);
+            var respostaAvaliacao = await _context.RespostaAvaliacao.Where(x => x.Id.Equals(entity.Id)).FirstOrDefaultAsync();
             if (respostaAvaliacao is null) throw new Exception("Não foi possível alterar, Resposta da Avaliação não existe mais");
             _dbSet.Update(entity);
             await _context.SaveChangesAsync();
