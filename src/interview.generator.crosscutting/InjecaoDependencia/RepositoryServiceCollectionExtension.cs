@@ -17,6 +17,7 @@ namespace interview.generator.crosscutting.InjecaoDependencia
             service.AddSingleton<ILoginService, LoginService>();
             service.AddSingleton<IUsuarioService, UsuarioService>();
             service.AddSingleton<IPerguntaService, PerguntaService>();
+            service.AddSingleton<IAreaConhecimentoService, AreaConhecimentoService>();
 
 
             return service;
