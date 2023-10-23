@@ -48,6 +48,13 @@ namespace interview.generator.infraestructure.Repositorio
             return await _dbSet.FirstOrDefaultAsync(u => u.Id.Equals(id));
         }
 
+        public async Task<AreaConhecimento?> ObterPorIdComPerguntas(Guid id)
+        {
+            return await _dbSet
+                            .Include(x => x.Perguntas)
+                            .FirstOrDefaultAsync(u => u.Id.Equals(id));
+        }
+
         public async Task<AreaConhecimento?> ObterPorIdEUsuarioId(Guid id, Guid usuarioId)
         {
             return await _context.AreaConhecimento.FirstOrDefaultAsync(x => x.Id == id && x.UsuarioId == usuarioId);

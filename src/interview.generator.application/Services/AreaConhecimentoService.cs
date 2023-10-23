@@ -59,7 +59,19 @@ namespace interview.generator.application.Services
         {
             var response = new ResponseBase();
 
-            //Adicionar validações
+            var areaConhecimento = await _areaConhecimentoRepositorio.ObterPorIdComPerguntas(id);
+
+            if(areaConhecimento == null)
+            {
+                response.AddErro("Area de conhecimento não encontrada");
+                return response;
+            }
+
+            if(areaConhecimento.Perguntas!.Count > 0)
+            {
+                response.AddErro("Area de conhecimento possui uma ou mais perguntas relacionadas");
+                return response;
+            }
 
             await _areaConhecimentoRepositorio.Excluir(id);
 
