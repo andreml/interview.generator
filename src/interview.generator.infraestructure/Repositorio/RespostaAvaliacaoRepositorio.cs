@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace interview.generator.infraestructure.Repositorio
 {
-    public class RespostaAvaliacaoRepositorio : IRespostaAvaliacaoRepositorioRepositorio
+    public class RespostaAvaliacaoRepositorio : IRespostaAvaliacaoRepositorio
     {
         protected ApplicationDbContext _context;
         protected DbSet<RespostaAvaliacao> _dbSet;
@@ -14,7 +14,6 @@ namespace interview.generator.infraestructure.Repositorio
             _context = context;
             _dbSet = _context.Set<RespostaAvaliacao>();
         }
-
         public async Task Adicionar(RespostaAvaliacao entity)
         {
             await _context.RespostaAvaliacao.AddAsync(entity);
@@ -32,24 +31,10 @@ namespace interview.generator.infraestructure.Repositorio
             throw new NotImplementedException();
         }
         public async Task<RespostaAvaliacao?> ObterRespostaPorPergunta(Guid PerguntaId)
-        {
-            return await _context.RespostaAvaliacao
-                           .Include(x => x.PerguntaQuestionarioId)
-                           .Include(x => x.AlternativaEscolhidaId)
-                           .Where(x => x.PerguntaQuestionarioId == PerguntaId).FirstOrDefaultAsync();
-        }
+            => await _context.RespostaAvaliacao.Where(x => x.PerguntaQuestionarioId == PerguntaId).FirstOrDefaultAsync();
         public async Task<RespostaAvaliacao?> ObterPorId(Guid id)
-        {
-            return await _context.RespostaAvaliacao
-                           .Include(x => x.PerguntaQuestionarioId)
-                           .Include(x => x.AlternativaEscolhidaId)
-                           .Where(x => x.AvaliacaoId == id).FirstOrDefaultAsync();
-        }
+            => await _context.RespostaAvaliacao.Where(x => x.AvaliacaoId.Equals(id)).FirstOrDefaultAsync();
         public async Task<IEnumerable<RespostaAvaliacao>> ObterTodos()
-        {
-            return await _context.RespostaAvaliacao
-                           .Include(x => x.PerguntaQuestionarioId)
-                           .Include(x => x.AlternativaEscolhidaId).ToListAsync();
-        }
+            => await _context.RespostaAvaliacao.ToListAsync();
     }
 }

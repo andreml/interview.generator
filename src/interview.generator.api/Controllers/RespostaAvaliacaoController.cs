@@ -1,7 +1,5 @@
 ﻿using interview.generator.application.Dto;
 using interview.generator.application.Interfaces;
-using interview.generator.application.Services;
-using interview.generator.domain.Entidade;
 using interview.generator.domain.Entidade.Common;
 using interview.generator.domain.Enum;
 using Microsoft.AspNetCore.Authorization;
@@ -18,13 +16,13 @@ namespace interview.generator.api.Controllers
         readonly IRespostaAvaliacaoService _;
         public RespostaAvaliacaoController(IRespostaAvaliacaoService service) { _ = service; }
 
-        [HttpGet("ObterTodos")]
-        [Authorize(Roles = $"{Perfis.Avaliador}")]
-        public async Task<IActionResult> ObterRespostaAvaliacaoAsync()
+        [HttpGet("ObterRespostasPorAvaliacao/{avaliacaoId}")]
+        //[Authorize(Roles = $"{Perfis.Avaliador}")]
+        public async Task<IActionResult> ObterRespostaPorAvalicacaoAsync(Guid avaliacaoId)
         {
             try
             {
-                var result = await _.ObterRespostasAvaliacao();
+                var result = await _.ObterRespostasPorAvaliacao(avaliacaoId);
                 return Response(result);
             }
             catch (Exception e)
@@ -38,12 +36,13 @@ namespace interview.generator.api.Controllers
             }
         }
 
-        [HttpGet("ObterPorId/{id}")]
-        public async Task<IActionResult> ObterPorId(Guid avaliacaoId)
+        [HttpGet("ObterRespostasPorPergunta/{perguntaId}")]
+        //[Authorize(Roles = $"{Perfis.Avaliador}")]
+        public async Task<IActionResult> ObterRespostaPorPerguntaAsync(Guid perguntaId)
         {
             try
             {
-                var result = await _.ObterRespostaPorPergunta(avaliacaoId);
+                var result = await _.ObterRespostaPorPergunta(perguntaId);
                 return Response(result);
             }
             catch (Exception e)
@@ -57,13 +56,13 @@ namespace interview.generator.api.Controllers
             }
         }
 
-        [HttpPost("AdicionarUsuario")]
-        public async Task<IActionResult> AdicionarUsuario(AdicionarUsuarioDto usuario)
+        [HttpPost("AdicionarRespostaAvaliacao")]
+        //[Authorize(Roles = $"{Perfis.Avaliador}")]
+        public async Task<IActionResult> AdicionarRespostaAvaliacao(AdicionarRespostaAvaliacaoDto obj)
         {
             try
             {
-                var result = await _usuarioService.CadastrarUsuario(usuario);
-
+                var result = await _.AdicionarRespostaAvaliacao(obj);
                 return Response(result);
             }
             catch (Exception e)
@@ -77,16 +76,16 @@ namespace interview.generator.api.Controllers
             }
         }
 
-        [Authorize]
-        [HttpPut("AlterarUsuario")]
-        public async Task<IActionResult> AlterarUsuario(AlterarUsuarioDto usuario)
+        [HttpPut("AlterarRespostaAvaliacao")]
+        ///[Authorize(Roles = $"{Perfis.Avaliador}")]
+        public async Task<IActionResult> AlterarRespostaAvaliacao(AlterarRespostaAvaliacaoDto obj)
         {
             try
             {
-                if (ObterUsuarioIdLogado() != usuario.Id)
-                    return Unauthorized();
+                //if (ObterUsuarioIdLogado() != usuario.Id)
+                //    return Unauthorized();
 
-                var result = await _usuarioService.AlterarUsuario(usuario);
+                var result = await _.AlterarRespostaAvaliacao(obj);
 
                 return Response(result);
             }
@@ -97,6 +96,26 @@ namespace interview.generator.api.Controllers
                     Codigo = (int)HttpStatusCode.BadRequest,
                     Mensagem = e.Message,
                     Excecao = "Erro ao excluir o usuário"
+                });
+            }
+        }
+
+        [HttpGet("ObterTodasRespostas")]
+        //[Authorize(Roles = $"{Perfis.Avaliador}")]
+        public async Task<IActionResult> ObterTodasRespostaAvaliacao()
+        {
+            try
+            {
+                var result = await _.ObterTodos();
+                return Response(result);
+            }
+            catch (Exception e)
+            {
+                return StatusCode((int)HttpStatusCode.BadRequest, new ResponseErro()
+                {
+                    Codigo = (int)HttpStatusCode.BadRequest,
+                    Mensagem = e.Message,
+                    Excecao = "Erro ao realizar a consulta"
                 });
             }
         }
