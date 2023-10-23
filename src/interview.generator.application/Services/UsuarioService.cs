@@ -1,5 +1,6 @@
 ﻿using interview.generator.application.Dto;
 using interview.generator.application.Interfaces;
+using interview.generator.application.ViewModels;
 using interview.generator.domain.Entidade;
 using interview.generator.domain.Entidade.Common;
 using interview.generator.domain.Repositorio;
@@ -46,7 +47,7 @@ namespace interview.generator.application.Services
                 }
             }
 
-            usuario.Atualizar(usuarioDto.Cpf, usuarioDto.Nome, usuarioDto.Perfil, usuarioDto.Login, usuarioDto.Senha);
+            usuario.Atualizar(usuarioDto.Cpf, usuarioDto.Nome, usuarioDto.Login, usuarioDto.Senha);
 
             await _repositorio.Alterar(usuario);
 
@@ -94,24 +95,34 @@ namespace interview.generator.application.Services
             return response;
         }
 
-        public async Task<ResponseBase<IEnumerable<Usuario>>> ListarUsuarios()
+        public async Task<ResponseBase<IEnumerable<UsuarioViewModel>>> ListarUsuarios()
         {
-            var response = new ResponseBase<IEnumerable<Usuario>>();
+            var response = new ResponseBase<IEnumerable<UsuarioViewModel>>();
 
             var usuarios = await _repositorio.ObterTodos();
 
-            response.AddData(usuarios);
+            if (usuarios.Count() == 0)
+                return response;
+
+            var usuariosViewModel = usuarios
+                                        .Select(u => new UsuarioViewModel(u.Id, u.Nome, u.Cpf, u.Login, u.Perfil))
+                                        .ToList();
+
+            response.AddData(usuariosViewModel);
 
             return response;
         }
 
-        public async Task<ResponseBase<Usuario>> ObterUsuario(Guid id)
+        public async Task<ResponseBase<UsuarioViewModel>> ObterUsuario(Guid id)
         {
-            var response = new ResponseBase<Usuario>();
+            var response = new ResponseBase<UsuarioViewModel>();
 
             var usuario = await _repositorio.ObterPorId(id);
 
-            response.AddData(usuario!);
+            if (usuario == null)
+                return response;
+
+            response.AddData(new UsuarioViewModel(usuario.Id, usuario.Nome, usuario.Cpf, usuario.Login, usuario.Perfil));
 
             return response;
         }

@@ -20,31 +20,36 @@ namespace interview.generator.infraestructure.Repositorio
             await _context.Pergunta.AddAsync(entity);
             await _context.SaveChangesAsync();
         }
-
-        public Task Alterar(Pergunta entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task Excluir(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<bool> ExistePorDescricao(string descricao, Guid usuarioId)
         {
             return await _context.Pergunta.AnyAsync(x => x.UsuarioCriacaoId == usuarioId 
                                                          && x.Descricao == descricao);
         }
 
-        public Task<Pergunta?> ObterPorId(Guid id)
+        public async Task<Pergunta?> ObterPerguntaPorId(Guid usuarioId, Guid perguntaId)
         {
-            throw new NotImplementedException();
+            return await _context.Pergunta
+                            .FirstOrDefaultAsync(x => x.UsuarioCriacaoId == usuarioId
+                                                 && x.Id == perguntaId);
         }
 
-        public Task<IEnumerable<Pergunta>> ObterTodos()
+        public IEnumerable<Pergunta> ObterPerguntas(Guid usuarioId, Guid perguntaId, string? areaConhecimento, string? descricao)
         {
-            throw new NotImplementedException();
+            return _context.Pergunta
+                        .Include(x => x.AreaConhecimento)
+                        .Include(x => x.Alternativas)
+                        .Where(x =>
+                            x.UsuarioCriacaoId == usuarioId
+                            && (perguntaId == Guid.Empty || x.Id == perguntaId)
+                            && (areaConhecimento == null || x.AreaConhecimento.Descricao.Contains(areaConhecimento!))
+                            && (descricao == null || x.Descricao.Contains(descricao!))
+                        );
+        }
+
+        public async Task Alterar(Pergunta entity)
+        {
+            _dbSet.Update(entity);
+            await _context.SaveChangesAsync();
         }
     }
 }

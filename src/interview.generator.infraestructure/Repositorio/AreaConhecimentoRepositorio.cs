@@ -40,7 +40,9 @@ namespace interview.generator.infraestructure.Repositorio
 
         public async Task<AreaConhecimento?> ObterPorDescricao(string descricao)
         {
-            return await _context.AreaConhecimento.FirstOrDefaultAsync(x => x.Descricao == descricao);
+            return await _context.AreaConhecimento
+                                .Include(x => x.Perguntas)
+                                .FirstOrDefaultAsync(x => x.Descricao == descricao);
         }
 
         public async Task<AreaConhecimento?> ObterPorId(Guid id)
@@ -48,15 +50,35 @@ namespace interview.generator.infraestructure.Repositorio
             return await _dbSet.FirstOrDefaultAsync(u => u.Id.Equals(id));
         }
 
+        public async Task<AreaConhecimento?> ObterPorIdComPerguntas(Guid id)
+        {
+            return await _dbSet
+                            .Include(x => x.Perguntas)
+                            .FirstOrDefaultAsync(u => u.Id.Equals(id));
+        }
+
         public async Task<AreaConhecimento?> ObterPorIdEUsuarioId(Guid id, Guid usuarioId)
         {
             return await _context.AreaConhecimento.FirstOrDefaultAsync(x => x.Id == id && x.UsuarioId == usuarioId);
+        }
+
+        public async Task<AreaConhecimento?> ObterPorDescricaoEUsuarioId(string descricao, Guid usuarioId)
+        {
+            return await _context.AreaConhecimento.FirstOrDefaultAsync(x => x.Descricao == descricao && x.UsuarioId == usuarioId);
         }
 
         public async Task<IEnumerable<AreaConhecimento>> ObterTodos()
         {
             var result = _dbSet.ToListAsync().Result;
             return await Task.FromResult(result);
+        }
+
+        public async Task<IEnumerable<AreaConhecimento>> ObterTodosPorUsuarioIdComPerguntas(Guid usuarioId)
+        {
+            return await _dbSet
+                            .Include(x => x.Perguntas)
+                            .Where(x => x.UsuarioId == usuarioId)
+                            .ToListAsync();
         }
     }
 }

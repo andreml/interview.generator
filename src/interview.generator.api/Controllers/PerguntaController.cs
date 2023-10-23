@@ -1,5 +1,6 @@
 ﻿using interview.generator.application.Dto;
 using interview.generator.application.Interfaces;
+using interview.generator.application.ViewModels;
 using interview.generator.domain.Entidade.Common;
 using interview.generator.domain.Enum;
 using Microsoft.AspNetCore.Authorization;
@@ -19,9 +20,40 @@ namespace interview.generator.api.Controllers
             _perguntaService = perguntaService;
         }
 
+        /// <summary>
+        /// Obtém perguntas cadastradas pelo usuário (Avaliador)
+        /// </summary>
+        /// <param name="perguntaId">Id da Pergunta (Opcional)</param>
+        /// <param name="areaConhecimento">Area de conhecimento (Opcional)</param>
+        /// <param name="descricao">Pergunta (Opcional)</param>
+        [HttpGet("ObterPerguntas")]
+        [Authorize(Roles = $"{Perfis.Avaliador}")]
+        [ProducesResponseType(typeof(IEnumerable<PerguntaViewModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public IActionResult ObterPerguntas([FromQuery] Guid perguntaId, [FromQuery] string? areaConhecimento, [FromQuery] string? descricao)
+        {
+            try
+            {
+                var userId = ObterUsuarioIdLogado();
+
+                var result = _perguntaService.ListarPerguntas(userId, perguntaId, areaConhecimento, descricao);
+
+                return Response(result);
+            }
+            catch (Exception e)
+            {
+                return ResponseErro(e.Message, "Erro ao obter perguntas");
+            }
+        }
+
+        /// <summary>
+        /// Adiciona nova pergunta
+        /// </summary>
         [HttpPost("AdicionarPergunta")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
-        public async Task<IActionResult> AdicionarUsuario(AdicionarPerguntaDto pergunta)
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> AdicionarPergunta(AdicionarPerguntaDto pergunta)
         {
             try
             {
@@ -33,12 +65,30 @@ namespace interview.generator.api.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode((int)HttpStatusCode.BadRequest, new ResponseErro()
-                {
-                    Codigo = (int)HttpStatusCode.BadRequest,
-                    Mensagem = "Erro ao incluir pergunta",
-                    Excecao = e.Message
-                });
+                return ResponseErro(e.Message, "Erro ao adicionar perguntas");
+            }
+        }
+
+        /// <summary>
+        /// Adiciona nova pergunta
+        /// </summary>
+        [HttpPost("AlterarPergunta")]
+        [Authorize(Roles = $"{Perfis.Avaliador}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> AlterarPergunta(AlterarPerguntaDto pergunta)
+        {
+            try
+            {
+                var usuarioId = ObterUsuarioIdLogado();
+
+                var result = await _perguntaService.AlterarPergunta(pergunta, usuarioId);
+
+                return Response(result);
+            }
+            catch (Exception e)
+            {
+                return ResponseErro(e.Message, "Erro ao alterar pergunta");
             }
         }
     }
