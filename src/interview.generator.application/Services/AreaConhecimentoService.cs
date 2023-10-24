@@ -16,7 +16,7 @@ namespace interview.generator.application.Services
             _areaConhecimentoRepositorio = areaConhecimentoRepositorio;
         }
 
-        public async Task<ResponseBase> AlterarAreaConhecimento(AlterarAreaConhecimentoDto areaConhecimento, Guid usuarioId)
+        public async Task<ResponseBase> AlterarAreaConhecimento(AlterarAreaConhecimentoDto areaConhecimento)
         {
             var response = new ResponseBase();
 
@@ -27,7 +27,11 @@ namespace interview.generator.application.Services
                 return response;
             }
 
-            var areaConhecimentoAlterada = new AreaConhecimento { Descricao = areaConhecimento.Descricao, UsuarioId = usuarioId, Id = areaConhecimento.Id };
+            var areaConhecimentoAlterada = new AreaConhecimento { 
+                Descricao = areaConhecimento.Descricao, 
+                UsuarioId = areaConhecimento.UsuarioId, 
+                Id = areaConhecimento.Id 
+            };
 
             await _areaConhecimentoRepositorio.Alterar(areaConhecimentoAlterada);
 
@@ -36,7 +40,7 @@ namespace interview.generator.application.Services
             return response;
         }
 
-        public async Task<ResponseBase> CadastrarAreaConhecimento(AdicionarAreaConhecimentoDto areaConhecimento, Guid usuarioId)
+        public async Task<ResponseBase> CadastrarAreaConhecimento(AdicionarAreaConhecimentoDto areaConhecimento)
         {
             var response = new ResponseBase();
 
@@ -47,7 +51,7 @@ namespace interview.generator.application.Services
                 return response;
             }
 
-            var novaAreaConhecimento = new AreaConhecimento { Descricao = areaConhecimento.Descricao, UsuarioId = usuarioId };
+            var novaAreaConhecimento = new AreaConhecimento { Descricao = areaConhecimento.Descricao, UsuarioId = areaConhecimento.UsuarioId };
 
             await _areaConhecimentoRepositorio.Adicionar(novaAreaConhecimento);
 
@@ -56,11 +60,11 @@ namespace interview.generator.application.Services
             return response;
         }
 
-        public async Task<ResponseBase> ExcluirAreaConhecimento(Guid id)
+        public async Task<ResponseBase> ExcluirAreaConhecimento(Guid id, Guid usuarioId)
         {
             var response = new ResponseBase();
 
-            var areaConhecimento = await _areaConhecimentoRepositorio.ObterPorIdComPerguntas(id);
+            var areaConhecimento = await _areaConhecimentoRepositorio.ObterPorIdComPerguntas(id, usuarioId);
 
             if(areaConhecimento == null)
             {
