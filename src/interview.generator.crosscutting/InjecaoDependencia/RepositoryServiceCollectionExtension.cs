@@ -1,4 +1,4 @@
-﻿using interview.generator.application.Interfaces;
+using interview.generator.application.Interfaces;
 using interview.generator.application.Services;
 using interview.generator.domain.Repositorio;
 using interview.generator.infraestructure.Repositorio;
