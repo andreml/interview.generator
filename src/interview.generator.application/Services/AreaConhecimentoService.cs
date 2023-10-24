@@ -81,11 +81,11 @@ namespace interview.generator.application.Services
             return response;
         }
 
-        public async Task<ResponseBase<IEnumerable<AreaConhecimentoViewModel>>> ListarAreasConhecimento(Guid usuarioId)
+        public async Task<ResponseBase<IEnumerable<AreaConhecimentoViewModel>>> ListarAreasConhecimento(Guid usuarioId, Guid areaConhecimentoId, string? descricao)
         {
             var response = new ResponseBase<IEnumerable<AreaConhecimentoViewModel>>();
 
-            var areasConhecimento = await _areaConhecimentoRepositorio.ObterTodosPorUsuarioIdComPerguntas(usuarioId);
+            var areasConhecimento = await _areaConhecimentoRepositorio.ObterAreaConhecimentoComPerguntas(usuarioId, areaConhecimentoId, descricao);
 
             if (areasConhecimento == null)
                 return response;
@@ -95,40 +95,6 @@ namespace interview.generator.application.Services
                                     .ToList();
 
             response.AddData(areasViewModel);
-
-            return response;
-        }
-
-        public async Task<ResponseBase<AreaConhecimentoViewModel>> ObterAreaConhecimento(Guid id)
-        {
-            var response = new ResponseBase<AreaConhecimentoViewModel>();
-
-            var areaConhecimento = await _areaConhecimentoRepositorio.ObterPorId(id);
-
-            if (areaConhecimento == null)
-                return response;
-
-            response.AddData(new AreaConhecimentoViewModel(
-                                        areaConhecimento.Id,
-                                        areaConhecimento.Descricao,
-                                        areaConhecimento.Perguntas!.Count));
-
-            return response;
-        }
-
-        public async Task<ResponseBase<AreaConhecimentoViewModel>> ObterAreaConhecimentoPorDescricao(string descricao)
-        {
-            var response = new ResponseBase<AreaConhecimentoViewModel>();
-
-            var areaConhecimento = await _areaConhecimentoRepositorio.ObterPorDescricao(descricao);
-
-            if (areaConhecimento == null)
-                return response;
-
-            response.AddData(new AreaConhecimentoViewModel(
-                                        areaConhecimento.Id, 
-                                        areaConhecimento.Descricao, 
-                                        areaConhecimento.Perguntas!.Count));
 
             return response;
         }

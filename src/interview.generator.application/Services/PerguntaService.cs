@@ -98,5 +98,26 @@ namespace interview.generator.application.Services
 
             return response;
         }
+
+        public async Task<ResponseBase> ExcluirPergunta(Guid perguntaId, Guid usuarioId)
+        {
+            var response = new ResponseBase();
+
+            var pergunta = await _perguntaRepositorio.ObterPerguntaPorId(usuarioId, perguntaId);
+            if (pergunta == null)
+            {
+                response.AddErro("Pergunta não encontrada");
+                return response;
+            }
+
+            //TODO: Adicionar validação de questionários cadastrados com essa pergunta
+            //Se siver, impedir a exclusão
+
+            await _perguntaRepositorio.Excluir(pergunta);
+
+            response.AddData("Pergunta excluída com sucesso!");
+            return response;
+        }
+
     }
 }

@@ -4,6 +4,7 @@ using interview.generator.domain.Entidade.Common;
 using interview.generator.domain.Repositorio;
 using interview.generator.domain.Utils;
 using Microsoft.Extensions.Configuration;
+using System.Net;
 
 namespace interview.generator.application.Services
 {
@@ -24,9 +25,14 @@ namespace interview.generator.application.Services
             var user = await _repositorio.ObterUsuarioPorLoginESenha(usuario.Login, usuario.Senha);
 
             if (user != null)
+            {
                 response.AddData(new { Usuario = new { Nome = user.Nome, Perfil = user.Perfil.ToString() }, Token = Jwt.GeraToken(user, user.VerificaValidadeTokenUsuario(), _configuration) });
+                response.SetStatusCode(HttpStatusCode.OK);
+            }
             else
+            {
                 response.AddErro("Não foi possível gerar token para acesso do usuário");
+            }
 
 
             return response;

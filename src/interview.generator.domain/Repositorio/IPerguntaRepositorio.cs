@@ -9,5 +9,6 @@ namespace interview.generator.domain.Repositorio
         IEnumerable<Pergunta> ObterPerguntas(Guid usuarioId, Guid perguntaId, string? areaConhecimento, string? descricao);
         Task<Pergunta?> ObterPerguntaPorId(Guid usuarioId, Guid perguntaId);
         Task Alterar(Pergunta entity);
+        Task Excluir(Pergunta entity);
     }
 }
