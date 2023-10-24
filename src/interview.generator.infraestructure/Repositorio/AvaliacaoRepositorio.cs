@@ -19,20 +19,45 @@ namespace interview.generator.infraestructure.Repositorio
             await _context.Avaliacao.AddAsync(entity);
             await _context.SaveChangesAsync();
         }
-        public async Task Alterar(Avaliacao entity)
+        public async Task<Avaliacao?> ObterAvaliacaoPorFiltro(Guid? CandidatoId, Guid? QuestionarioId)
         {
-            var Avaliacao = await _context.Avaliacao.Where(x => x.Id.Equals(entity.Id)).FirstOrDefaultAsync();
-            if (Avaliacao is null) throw new Exception("Não foi possível alterar, Avaliação não existe mais");
-            _dbSet.Update(entity);
-            await _context.SaveChangesAsync();
+            var resultado = await _context.Avaliacao.Include(x => x.Respostas)
+                                                    .Where(x => x.CandidatoId.Equals(CandidatoId!) ||
+                                                                x.QuestionarioId.Equals(QuestionarioId!))
+                                                    .FirstOrDefaultAsync();
+
+            return resultado;
         }
 
-        public async Task<Avaliacao?> ObterAvaliacaoPorFiltro(Guid? CandidatoId, Guid? QuestionarioId, DateTime? DataAplicacao)
-            => await _context.Avaliacao.Where(x => x.CandidatoId.Equals(CandidatoId!) ||
-                                                   x.QuestionarioId.Equals(QuestionarioId!) ||
-                                                   x.DataAplicacao.Equals(DataAplicacao!))
-                                       .FirstOrDefaultAsync();
-        public async Task<IEnumerable<Avaliacao>> ObterTodos()
-            => await _context.Avaliacao.ToListAsync();
+        public async Task AdicionarObservacaoAvaliacao(Guid? CandidatoId, Guid? QuestionarioId, string Observacao)
+        {
+            var avaliacao = await _context.Avaliacao.Include(x => x.Respostas)
+                                                    .Where(x => x.QuestionarioId.Equals(QuestionarioId) &&
+                                                                x.CandidatoId.Equals(CandidatoId))
+                                                    .FirstOrDefaultAsync();
+
+            var existeAlternativaNaoRespondida = false;
+
+            if (avaliacao != null && avaliacao.Respostas != null)
+            {
+                foreach (var resposta in avaliacao.Respostas)
+                {
+                    if (resposta.AlternativaEscolhidaId == Guid.Empty)
+                    {
+                        existeAlternativaNaoRespondida = true;
+                        break;
+                    }
+                }
+            }
+
+            if (existeAlternativaNaoRespondida) throw new ApplicationException("Avaliação em aberto porque existem perguntas não respondidas");
+
+            if (avaliacao != null)
+            {
+                avaliacao.ObservacaoAplicador = Observacao;
+                _context.Avaliacao.Update(avaliacao);
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }

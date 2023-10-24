@@ -15,14 +15,11 @@ namespace interview.generator.domain.Utils
 {
     public static class Jwt
     {
+
         public static string GeraToken(Usuario usuario, DateTime validade, IConfiguration configuration)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var secretKeyParam = configuration["Secret:Key"];
-
-            if (secretKeyParam is null) throw new Exception("Secret não parametrizada");
-
-            var key = Encoding.ASCII.GetBytes(secretKeyParam);
+            var key = Encoding.ASCII.GetBytes(configuration["Secret:Key"]);
             var tokenDescriptor = new SecurityTokenDescriptor()
             {
                 Subject = new ClaimsIdentity(new Claim[]

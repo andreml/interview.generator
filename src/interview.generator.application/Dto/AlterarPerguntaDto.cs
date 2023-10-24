@@ -2,23 +2,27 @@
 
 namespace interview.generator.application.Dto
 {
-    public class AdicionarPerguntaDto
+    public class AlterarPerguntaDto
     {
+        public Guid Id { get; set; }
         public string Descricao { get; set; } = default!;
         public string AreaConhecimento { get; set; } = default!;
-        public ICollection<AlternativaDto> Alternativas { get; set; } = default!;
+        public ICollection<AlterarAlternativaDto> Alternativas { get; set; } = default!;
     }
 
-    public class AlternativaDto
+    public class AlterarAlternativaDto
     {
         public string Descricao { get; set; } = default!;
         public bool Correta { get; set; }
     }
 
-    public class AdicionarPerguntaDtoValidator : AbstractValidator<AdicionarPerguntaDto>
+    public class AlterarPerguntaDtoValidator : AbstractValidator<AlterarPerguntaDto>
     {
-        public AdicionarPerguntaDtoValidator()
+        public AlterarPerguntaDtoValidator()
         {
+            RuleFor(x => x.Id)
+                .NotNull().NotEmpty().WithMessage("Id é obrigatório");
+
             RuleFor(x => x.Descricao)
                 .NotNull().NotEmpty().WithMessage("Descricao é obrigatório")
                 .MaximumLength(1000).WithMessage("Descrição deve ter até 1000 caracteres");

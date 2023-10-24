@@ -16,13 +16,18 @@ namespace interview.generator.api.Controllers
         readonly IAvaliacaoService _;
         public AvaliacaoController(IAvaliacaoService service) { _ = service; }
 
-        [HttpGet("ObterPorFiltro")]
+        /// <summary>
+        /// Obtém avaliações cadastradas (Avaliador)
+        /// </summary>
+        /// <param name="CandidatoId?">Id do Candidato</param>
+        /// <param name="QuestionarioId?">Id do Questionário</param>
+        [HttpGet("ObterAvaliacoesPorFiltro")]
         //[Authorize(Roles = $"{Perfis.Avaliador}")]
-        public async Task<IActionResult> ObterRespostaPorFiltroAsync(Guid? CandidatoId, Guid? QuestionarioId, DateTime? DataAplicacao)
+        public async Task<IActionResult> ObterAvaliacoesPorFiltroAsync(Guid? CandidatoId, Guid? QuestionarioId)
         {
             try
             {
-                var result = await _.ObterAvaliacaoPorFiltro(CandidatoId, QuestionarioId, DataAplicacao);
+                var result = await _.ObterAvaliacaoPorFiltro(CandidatoId, QuestionarioId);
                 return Response(result);
             }
             catch (Exception e)
@@ -30,15 +35,18 @@ namespace interview.generator.api.Controllers
                 return StatusCode((int)HttpStatusCode.BadRequest, new ResponseErro()
                 {
                     Codigo = (int)HttpStatusCode.BadRequest,
-                    Mensagem = e.Message,
-                    Excecao = "Erro um erro"
+                    Mensagem = e.Message
                 });
             }
         }
 
+        /// <summary>
+        /// Adiciona a avaliação do candidato (Candidato)
+        /// </summary>
+        /// <param name="AdicionarAvaliacaoDto">Objeto AdicionarAvaliacaoDto</param>
         [HttpPost("Adicionar")]
-        //[Authorize(Roles = $"{Perfis.Avaliador}")]
-        public async Task<IActionResult> AdicionarAvaliacao(AdicionarAvaliacaoDto obj)
+        //[Authorize(Roles = $"{Perfis.Candidato}")]
+        public async Task<IActionResult> AdicionarAvaliacaoAsync(AdicionarAvaliacaoDto obj)
         {
             try
             {
@@ -50,42 +58,22 @@ namespace interview.generator.api.Controllers
                 return StatusCode((int)HttpStatusCode.BadRequest, new ResponseErro()
                 {
                     Codigo = (int)HttpStatusCode.BadRequest,
-                    Mensagem = e.Message,
-                    Excecao = "Erro ao incluir o usuário"
+                    Mensagem = e.Message
                 });
             }
         }
 
-        [HttpPut("Alterar")]
-        ///[Authorize(Roles = $"{Perfis.Avaliador}")]
-        public async Task<IActionResult> AlterarAvaliacao(AlterarAvaliacaoDto obj)
-        {
-            try
-            {
-                //if (ObterUsuarioIdLogado() != usuario.Id)
-                //    return Unauthorized();
-
-                var result = await _.AlterarAvaliacao(obj);
-                return Response(result);
-            }
-            catch (Exception e)
-            {
-                return StatusCode((int)HttpStatusCode.BadRequest, new ResponseErro()
-                {
-                    Codigo = (int)HttpStatusCode.BadRequest,
-                    Mensagem = e.Message,
-                    Excecao = "Erro ao excluir o usuário"
-                });
-            }
-        }
-
-        [HttpGet("ObterTodas")]
+        /// <summary>
+        /// Adiciona uma observação na avaliação do candidato (Avaliador)
+        /// </summary>
+        /// <param name="AdicionarAvaliacaoDto">Objeto AdicionarAvaliacaoDto</param>
+        [HttpPost("AdicionarObservacaoAvaliador")]
         //[Authorize(Roles = $"{Perfis.Avaliador}")]
-        public async Task<IActionResult> ObterTodasAvaliacao()
+        public async Task<IActionResult> AdicionarObservacaoAvaliacaoAsync(AdicionarObservacaoAvaliadorDto obj)
         {
             try
             {
-                var result = await _.ObterTodos();
+                var result = await _.AdicionarObservacaoAvaliacao(obj);
                 return Response(result);
             }
             catch (Exception e)
@@ -93,8 +81,7 @@ namespace interview.generator.api.Controllers
                 return StatusCode((int)HttpStatusCode.BadRequest, new ResponseErro()
                 {
                     Codigo = (int)HttpStatusCode.BadRequest,
-                    Mensagem = e.Message,
-                    Excecao = "Erro ao realizar a consulta"
+                    Mensagem = e.Message
                 });
             }
         }

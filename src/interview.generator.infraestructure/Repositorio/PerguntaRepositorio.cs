@@ -26,6 +26,13 @@ namespace interview.generator.infraestructure.Repositorio
                                                          && x.Descricao == descricao);
         }
 
+        public async Task<Pergunta?> ObterPerguntaPorId(Guid usuarioId, Guid perguntaId)
+        {
+            return await _context.Pergunta
+                            .FirstOrDefaultAsync(x => x.UsuarioCriacaoId == usuarioId
+                                                 && x.Id == perguntaId);
+        }
+
         public IEnumerable<Pergunta> ObterPerguntas(Guid usuarioId, Guid perguntaId, string? areaConhecimento, string? descricao)
         {
             return _context.Pergunta
@@ -37,6 +44,18 @@ namespace interview.generator.infraestructure.Repositorio
                             && (areaConhecimento == null || x.AreaConhecimento.Descricao.Contains(areaConhecimento!))
                             && (descricao == null || x.Descricao.Contains(descricao!))
                         );
+        }
+
+        public async Task Alterar(Pergunta entity)
+        {
+            _dbSet.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task Excluir(Pergunta entity)
+        {
+            _context.Remove(entity);
+            await _context.SaveChangesAsync();
         }
     }
 }

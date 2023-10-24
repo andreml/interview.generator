@@ -24,5 +24,10 @@ namespace interview.generator.domain.Entidade
         {
             Alternativas.Add(alternativa);
         }
+
+        public void RemoverAlternativas()
+        {
+            Alternativas.Clear();
+        }
     }
 }

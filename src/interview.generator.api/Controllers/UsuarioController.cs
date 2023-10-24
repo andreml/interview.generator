@@ -1,10 +1,9 @@
 ﻿using interview.generator.application.Dto;
 using interview.generator.application.Interfaces;
-using interview.generator.domain.Entidade.Common;
+using interview.generator.application.ViewModels;
 using interview.generator.domain.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
 
 namespace interview.generator.api.Controllers
 {
@@ -19,8 +18,13 @@ namespace interview.generator.api.Controllers
             _usuarioService = usuarioService;
         }
 
+        /// <summary>
+        /// Obtém todos os usuários (Necessário estar autenticado com usuário Avaliador)
+        /// </summary>
         [HttpGet("ObterTodos")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
+        [ProducesResponseType(typeof(IEnumerable<UsuarioViewModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> ObterUsuariosAsync()
         {
             try
@@ -31,16 +35,18 @@ namespace interview.generator.api.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode((int)HttpStatusCode.BadRequest, new ResponseErro()
-                {
-                    Codigo = (int)HttpStatusCode.BadRequest,
-                    Mensagem = e.Message,
-                    Excecao = "Erro ao obter os usuários"
-                });
+                return ResponseErro(e.Message, "Erro ao obter os usuários");
             }
         }
 
+        /// <summary>
+        /// Obtém usuário por Id
+        /// </summary>
+        /// <param name="id">Id do usuário</param>
+        /// <returns></returns>
         [HttpGet("ObterPorId/{id}")]
+        [ProducesResponseType(typeof(UsuarioViewModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> ObterPorId(Guid id)
         {
             try
@@ -51,16 +57,17 @@ namespace interview.generator.api.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode((int)HttpStatusCode.BadRequest, new ResponseErro()
-                {
-                    Codigo = (int)HttpStatusCode.BadRequest,
-                    Mensagem = e.Message,
-                    Excecao = "Erro ao realizar a consulta"
-                });
+                return ResponseErro(e.Message, "Erro ao realizar a consulta");
             }
         }
 
+        /// <summary>
+        /// Adicionar um novo usuário
+        /// </summary>
+        /// <returns></returns>
         [HttpPost("AdicionarUsuario")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AdicionarUsuario(AdicionarUsuarioDto usuario)
         {
             try
@@ -71,17 +78,18 @@ namespace interview.generator.api.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode((int)HttpStatusCode.BadRequest, new ResponseErro()
-                {
-                    Codigo = (int)HttpStatusCode.BadRequest,
-                    Mensagem = e.Message,
-                    Excecao = "Erro ao incluir o usuário"
-                });
+                return ResponseErro(e.Message, "Erro ao adicionar usuário");
             }
         }
 
+        /// <summary>
+        /// Altera um usuário existente
+        /// </summary>
+        /// <returns></returns>
         [Authorize]
         [HttpPut("AlterarUsuario")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AlterarUsuario(AlterarUsuarioDto usuario)
         {
             try
@@ -95,12 +103,7 @@ namespace interview.generator.api.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode((int)HttpStatusCode.BadRequest, new ResponseErro()
-                {
-                    Codigo = (int)HttpStatusCode.BadRequest,
-                    Mensagem = e.Message,
-                    Excecao = "Erro ao excluir o usuário"
-                });
+                return ResponseErro(e.Message, "Erro ao excluir o usuário");
             }
         }
     }

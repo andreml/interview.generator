@@ -19,86 +19,63 @@ namespace interview.generator.application.Services
             {
                 await _.Adicionar(new Avaliacao()
                 {
-                    //TODO ANDRE
+                    Id = Guid.NewGuid(),
                     CandidatoId = entity.CandidatoId,
                     QuestionarioId = entity.QuestionarioId,
                     Respostas = entity.Respostas,
-                    DataAplicacao = entity.DataAplicacao,
-                    ObservacaoAplicador = entity.ObservacaoAplicador
+                    DataAplicacao = entity.DataAplicacao
                 });
                 response.SetStatusCode(HttpStatusCode.OK);
-                return response;
             }
             catch (Exception e)
             {
                 response.SetStatusCode(HttpStatusCode.BadRequest);
                 response.AddErro(e.Message);
-                return response;
-            }
-        }
-        public async Task<ResponseBase> AlterarAvaliacao(AlterarAvaliacaoDto entity)
-        {
-            var response = new ResponseBase();
-
-            try
-            {
-                await _.Alterar(new Avaliacao()
-                {
-                    //TODO ANDRE
-                    CandidatoId = entity.CandidatoId,
-                    QuestionarioId = entity.QuestionarioId,
-                    Respostas = entity.Respostas,
-                    DataAplicacao = entity.DataAplicacao,
-                    ObservacaoAplicador = entity.ObservacaoAplicador
-                });
-
-                response.SetStatusCode(HttpStatusCode.OK);
-                return response;
-            }
-            catch (Exception e)
-            {
-                response.SetStatusCode(HttpStatusCode.BadRequest);
-                response.AddErro(e.Message);
-                return response;
-            }
-        }
-        public async Task<ResponseBase<Avaliacao>> ObterAvaliacaoPorFiltro(Guid? CandidatoId, Guid? QuestionarioId, DateTime? DataAplicacao)
-        {
-            var response = new ResponseBase<Avaliacao>();
-            var resposta = await _.ObterAvaliacaoPorFiltro(CandidatoId, QuestionarioId, DataAplicacao);
-
-            if (resposta is null)
-            {
-                response.SetStatusCode(HttpStatusCode.BadRequest);
-                response.AddErro("Avaliação não existe");
-                return response;
             }
 
-            response.AddData(resposta, HttpStatusCode.OK);
             return response;
         }
-        public async Task<ResponseBase<IEnumerable<Avaliacao>>> ObterTodos()
+
+        public async Task<ResponseBase> AdicionarObservacaoAvaliacao(AdicionarObservacaoAvaliadorDto obj)
         {
-            var response = new ResponseBase<IEnumerable<Avaliacao>>();
+            var response = new ResponseBase();
             try
             {
-                var resposta = await _.ObterTodos();
+                await _.AdicionarObservacaoAvaliacao(obj.CandidatoId, obj.QuestionarioId, obj.ObservacaoAvaliador);
+                response.SetStatusCode(HttpStatusCode.Created);
+            }
+            catch (Exception e)
+            {
+                response.SetStatusCode(HttpStatusCode.BadRequest);
+                response.AddErro(e.Message);
+            }
+
+            return response;
+        }
+
+        public async Task<ResponseBase<Avaliacao>> ObterAvaliacaoPorFiltro(Guid? CandidatoId, Guid? QuestionarioId)
+        {
+            var response = new ResponseBase<Avaliacao>();
+            try
+            {
+                var resposta = await _.ObterAvaliacaoPorFiltro(CandidatoId, QuestionarioId);
+
                 if (resposta is null)
                 {
                     response.SetStatusCode(HttpStatusCode.BadRequest);
-                    response.AddErro("Nenhum candidato foi avaliado");
+                    response.AddErro("Avaliação não existe");
                     return response;
                 }
 
                 response.AddData(resposta, HttpStatusCode.OK);
-                return response;
             }
             catch (Exception e)
             {
                 response.SetStatusCode(HttpStatusCode.BadRequest);
                 response.AddErro(e.Message);
-                return response;
             }
+
+            return response;
         }
     }
 }
