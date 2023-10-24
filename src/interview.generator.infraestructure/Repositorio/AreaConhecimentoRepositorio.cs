@@ -35,6 +35,7 @@ namespace interview.generator.infraestructure.Repositorio
             if (result is null) throw new Exception("Area de conhecimento não encontrada");
 
             _context.Remove(result);
+            _context.SaveChanges();
             return Task.CompletedTask;
         }
 
@@ -50,11 +51,12 @@ namespace interview.generator.infraestructure.Repositorio
             return await _dbSet.FirstOrDefaultAsync(u => u.Id.Equals(id));
         }
 
-        public async Task<AreaConhecimento?> ObterPorIdComPerguntas(Guid id)
+        public async Task<AreaConhecimento?> ObterPorIdComPerguntas(Guid id, Guid usuarioId)
         {
             return await _dbSet
                             .Include(x => x.Perguntas)
-                            .FirstOrDefaultAsync(u => u.Id.Equals(id));
+                            .FirstOrDefaultAsync(u => u.Id.Equals(id)
+                                                 && u.UsuarioId == usuarioId);
         }
 
         public async Task<AreaConhecimento?> ObterPorDescricaoEUsuarioId(string descricao, Guid usuarioId)
