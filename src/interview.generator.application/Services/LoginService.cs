@@ -18,7 +18,7 @@ namespace interview.generator.application.Services
             _repositorio = usuarioRepositorio;
             _configuration = configuration;
         }
-        public async Task<ResponseBase<object>> BuscaTokenUsuario(GeraTokenUsuario usuario)
+        public async Task<ResponseBase<object>> BuscarTokenUsuario(GeraTokenUsuario usuario)
         {
             var response = new ResponseBase<object>();
 
