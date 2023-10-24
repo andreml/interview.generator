@@ -1,11 +1,9 @@
 ﻿using interview.generator.application.Dto;
 using interview.generator.application.Interfaces;
 using interview.generator.application.ViewModels;
-using interview.generator.domain.Entidade.Common;
 using interview.generator.domain.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
 
 namespace interview.generator.api.Controllers
 {
@@ -21,7 +19,7 @@ namespace interview.generator.api.Controllers
         }
 
         /// <summary>
-        /// Obtém perguntas cadastradas pelo usuário (Avaliador)
+        /// Obtém perguntas cadastradas (Avaliador)
         /// </summary>
         /// <param name="perguntaId">Id da Pergunta (Opcional)</param>
         /// <param name="areaConhecimento">Area de conhecimento (Opcional)</param>
@@ -47,7 +45,7 @@ namespace interview.generator.api.Controllers
         }
 
         /// <summary>
-        /// Adiciona nova pergunta
+        /// Adiciona nova pergunta (Avaliador)
         /// </summary>
         [HttpPost("AdicionarPergunta")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
@@ -70,7 +68,7 @@ namespace interview.generator.api.Controllers
         }
 
         /// <summary>
-        /// Adiciona nova pergunta
+        /// Altera uma pergunta existente (Avaliador)
         /// </summary>
         [HttpPost("AlterarPergunta")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
@@ -89,6 +87,29 @@ namespace interview.generator.api.Controllers
             catch (Exception e)
             {
                 return ResponseErro(e.Message, "Erro ao alterar pergunta");
+            }
+        }
+
+        /// <summary>
+        /// Exclui uma pergunta existente (Avaliador)
+        /// </summary>
+        [HttpDelete("ExcluirPergunta/{perguntaId}")]
+        [Authorize(Roles = $"{Perfis.Avaliador}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ExcluirPergunta(Guid perguntaId)
+        {
+            try
+            {
+                var usuarioId = ObterUsuarioIdLogado();
+
+                var result = await _perguntaService.ExcluirPergunta(perguntaId, usuarioId);
+
+                return Response(result);
+            }
+            catch (Exception e)
+            {
+                return ResponseErro(e.Message, "Erro ao excluir pergunta");
             }
         }
     }

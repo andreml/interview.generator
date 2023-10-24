@@ -51,5 +51,11 @@ namespace interview.generator.infraestructure.Repositorio
             _dbSet.Update(entity);
             await _context.SaveChangesAsync();
         }
+
+        public async Task Excluir(Pergunta entity)
+        {
+            _context.Remove(entity);
+            await _context.SaveChangesAsync();
+        }
     }
 }

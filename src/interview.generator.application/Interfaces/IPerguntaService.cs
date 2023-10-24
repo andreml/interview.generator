@@ -9,5 +9,6 @@ namespace interview.generator.application.Interfaces
         Task<ResponseBase> CadastrarPergunta(AdicionarPerguntaDto pergunta, Guid usuarioId);
         ResponseBase<IEnumerable<PerguntaViewModel>> ListarPerguntas(Guid userId, Guid perguntaId, string? areaConhecimento, string? descricao);
         Task<ResponseBase> AlterarPergunta(AlterarPerguntaDto pergunta, Guid usuarioId);
+        Task<ResponseBase> ExcluirPergunta(Guid perguntaId, Guid usuarioId);
     }
 }
