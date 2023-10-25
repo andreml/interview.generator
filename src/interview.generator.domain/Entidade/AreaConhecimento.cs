@@ -12,5 +12,8 @@ namespace interview.generator.domain.Entidade
         public AreaConhecimento()
         {
         }
+
+        public void AlterarDescricao(string descricao) =>
+            Descricao = descricao;
     }
 }

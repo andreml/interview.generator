@@ -16,24 +16,27 @@ namespace interview.generator.application.Services
             _areaConhecimentoRepositorio = areaConhecimentoRepositorio;
         }
 
-        public async Task<ResponseBase> AlterarAreaConhecimento(AlterarAreaConhecimentoDto areaConhecimento)
+        public async Task<ResponseBase> AlterarAreaConhecimento(AlterarAreaConhecimentoDto areaConhecimentoDto)
         {
             var response = new ResponseBase();
 
-            var areaConhecimentoExistente = await _areaConhecimentoRepositorio.ObterPorDescricao(areaConhecimento.Descricao);
-            if (areaConhecimentoExistente != null)
+            var areaConhecimento = await _areaConhecimentoRepositorio.ObterPorIdEUsuarioId(areaConhecimentoDto.Id, areaConhecimentoDto.UsuarioId);
+            if(areaConhecimento == null)
             {
-                response.AddErro($"Já existe uma área do conhecimento cadastrada com essa descrição. Id: {areaConhecimentoExistente.Id}");
+                response.AddErro($"Area de conhecimento não encontrada");
                 return response;
             }
 
-            var areaConhecimentoAlterada = new AreaConhecimento { 
-                Descricao = areaConhecimento.Descricao, 
-                UsuarioId = areaConhecimento.UsuarioId, 
-                Id = areaConhecimento.Id 
-            };
+            var areaConhecimentoDescricao = await _areaConhecimentoRepositorio.ObterPorDescricaoEUsuarioId(areaConhecimentoDto.Descricao, areaConhecimentoDto.UsuarioId);
+            if (areaConhecimentoDescricao != null && areaConhecimentoDescricao.Id != areaConhecimento.Id)
+            {
+                response.AddErro($"Já existe uma área do conhecimento cadastrada com essa descrição. Id: {areaConhecimentoDescricao.Id}");
+                return response;
+            }
 
-            await _areaConhecimentoRepositorio.Alterar(areaConhecimentoAlterada);
+            areaConhecimento.AlterarDescricao(areaConhecimentoDto.Descricao);
+
+            await _areaConhecimentoRepositorio.Alterar(areaConhecimento);
 
             response.AddData("Área de Conhecimento alterada com sucesso!");
 
@@ -44,7 +47,7 @@ namespace interview.generator.application.Services
         {
             var response = new ResponseBase();
 
-            var areaConhecimentoExistente = await _areaConhecimentoRepositorio.ObterPorDescricao(areaConhecimento.Descricao);
+            var areaConhecimentoExistente = await _areaConhecimentoRepositorio.ObterPorDescricaoEUsuarioId(areaConhecimento.Descricao, areaConhecimento.UsuarioId);
             if (areaConhecimentoExistente != null)
             {
                 response.AddErro($"Já existe uma área do conhecimento cadastrada com essa descrição. Id: {areaConhecimentoExistente.Id}");

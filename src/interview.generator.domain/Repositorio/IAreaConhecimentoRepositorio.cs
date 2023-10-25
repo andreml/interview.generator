@@ -6,8 +6,8 @@ namespace interview.generator.domain.Repositorio
     {
         Task Excluir(AreaConhecimento entity);
         Task<AreaConhecimento?> ObterPorIdComPerguntas(Guid id, Guid usuarioId);
+        Task<AreaConhecimento?> ObterPorIdEUsuarioId(Guid id, Guid usuarioId);
         Task<AreaConhecimento?> ObterPorDescricaoEUsuarioId(string descricao, Guid usuarioId);
-        Task<AreaConhecimento?> ObterPorDescricao(string descricao);
         Task<IEnumerable<AreaConhecimento>> ObterAreaConhecimentoComPerguntas(Guid usuarioId, Guid areaConhecimentoId, string? descricao);
     }
 }
