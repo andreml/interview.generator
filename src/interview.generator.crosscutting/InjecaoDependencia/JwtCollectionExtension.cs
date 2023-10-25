@@ -1,5 +1,4 @@
 ﻿using interview.generator.domain.Entidade.Common;
-using interview.generator.domain.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -33,7 +32,7 @@ namespace interview.generator.crosscutting.InjecaoDependencia
                         var errors = new List<string>();
                         errors.Add("Usuário não está autenticado");
                         c.HandleResponse();
-                        var response = JsonSerializer.Serialize(new ResponseErro() { Codigo = (int)HttpStatusCode.Unauthorized, Mensagem = errors, Excecao = "Autenticação obrigatória" });
+                        var response = JsonSerializer.Serialize(new ResponseErro() { Codigo = (int)HttpStatusCode.Unauthorized, Mensagens = errors, Excecao = "Autenticação obrigatória" });
                         c.Response.StatusCode = 401;
                         c.Response.ContentType = "application/json;charset=utf-8";
                         return c.Response.WriteAsync(response);
@@ -42,7 +41,7 @@ namespace interview.generator.crosscutting.InjecaoDependencia
                     {
                         var errors = new List<string>();
                         errors.Add("Usuário não tem permissão para acessar essa funcionalidade");
-                        var response = JsonSerializer.Serialize(new ResponseErro() { Codigo = (int)HttpStatusCode.Forbidden, Mensagem = errors, Excecao = "Permissão negada" });
+                        var response = JsonSerializer.Serialize(new ResponseErro() { Codigo = (int)HttpStatusCode.Forbidden, Mensagens = errors, Excecao = "Permissão negada" });
                         c.Response.StatusCode = 403;
                         c.Response.ContentType = "application/json;charset=utf-8";
                         return c.Response.WriteAsync(response);

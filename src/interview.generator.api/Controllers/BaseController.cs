@@ -1,6 +1,5 @@
 ﻿using interview.generator.domain.Entidade.Common;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using System.Net;
 
 namespace interview.generator.api.Controllers
@@ -11,11 +10,7 @@ namespace interview.generator.api.Controllers
         protected new IActionResult Response<T>(ResponseBase<T> result)
         {
             if (result.HasError)
-            {
-                var status = result.StatusCode == 0 ? (int)HttpStatusCode.BadRequest : result.StatusCode;
-
-                return StatusCode((int)status, result.erros);
-            }
+                return ResponseErro((int)HttpStatusCode.BadRequest, result.GetErrors());
 
             switch (HttpContext.Request.Method)
             {
@@ -33,24 +28,21 @@ namespace interview.generator.api.Controllers
 
         protected IActionResult ResponseErro(string exception, string mensagem)
         {
-            var mensagens = new List<string>();
-            mensagens.Add(mensagem);
-
             return StatusCode((int)HttpStatusCode.BadRequest, new ResponseErro()
             {
                 Codigo = (int)HttpStatusCode.BadRequest,
-                Mensagem = mensagens,
+                Mensagens = new List<string> { mensagem },
                 Excecao = exception
             });
         }
-        protected IActionResult ResponseErro(int statusCode, List<string> mensagem)
+        protected IActionResult ResponseErro(int statusCode, List<string> mensagens)
         {
             if (statusCode == 0) statusCode = (int)HttpStatusCode.BadRequest;
             
             return StatusCode(statusCode, new ResponseErro()
             {
                 Codigo = statusCode,
-                Mensagem = mensagem
+                Mensagens = mensagens
             });
         }
 

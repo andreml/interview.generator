@@ -26,7 +26,7 @@ namespace interview.generator.api.Controllers
                 areaConhecimento.UsuarioId = ObterUsuarioIdLogado();
 
                 var result = await _areaConhecimentoService.CadastrarAreaConhecimento(areaConhecimento);
-                if (result != null && result.HasError) return ResponseErro(result.StatusCode, result.GetErrors());
+
                 return Response(result!);
             }
             catch (Exception e)
@@ -50,7 +50,7 @@ namespace interview.generator.api.Controllers
                 var usuarioId = ObterUsuarioIdLogado();
 
                 var result = await _areaConhecimentoService.ListarAreasConhecimento(usuarioId, areaConhecimentoId, descricao);
-                if (result != null && result.HasError) return ResponseErro(result.StatusCode, result.GetErrors());
+
                 return Response(result!);
             }
             catch (Exception e)
@@ -69,7 +69,7 @@ namespace interview.generator.api.Controllers
                 areaConhecimento.UsuarioId = ObterUsuarioIdLogado();
 
                 var result = await _areaConhecimentoService.AlterarAreaConhecimento(areaConhecimento);
-                if (result != null && result.HasError) return ResponseErro(result.StatusCode, result.GetErrors());
+
                 return Response(result!);
             }
             catch (Exception e)
@@ -86,7 +86,7 @@ namespace interview.generator.api.Controllers
             try
             {
                 var result = await _areaConhecimentoService.ExcluirAreaConhecimento(id, ObterUsuarioIdLogado());
-                if (result != null && result.HasError) return ResponseErro(result.StatusCode, result.GetErrors());
+
                 return Response(result!);
             }
             catch (Exception e)

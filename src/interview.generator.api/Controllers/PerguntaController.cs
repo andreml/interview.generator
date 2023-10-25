@@ -58,7 +58,7 @@ namespace interview.generator.api.Controllers
                 pergunta.UsuarioId = ObterUsuarioIdLogado();
 
                 var result = await _perguntaService.CadastrarPergunta(pergunta);
-                if (result != null && result.HasError) return ResponseErro(result.StatusCode, result.GetErrors());
+
                 return Response(result!);
             }
             catch (Exception e)

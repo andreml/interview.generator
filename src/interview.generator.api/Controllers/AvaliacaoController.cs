@@ -26,7 +26,7 @@ namespace interview.generator.api.Controllers
             try
             {
                 var result = await _.ObterAvaliacaoPorFiltro(ObterUsuarioIdLogado(), CandidatoId, QuestionarioId);
-                if (result != null && result.HasError) return ResponseErro(result.StatusCode, result.GetErrors());
+
                 return Response(result!);
             }
             catch (Exception e)
@@ -45,7 +45,7 @@ namespace interview.generator.api.Controllers
             try
             {
                 var result = await _.AdicionarAvaliacao(obj);
-                if (result != null && result.HasError) return ResponseErro(result.StatusCode, result.GetErrors());
+
                 return Response(result!);
             }
             catch (Exception e)
@@ -65,7 +65,7 @@ namespace interview.generator.api.Controllers
             {
                 obj.UsuarioIdCriacaoQuestionario = ObterUsuarioIdLogado();
                 var result = await _.AdicionarObservacaoAvaliacao(obj);
-                if (result != null && result.HasError) return ResponseErro(result.StatusCode, result.GetErrors());
+
                 return Response(result!);
             }
             catch (Exception e)
