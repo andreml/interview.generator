@@ -25,21 +25,6 @@ namespace interview.generator.infraestructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Avaliacao",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CandidatoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    QuestionarioId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DataAplicacao = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ObservacaoAplicador = table.Column<string>(type: "VARCHAR(500)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Avaliacao", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "PerguntaQuestionario",
                 columns: table => new
                 {
@@ -118,21 +103,22 @@ namespace interview.generator.infraestructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RespostaAvaliacao",
+                name: "Avaliacao",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AvaliacaoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PerguntaQuestionarioId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AlternativaEscolhidaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    CandidatoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    QuestionarioId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DataAplicacao = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ObservacaoAplicador = table.Column<string>(type: "VARCHAR(500)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RespostaAvaliacao", x => x.Id);
+                    table.PrimaryKey("PK_Avaliacao", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_RespostaAvaliacao_Avaliacao_AvaliacaoId",
-                        column: x => x.AvaliacaoId,
-                        principalTable: "Avaliacao",
+                        name: "FK_Avaliacao_Questionario_QuestionarioId",
+                        column: x => x.QuestionarioId,
+                        principalTable: "Questionario",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -157,10 +143,35 @@ namespace interview.generator.infraestructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "RespostaAvaliacao",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AvaliacaoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PerguntaQuestionarioId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AlternativaEscolhidaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RespostaAvaliacao", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RespostaAvaliacao_Avaliacao_AvaliacaoId",
+                        column: x => x.AvaliacaoId,
+                        principalTable: "Avaliacao",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Alternativa_PerguntaId",
                 table: "Alternativa",
                 column: "PerguntaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Avaliacao_QuestionarioId",
+                table: "Avaliacao",
+                column: "QuestionarioId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Pergunta_AreaConhecimentoId",
@@ -183,9 +194,6 @@ namespace interview.generator.infraestructure.Migrations
                 name: "PerguntaQuestionario");
 
             migrationBuilder.DropTable(
-                name: "Questionario");
-
-            migrationBuilder.DropTable(
                 name: "RespostaAvaliacao");
 
             migrationBuilder.DropTable(
@@ -202,6 +210,9 @@ namespace interview.generator.infraestructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "AreaConhecimento");
+
+            migrationBuilder.DropTable(
+                name: "Questionario");
         }
     }
 }
