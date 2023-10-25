@@ -9,55 +9,44 @@ namespace interview.generator.infraestructure.Repositorio
     {
         protected ApplicationDbContext _context;
         protected DbSet<Avaliacao> _dbSet;
+
         public AvaliacaoRepositorio(ApplicationDbContext context)
         {
             _context = context;
             _dbSet = _context.Set<Avaliacao>();
         }
+
         public async Task Adicionar(Avaliacao entity)
         {
             await _context.Avaliacao.AddAsync(entity);
             await _context.SaveChangesAsync();
         }
-        public async Task<Avaliacao?> ObterAvaliacaoPorFiltro(Guid? CandidatoId, Guid? QuestionarioId)
+
+        public async Task<Avaliacao?> ObterAvaliacaoPorFiltro(Guid usuarioIdCriacaoQuestionario, Guid? candidatoId, Guid? questionarioId)
         {
             var resultado = await _context.Avaliacao.Include(x => x.Respostas)
-                                                    .Where(x => x.CandidatoId.Equals(CandidatoId!) ||
-                                                                x.QuestionarioId.Equals(QuestionarioId!))
+                                                    .Where(x => x.Questionario.UsuarioCriacaoId == usuarioIdCriacaoQuestionario &&
+                                                                ( x.CandidatoId.Equals(candidatoId!) ||
+                                                                  x.Questionario.Id.Equals(questionarioId!))
+                                                    )
                                                     .FirstOrDefaultAsync();
 
             return resultado;
         }
 
-        public async Task AdicionarObservacaoAvaliacao(Guid? CandidatoId, Guid? QuestionarioId, string Observacao)
+        public async Task<Avaliacao?> ObterAvaliacaoPorIdEUsuarioCriacaoQuestionario(Guid id, Guid usuarioIdCriacaoQuestionario)
         {
-            var avaliacao = await _context.Avaliacao.Include(x => x.Respostas)
-                                                    .Where(x => x.QuestionarioId.Equals(QuestionarioId) &&
-                                                                x.CandidatoId.Equals(CandidatoId))
-                                                    .FirstOrDefaultAsync();
+            return await _dbSet
+                        .Where(x => x.Id == id
+                               && x.Questionario.UsuarioCriacaoId == usuarioIdCriacaoQuestionario)
+                        .FirstOrDefaultAsync();
+        }
 
-            var existeAlternativaNaoRespondida = false;
 
-            if (avaliacao != null && avaliacao.Respostas != null)
-            {
-                foreach (var resposta in avaliacao.Respostas)
-                {
-                    if (resposta.AlternativaEscolhidaId == Guid.Empty)
-                    {
-                        existeAlternativaNaoRespondida = true;
-                        break;
-                    }
-                }
-            }
-
-            if (existeAlternativaNaoRespondida) throw new ApplicationException("Avaliação em aberto porque existem perguntas não respondidas");
-
-            if (avaliacao != null)
-            {
-                avaliacao.ObservacaoAplicador = Observacao;
-                _context.Avaliacao.Update(avaliacao);
-                await _context.SaveChangesAsync();
-            }
+        public async Task Alterar(Avaliacao entity)
+        {
+            _dbSet.Update(entity);
+            await _context.SaveChangesAsync();
         }
     }
 }

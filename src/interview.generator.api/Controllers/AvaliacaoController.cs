@@ -1,10 +1,8 @@
 ﻿using interview.generator.application.Dto;
 using interview.generator.application.Interfaces;
-using interview.generator.domain.Entidade.Common;
 using interview.generator.domain.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
 
 namespace interview.generator.api.Controllers
 {
@@ -22,30 +20,25 @@ namespace interview.generator.api.Controllers
         /// <param name="CandidatoId?">Id do Candidato</param>
         /// <param name="QuestionarioId?">Id do Questionário</param>
         [HttpGet("ObterAvaliacoesPorFiltro")]
-        //[Authorize(Roles = $"{Perfis.Avaliador}")]
+        [Authorize(Roles = $"{Perfis.Avaliador}")]
         public async Task<IActionResult> ObterAvaliacoesPorFiltroAsync(Guid? CandidatoId, Guid? QuestionarioId)
         {
             try
             {
-                var result = await _.ObterAvaliacaoPorFiltro(CandidatoId, QuestionarioId);
+                var result = await _.ObterAvaliacaoPorFiltro(ObterUsuarioIdLogado(), CandidatoId, QuestionarioId);
                 return Response(result);
             }
             catch (Exception e)
             {
-                return StatusCode((int)HttpStatusCode.BadRequest, new ResponseErro()
-                {
-                    Codigo = (int)HttpStatusCode.BadRequest,
-                    Mensagem = e.Message
-                });
+                return ResponseErro(e.Message, "Erro ao obter avaliações");
             }
         }
 
         /// <summary>
         /// Adiciona a avaliação do candidato (Candidato)
         /// </summary>
-        /// <param name="AdicionarAvaliacaoDto">Objeto AdicionarAvaliacaoDto</param>
         [HttpPost("Adicionar")]
-        //[Authorize(Roles = $"{Perfis.Candidato}")]
+        [Authorize(Roles = $"{Perfis.Candidato}")]
         public async Task<IActionResult> AdicionarAvaliacaoAsync(AdicionarAvaliacaoDto obj)
         {
             try
@@ -55,34 +48,26 @@ namespace interview.generator.api.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode((int)HttpStatusCode.BadRequest, new ResponseErro()
-                {
-                    Codigo = (int)HttpStatusCode.BadRequest,
-                    Mensagem = e.Message
-                });
+                return ResponseErro(e.Message, "Erro ao adicionar avaliação");
             }
         }
 
         /// <summary>
         /// Adiciona uma observação na avaliação do candidato (Avaliador)
         /// </summary>
-        /// <param name="AdicionarAvaliacaoDto">Objeto AdicionarAvaliacaoDto</param>
-        [HttpPost("AdicionarObservacaoAvaliador")]
-        //[Authorize(Roles = $"{Perfis.Avaliador}")]
+        [HttpPut("AdicionarObservacaoAvaliador")]
+        [Authorize(Roles = $"{Perfis.Avaliador}")]
         public async Task<IActionResult> AdicionarObservacaoAvaliacaoAsync(AdicionarObservacaoAvaliadorDto obj)
         {
             try
             {
+                obj.UsuarioIdCriacaoQuestionario = ObterUsuarioIdLogado();
                 var result = await _.AdicionarObservacaoAvaliacao(obj);
                 return Response(result);
             }
             catch (Exception e)
             {
-                return StatusCode((int)HttpStatusCode.BadRequest, new ResponseErro()
-                {
-                    Codigo = (int)HttpStatusCode.BadRequest,
-                    Mensagem = e.Message
-                });
+                return ResponseErro(e.Message, "Erro ao adicionar observação");
             }
         }
     }
