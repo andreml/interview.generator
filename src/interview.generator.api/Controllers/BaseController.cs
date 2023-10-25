@@ -1,5 +1,6 @@
 ﻿using interview.generator.domain.Entidade.Common;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using System.Net;
 
 namespace interview.generator.api.Controllers
@@ -26,17 +27,30 @@ namespace interview.generator.api.Controllers
                 case "DELETE":
                     return ResponsePutAndDelete(result);
                 default:
-                    return StatusCode(result.StatusCode, result.Data); 
-            }   
+                    return StatusCode(result.StatusCode, result.Data);
+            }
         }
 
         protected IActionResult ResponseErro(string exception, string mensagem)
         {
+            var mensagens = new List<string>();
+            mensagens.Add(mensagem);
+
             return StatusCode((int)HttpStatusCode.BadRequest, new ResponseErro()
             {
                 Codigo = (int)HttpStatusCode.BadRequest,
-                Mensagem = mensagem,
+                Mensagem = mensagens,
                 Excecao = exception
+            });
+        }
+        protected IActionResult ResponseErro(int statusCode, List<string> mensagem)
+        {
+            if (statusCode == 0) statusCode = (int)HttpStatusCode.BadRequest;
+            
+            return StatusCode(statusCode, new ResponseErro()
+            {
+                Codigo = statusCode,
+                Mensagem = mensagem
             });
         }
 
@@ -47,7 +61,7 @@ namespace interview.generator.api.Controllers
 
         private IActionResult ResponseGet<T>(ResponseBase<T> result)
         {
-            if(result.Data == null)
+            if (result.Data == null)
                 return NoContent();
 
             return Ok(result.Data);

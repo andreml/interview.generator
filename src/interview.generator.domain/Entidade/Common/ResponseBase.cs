@@ -21,6 +21,8 @@ namespace interview.generator.domain.Entidade.Common
         [JsonIgnore]
         public bool HasError => _erros.Any();
 
+        public List<string> GetErrors() => _erros.ToList();
+
         public void SetStatusCode(HttpStatusCode statusCode)
         {
             _statusCode = statusCode;

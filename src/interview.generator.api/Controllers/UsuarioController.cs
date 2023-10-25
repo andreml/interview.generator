@@ -29,8 +29,8 @@ namespace interview.generator.api.Controllers
             try
             {
                 var result = await _usuarioService.ObterUsuario(ObterUsuarioIdLogado());
-
-                return Response(result);
+                if (result != null && result.HasError) return ResponseErro(result.StatusCode, result.GetErrors());
+                return Response(result!);
             }
             catch (Exception e)
             {
@@ -50,8 +50,8 @@ namespace interview.generator.api.Controllers
             try
             {
                 var result = await _usuarioService.CadastrarUsuario(usuario);
-
-                return Response(result);
+                if (result != null && result.HasError) return ResponseErro(result.StatusCode, result.GetErrors());
+                return Response(result!);
             }
             catch (Exception e)
             {
@@ -73,8 +73,8 @@ namespace interview.generator.api.Controllers
             {
                 usuario.Id = ObterUsuarioIdLogado();
                 var result = await _usuarioService.AlterarUsuario(usuario);
-
-                return Response(result);
+                if (result != null && result.HasError) return ResponseErro(result.StatusCode, result.GetErrors());
+                return Response(result!);
             }
             catch (Exception e)
             {
