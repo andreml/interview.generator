@@ -49,7 +49,7 @@ namespace interview.generator.application.Dto
                 .MinimumLength(8)
                 .WithMessage("Senha deve conter no mínimo 8 caracteres")
                 .Matches(RegexUtils.SenhaValidator)
-                .WithMessage("Senha deve ter pelo menos uma letra e um número");
+                .WithMessage("Senha deve ter pelo menos uma letra maiúscila, uma minúscula, um número e um caractere especial");
         }
     }
 }
