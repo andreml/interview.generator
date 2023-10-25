@@ -1,5 +1,6 @@
 ﻿using interview.generator.application.Dto;
 using interview.generator.application.ViewModels;
+using interview.generator.domain.Entidade.Common;
 using interview.generator.domain.Enum;
 using Newtonsoft.Json;
 using System.Net;
@@ -38,6 +39,35 @@ namespace Interview.Generator.IntegrationTests.Controllers
         }
 
         [Fact, TestPriority(2)]
+        public async Task AlterarUsuario()
+        {
+            //Arrange
+            await Autenticar(_loginAvaliador, _senha);
+
+            var alterarUsuarioDto = new AlterarUsuarioDto()
+            {
+                Cpf = "37756742257",
+                Nome = "Guilherme Dos Santos",
+                Login = _loginAvaliador,
+                Senha = _senha
+            };
+
+            //Act
+            var putUsuario = await _client.PutAsync("/Usuario/AlterarUsuario", JsonContent.Create(alterarUsuarioDto));
+            putUsuario.EnsureSuccessStatusCode();
+
+            //Assert
+            var getUsuario = await _client.GetAsync("/Usuario/ObterUsuario");
+            getUsuario.EnsureSuccessStatusCode();
+            var getUsuarioResponse = await LerDoJson<UsuarioViewModel>(getUsuario.Content);
+
+            Assert.Equal(HttpStatusCode.OK, putUsuario.StatusCode);
+            Assert.Equal(alterarUsuarioDto.Cpf, getUsuarioResponse.Cpf);
+            Assert.Equal(alterarUsuarioDto.Nome, getUsuarioResponse.Nome);
+            Assert.Equal(alterarUsuarioDto.Login, getUsuarioResponse.Login);
+        }
+
+        [Fact, TestPriority(3)]
         public async Task GerarTokenDeUsuario()
         {
             //Arrange
@@ -53,7 +83,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
             Assert.False(string.IsNullOrEmpty(postLoginResponse.Token));
         }
 
-        [Fact, TestPriority(3)]
+        [Fact, TestPriority(4)]
         public async Task AdicionarAreaConhecimento()
         {
             //Arrange
@@ -68,7 +98,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
             Assert.Equal(HttpStatusCode.Created, postAreaConhecimento.StatusCode);
         }
 
-        [Fact, TestPriority(4)]
+        [Fact, TestPriority(5)]
         public async Task AlterarAreaConhecimento()
         {
             //Arrange
@@ -92,7 +122,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
             Assert.Equal(alterarAreaConhecimento.Descricao, getAreaConhecimento.FirstOrDefault()!.Descricao);
         }
 
-        [Fact, TestPriority(5)]
+        [Fact, TestPriority(6)]
         public async Task ExcluirAreaConhecimento()
         {
             //Arrange
@@ -116,7 +146,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
             Assert.Empty(getAreaConhecimentoDepoisDelete);
         }
 
-        [Fact, TestPriority(6)]
+        [Fact, TestPriority(7)]
         public async Task AdicionarPergunta()
         {
             //Arrange
@@ -141,7 +171,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
             Assert.Equal(HttpStatusCode.Created, postPergunta.StatusCode);
         }
 
-        [Fact, TestPriority(7)]
+        [Fact, TestPriority(8)]
         public async Task AlterarPergunta()
         {
             //Arrange
@@ -177,7 +207,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
             Assert.Equal(alterarPerguntaDto.Alternativas.Count, pergunta.Alternativas.Count);
         }
 
-        [Fact, TestPriority(8)]
+        [Fact, TestPriority(9)]
         public async Task ExcluirPergunta()
         {
             //Arrange
@@ -197,7 +227,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
             Assert.Null(getPergunta);
         }
 
-        [Fact, TestPriority(9)]
+        [Fact, TestPriority(10)]
         public async Task AlterarAreaDeConhecimentoComPerguntasVinculadas()
         {
             //Arrange
