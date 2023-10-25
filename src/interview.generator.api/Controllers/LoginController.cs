@@ -23,7 +23,7 @@ namespace interview.generator.api.Controllers
             {
                 var result = await _loginService.BuscarTokenUsuario(usuario);
 
-                return Response(result);
+                return Response(result!);
             }
             catch (Exception e)
             {

@@ -27,7 +27,7 @@ namespace interview.generator.api.Controllers
 
                 var result = await _areaConhecimentoService.CadastrarAreaConhecimento(areaConhecimento);
 
-                return Response(result);
+                return Response(result!);
             }
             catch (Exception e)
             {
@@ -51,7 +51,7 @@ namespace interview.generator.api.Controllers
 
                 var result = await _areaConhecimentoService.ListarAreasConhecimento(usuarioId, areaConhecimentoId, descricao);
 
-                return Response(result);
+                return Response(result!);
             }
             catch (Exception e)
             {
@@ -70,7 +70,7 @@ namespace interview.generator.api.Controllers
 
                 var result = await _areaConhecimentoService.AlterarAreaConhecimento(areaConhecimento);
 
-                return Response(result);
+                return Response(result!);
             }
             catch (Exception e)
             {
@@ -87,7 +87,7 @@ namespace interview.generator.api.Controllers
             {
                 var result = await _areaConhecimentoService.ExcluirAreaConhecimento(id, ObterUsuarioIdLogado());
 
-                return Response(result);
+                return Response(result!);
             }
             catch (Exception e)
             {

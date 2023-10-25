@@ -26,7 +26,8 @@ namespace interview.generator.api.Controllers
             try
             {
                 var result = await _.ObterAvaliacaoPorFiltro(ObterUsuarioIdLogado(), CandidatoId, QuestionarioId);
-                return Response(result);
+
+                return Response(result!);
             }
             catch (Exception e)
             {
@@ -44,7 +45,8 @@ namespace interview.generator.api.Controllers
             try
             {
                 var result = await _.AdicionarAvaliacao(obj);
-                return Response(result);
+
+                return Response(result!);
             }
             catch (Exception e)
             {
@@ -63,7 +65,8 @@ namespace interview.generator.api.Controllers
             {
                 obj.UsuarioIdCriacaoQuestionario = ObterUsuarioIdLogado();
                 var result = await _.AdicionarObservacaoAvaliacao(obj);
-                return Response(result);
+
+                return Response(result!);
             }
             catch (Exception e)
             {

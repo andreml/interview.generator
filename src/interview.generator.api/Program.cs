@@ -1,9 +1,6 @@
-using FluentValidation;
 using FluentValidation.AspNetCore;
 using interview.generator.crosscutting.InjecaoDependencia;
-using interview.generator.domain.Entidade;
 using Microsoft.AspNetCore.Mvc;
-using System;
 
 var builder = WebApplication.CreateBuilder(args);
 

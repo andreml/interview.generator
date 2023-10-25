@@ -10,11 +10,7 @@ namespace interview.generator.api.Controllers
         protected new IActionResult Response<T>(ResponseBase<T> result)
         {
             if (result.HasError)
-            {
-                var status = result.StatusCode == 0 ? (int)HttpStatusCode.BadRequest : result.StatusCode;
-
-                return StatusCode((int)status, result.erros);
-            }
+                return ResponseErro((int)HttpStatusCode.BadRequest, result.GetErrors());
 
             switch (HttpContext.Request.Method)
             {
@@ -26,8 +22,8 @@ namespace interview.generator.api.Controllers
                 case "DELETE":
                     return ResponsePutAndDelete(result);
                 default:
-                    return StatusCode(result.StatusCode, result.Data); 
-            }   
+                    return StatusCode(result.StatusCode, result.Data);
+            }
         }
 
         protected IActionResult ResponseErro(string exception, string mensagem)
@@ -35,8 +31,18 @@ namespace interview.generator.api.Controllers
             return StatusCode((int)HttpStatusCode.BadRequest, new ResponseErro()
             {
                 Codigo = (int)HttpStatusCode.BadRequest,
-                Mensagem = mensagem,
+                Mensagens = new List<string> { mensagem },
                 Excecao = exception
+            });
+        }
+        protected IActionResult ResponseErro(int statusCode, List<string> mensagens)
+        {
+            if (statusCode == 0) statusCode = (int)HttpStatusCode.BadRequest;
+            
+            return StatusCode(statusCode, new ResponseErro()
+            {
+                Codigo = statusCode,
+                Mensagens = mensagens
             });
         }
 
@@ -47,7 +53,7 @@ namespace interview.generator.api.Controllers
 
         private IActionResult ResponseGet<T>(ResponseBase<T> result)
         {
-            if(result.Data == null)
+            if (result.Data == null)
                 return NoContent();
 
             return Ok(result.Data);

@@ -59,7 +59,7 @@ namespace interview.generator.api.Controllers
 
                 var result = await _perguntaService.CadastrarPergunta(pergunta);
 
-                return Response(result);
+                return Response(result!);
             }
             catch (Exception e)
             {
