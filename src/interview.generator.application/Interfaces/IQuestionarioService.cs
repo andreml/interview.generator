@@ -11,11 +11,12 @@ namespace interview.generator.application.Interfaces
 {
     public interface IQuestionarioService
     {
-        Task<ResponseBase> CadastrarQuestionario(AdicionarQuestionarioDto questionario);
-        Task<ResponseBase> AlterarQuestionario(AlterarQuestionarioDto questionario);
+        Task<ResponseBase> CadastrarQuestionario(AdicionarQuestionarioDto questionario, Guid usuarioId);
+        Task<ResponseBase> AlterarQuestionario(AlterarQuestionarioDto questionario, Guid usuarioId);
         Task<ResponseBase> ExcluirQuestionario(Guid idQuestionario);
-        Task<ResponseBase<QuestionarioViewModel>> ObterQuestionarioPorCandidato(Guid idCandidadto);
-        Task<ResponseBase<QuestionarioViewModel>> ObterQuestionariosPorFiltro(string descricao);
+        Task<ResponseBase<QuestionarioViewModel>> ObterQuestionarioPorCandidato(Guid idCandidato);
+        Task<ResponseBase<QuestionarioViewModel>> ObterPorId(Guid id);
+        Task<ResponseBase<QuestionarioViewModel>> ObterQuestionariosPorDescricao(string descricao);
 
     }
 }

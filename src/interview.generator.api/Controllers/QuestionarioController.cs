@@ -1,6 +1,7 @@
 ﻿using interview.generator.application.Dto;
 using interview.generator.application.Interfaces;
 using interview.generator.application.Services;
+using interview.generator.application.ViewModels;
 using interview.generator.domain.Entidade;
 using interview.generator.domain.Enum;
 using Microsoft.AspNetCore.Authorization;
@@ -28,7 +29,7 @@ namespace interview.generator.api.Controllers
             {
                 var usuarioId = ObterUsuarioIdLogado();
 
-                var result = await _questionarioService.CadastrarQuestionario(questionario);
+                var result = await _questionarioService.CadastrarQuestionario(questionario, usuarioId);
 
                 return Response(result);
             }
@@ -46,7 +47,7 @@ namespace interview.generator.api.Controllers
             {
                 var usuarioId = ObterUsuarioIdLogado();
 
-                var result = await _questionarioService.AlterarQuestionario(questionario);
+                var result = await _questionarioService.AlterarQuestionario(questionario, usuarioId);
 
                 return Response(result);
             }
@@ -57,7 +58,7 @@ namespace interview.generator.api.Controllers
         }
 
         [HttpDelete("ExcluirQuestionario/{id}")]
-        [Authorize(Roles = $"{Perfis.Avaliador}")]
+        [Authorize(Roles = $"{Perfis.Candidato}")]
         public async Task<IActionResult> ExcluirQuestionario(Guid id)
         {
             try
@@ -74,15 +75,16 @@ namespace interview.generator.api.Controllers
             }
         }
 
-        [HttpGet("ObterQuestionarioPorCandidato/{idCandidato}")]
+        [HttpGet("ObterQuestionarioPorCandidato/")]
+
         [Authorize(Roles = $"{Perfis.Candidato}")]
-        public async Task<IActionResult> ObterQuestionarioPorCandidato(Guid idCandidato)
+        public async Task<IActionResult> ObterQuestionarioPorCandidato()
         {
             try
             {
                 var usuarioId = ObterUsuarioIdLogado();
 
-                var result = await _questionarioService.ObterQuestionarioPorCandidato(idCandidato);
+                var result = await _questionarioService.ObterQuestionarioPorCandidato(usuarioId);
 
                 return Response(result);
             }
@@ -92,7 +94,8 @@ namespace interview.generator.api.Controllers
             }
         }
 
-        [HttpGet("ObterQuestionariosPorFiltro/{id}")]
+        [HttpGet("ObterQuestionariosPorDescricao/{descricao}")]
+
         [Authorize(Roles = $"{Perfis.Avaliador}")]
         public async Task<IActionResult> ObterQuestionariosPorFiltro(string descricao)
         {
@@ -100,7 +103,7 @@ namespace interview.generator.api.Controllers
             {
                 var usuarioId = ObterUsuarioIdLogado();
 
-                var result = await _questionarioService.ObterQuestionariosPorFiltro(descricao);
+                var result = await _questionarioService.ObterQuestionariosPorDescricao(descricao);
 
                 return Response(result);
             }

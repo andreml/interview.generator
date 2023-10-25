@@ -13,7 +13,8 @@ namespace interview.generator.crosscutting.InjecaoDependencia
             service.AddSingleton<IUsuarioRepositorio, UsuarioRepositorio>();
             service.AddSingleton<IPerguntaRepositorio, PerguntaRepositorio>();
             service.AddSingleton<IAreaConhecimentoRepositorio, AreaConhecimentoRepositorio>();
-            
+            service.AddSingleton<IQuestionarioRepositorio, QuestionarioRepositorio>();
+
 
             service.AddSingleton<ILoginService, LoginService>();
             service.AddSingleton<IUsuarioService, UsuarioService>();

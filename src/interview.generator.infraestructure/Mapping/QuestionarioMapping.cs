@@ -26,6 +26,11 @@ namespace interview.generator.infraestructure.Mapping
             builder
                 .Property(x => x.DataCriacao)
                 .IsRequired();
+
+            builder
+                .HasMany(x => x.Perguntas)
+                .WithOne()
+                .HasForeignKey(x => x.PerguntaId);
         }
     }
 }
