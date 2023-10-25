@@ -21,11 +21,11 @@ namespace interview.generator.application.Services
             _areaConhecimentoService = areaConhecimentoService;
         }
 
-        public async Task<ResponseBase> AlterarPergunta(AlterarPerguntaDto perguntaDto, Guid usuarioId)
+        public async Task<ResponseBase> AlterarPergunta(AlterarPerguntaDto perguntaDto)
         {
             var response = new ResponseBase();
 
-            var pergunta = await _perguntaRepositorio.ObterPerguntaPorId(usuarioId, perguntaDto.Id);
+            var pergunta = await _perguntaRepositorio.ObterPerguntaPorId(perguntaDto.UsuarioId, perguntaDto.Id);
 
             if(pergunta == null)
             {
@@ -33,7 +33,7 @@ namespace interview.generator.application.Services
                 return response;
             }
 
-            var areaConhecimento = await _areaConhecimentoService.ObterOuCriarAreaConhecimento(usuarioId, perguntaDto.AreaConhecimento);
+            var areaConhecimento = await _areaConhecimentoService.ObterOuCriarAreaConhecimento(perguntaDto.UsuarioId, perguntaDto.AreaConhecimento);
 
             //TODO: Validar se existem questionários com a pergunta
 
@@ -51,20 +51,20 @@ namespace interview.generator.application.Services
             return response;
         }
 
-        public async Task<ResponseBase> CadastrarPergunta(AdicionarPerguntaDto pergunta, Guid usuarioId)
+        public async Task<ResponseBase> CadastrarPergunta(AdicionarPerguntaDto pergunta)
         {
             var response = new ResponseBase();
 
-            var perguntaDuplicada = await _perguntaRepositorio.ExistePorDescricao(pergunta.Descricao, usuarioId);
+            var perguntaDuplicada = await _perguntaRepositorio.ExistePorDescricao(pergunta.Descricao, pergunta.UsuarioId);
             if (perguntaDuplicada)
             {
                 response.AddErro("Pergunta já cadastrada");
                 return response;
             }
 
-            var areaConhecimento = await _areaConhecimentoService.ObterOuCriarAreaConhecimento(usuarioId, pergunta.AreaConhecimento);
+            var areaConhecimento = await _areaConhecimentoService.ObterOuCriarAreaConhecimento(pergunta.UsuarioId, pergunta.AreaConhecimento);
 
-            var novaPergunta = new Pergunta(areaConhecimento, pergunta.Descricao, usuarioId);
+            var novaPergunta = new Pergunta(areaConhecimento, pergunta.Descricao, pergunta.UsuarioId);
 
             foreach (var alternativa in pergunta.Alternativas)
                 novaPergunta.AdicionarAlternativa(new Alternativa(alternativa.Descricao, alternativa.Correta));

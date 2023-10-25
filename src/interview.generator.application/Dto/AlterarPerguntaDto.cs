@@ -1,9 +1,12 @@
 ﻿using FluentValidation;
+using System.Text.Json.Serialization;
 
 namespace interview.generator.application.Dto
 {
     public class AlterarPerguntaDto
     {
+        [JsonIgnore]
+        public Guid UsuarioId { get; set; }
         public Guid Id { get; set; }
         public string Descricao { get; set; } = default!;
         public string AreaConhecimento { get; set; } = default!;

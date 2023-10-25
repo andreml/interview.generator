@@ -55,9 +55,9 @@ namespace interview.generator.api.Controllers
         {
             try
             {
-                var usuarioId = ObterUsuarioIdLogado();
+                pergunta.UsuarioId = ObterUsuarioIdLogado();
 
-                var result = await _perguntaService.CadastrarPergunta(pergunta, usuarioId);
+                var result = await _perguntaService.CadastrarPergunta(pergunta);
 
                 return Response(result);
             }
@@ -78,9 +78,9 @@ namespace interview.generator.api.Controllers
         {
             try
             {
-                var usuarioId = ObterUsuarioIdLogado();
+                pergunta.UsuarioId = ObterUsuarioIdLogado();
 
-                var result = await _perguntaService.AlterarPergunta(pergunta, usuarioId);
+                var result = await _perguntaService.AlterarPergunta(pergunta);
 
                 return Response(result);
             }

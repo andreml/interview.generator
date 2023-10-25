@@ -16,12 +16,12 @@ namespace interview.generator.api.Controllers
             
         }
 
-        [HttpPost("GeraToken")]
-        public async Task<IActionResult> GeraToken(GeraTokenUsuario usuario)
+        [HttpPost("GerarToken")]
+        public async Task<IActionResult> GerarToken(GeraTokenUsuario usuario)
         {
             try
             {
-                var result = await _loginService.BuscaTokenUsuario(usuario);
+                var result = await _loginService.BuscarTokenUsuario(usuario);
 
                 return Response(result);
             }
