@@ -31,7 +31,7 @@ namespace interview.generator.infraestructure.Repositorio
                                                     )
                                                     .FirstOrDefaultAsync();
 
-            return resultado;
+            return resultado; 
         }
 
         public async Task<Avaliacao?> ObterAvaliacaoPorIdEUsuarioCriacaoQuestionario(Guid id, Guid usuarioIdCriacaoQuestionario)
