@@ -1,5 +1,6 @@
 ﻿using interview.generator.application.Dto;
 using interview.generator.application.Interfaces;
+using interview.generator.application.ViewModels;
 using interview.generator.domain.Entidade.Common;
 using interview.generator.domain.Repositorio;
 using interview.generator.domain.Utils;
@@ -18,16 +19,16 @@ namespace interview.generator.application.Services
             _repositorio = usuarioRepositorio;
             _configuration = configuration;
         }
-        public async Task<ResponseBase<object>> BuscarTokenUsuario(GeraTokenUsuario usuario)
+        public async Task<ResponseBase<LoginViewModel>> BuscarTokenUsuario(GeraTokenUsuario usuario)
         {
-            var response = new ResponseBase<object>();
+            var response = new ResponseBase<LoginViewModel>();
 
             var user = await _repositorio.ObterUsuarioPorLoginESenha(usuario.Login, usuario.Senha);
 
             if (user != null)
             {
-                response.AddData(new { Usuario = new { Nome = user.Nome, Perfil = user.Perfil.ToString() }, Token = Jwt.GeraToken(user, user.VerificaValidadeTokenUsuario(), _configuration) });
-                response.SetStatusCode(HttpStatusCode.OK);
+                var login = new LoginViewModel(user.Nome, user.Perfil, Jwt.GeraToken(user, user.VerificaValidadeTokenUsuario(), _configuration));
+                response.AddData(login, HttpStatusCode.OK);
             }
             else
             {
