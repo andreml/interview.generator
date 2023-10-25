@@ -1,10 +1,12 @@
 ﻿using FluentValidation;
 using interview.generator.domain.Utils;
+using System.Text.Json.Serialization;
 
 namespace interview.generator.application.Dto
 {
     public class AlterarUsuarioDto
     {
+        [JsonIgnore]
         public Guid Id { get; set; }
         public string Cpf { get; set; } = default!;
         public string Nome { get; set; } = default!;

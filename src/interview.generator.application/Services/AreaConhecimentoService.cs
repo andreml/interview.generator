@@ -78,7 +78,7 @@ namespace interview.generator.application.Services
                 return response;
             }
 
-            await _areaConhecimentoRepositorio.Excluir(id);
+            await _areaConhecimentoRepositorio.Excluir(areaConhecimento);
 
             response.AddData("Area do conhecimento excluída com sucesso!");
 
