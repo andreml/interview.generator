@@ -70,7 +70,7 @@ namespace interview.generator.api.Controllers
         /// <summary>
         /// Altera uma pergunta existente (Avaliador)
         /// </summary>
-        [HttpPost("AlterarPergunta")]
+        [HttpPut("AlterarPergunta")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status400BadRequest)]

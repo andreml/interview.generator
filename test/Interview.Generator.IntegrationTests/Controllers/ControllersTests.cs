@@ -17,8 +17,6 @@ namespace Interview.Generator.IntegrationTests.Controllers
         private readonly string _loginAvaliador = "teste.integrado.avaliador";
         private readonly string _senha = "Teste@integrado123";
 
-        private string bearerToken = string.Empty;
-
         public ControllersTests(InterviewGeneratorWebAppFactory<Program> factory)
         {
             Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Test");
@@ -27,7 +25,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
         }
 
         [Fact, TestPriority(1)]
-        public async Task AdicaoDeUsuario()
+        public async Task AdicionarUsuario()
         {
             //Arrange
             var novoUsuario = new AdicionarUsuarioDto("89660569467", "João da Silva", Perfil.Avaliador, _loginAvaliador, _senha);
@@ -40,7 +38,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
         }
 
         [Fact, TestPriority(2)]
-        public async Task LoginDeUsuario()
+        public async Task GerarTokenDeUsuario()
         {
             //Arrange
             var loginDto = new GeraTokenUsuario(_loginAvaliador, _senha);
@@ -71,7 +69,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
         }
 
         [Fact, TestPriority(4)]
-        public async Task EditarAreaConhecimento()
+        public async Task AlterarAreaConhecimento()
         {
             //Arrange
             await Autenticar(_loginAvaliador, _senha);
@@ -118,7 +116,128 @@ namespace Interview.Generator.IntegrationTests.Controllers
             Assert.Empty(getAreaConhecimentoDepoisDelete);
         }
 
-        //TODO: Alterar area de conhecimento com perguntas
+        [Fact, TestPriority(6)]
+        public async Task AdicionarPergunta()
+        {
+            //Arrange
+            await Autenticar(_loginAvaliador, _senha);
+
+            var perguntaDto = new AdicionarPerguntaDto()
+            {
+                Descricao = "Quanto é 1+1?",
+                AreaConhecimento = "Matematica",
+                Alternativas = new List<AlternativaDto>()
+                {
+                    new AlternativaDto("É 3", false),
+                    new AlternativaDto("É 2", true),
+                    new AlternativaDto("É 5", false)
+                }
+            };
+
+            //Act
+            var postPergunta = await _client.PostAsync("/Pergunta/AdicionarPergunta", JsonContent.Create(perguntaDto));
+
+            //Assert
+            Assert.Equal(HttpStatusCode.Created, postPergunta.StatusCode);
+        }
+
+        [Fact, TestPriority(7)]
+        public async Task AlterarPergunta()
+        {
+            //Arrange
+            await Autenticar(_loginAvaliador, _senha);
+
+            var pergunta = (await ObterPergunta("Quanto")).FirstOrDefault();
+
+            var alterarPerguntaDto = new AlterarPerguntaDto()
+            {
+                Id = pergunta!.Id,
+                Descricao = "descricaoPergunta2432",
+                AreaConhecimento = "TesteDescricao12543",
+                Alternativas = new List<AlterarAlternativaDto>()
+                {
+                    new AlterarAlternativaDto("Alternativa 1", true),
+                    new AlterarAlternativaDto("Alternativa 2", false),
+                    new AlterarAlternativaDto("Alternativa 3", false),
+                    new AlterarAlternativaDto("Alternativa 4", false)
+                }
+            };
+
+            //Act
+            var putPergunta = await _client.PutAsync("/Pergunta/AlterarPergunta", JsonContent.Create(alterarPerguntaDto));
+            putPergunta.EnsureSuccessStatusCode();
+
+            pergunta = (await ObterPergunta(alterarPerguntaDto.Descricao)).FirstOrDefault();
+
+            //Assert
+            Assert.Equal(HttpStatusCode.OK, putPergunta.StatusCode);
+            Assert.NotNull(pergunta);
+            Assert.Equal(alterarPerguntaDto.Descricao, pergunta.Descricao);
+            Assert.Equal(alterarPerguntaDto.AreaConhecimento, pergunta.Areaconhecimento);
+            Assert.Equal(alterarPerguntaDto.Alternativas.Count, pergunta.Alternativas.Count);
+        }
+
+        [Fact, TestPriority(8)]
+        public async Task ExcluirPergunta()
+        {
+            //Arrange
+            await Autenticar(_loginAvaliador, _senha);
+            var perguntaDescricao = "descricaoPergunta2432";
+
+            var pergunta = (await ObterPergunta(perguntaDescricao)).FirstOrDefault();
+
+            //Act
+            var deletePergunta = await _client.DeleteAsync($"/Pergunta/ExcluirPergunta/{pergunta!.Id}");
+            deletePergunta.EnsureSuccessStatusCode();
+
+            //Assert
+            var getPergunta = await ObterPergunta(perguntaDescricao);
+
+            Assert.Equal(HttpStatusCode.OK, deletePergunta.StatusCode);
+            Assert.Null(getPergunta);
+        }
+
+        [Fact, TestPriority(9)]
+        public async Task AlterarAreaDeConhecimentoComPerguntasVinculadas()
+        {
+            //Arrange
+            await Autenticar(_loginAvaliador, _senha);
+
+            var perguntaDto = new AdicionarPerguntaDto()
+            {
+                Descricao = "Qual o resultado deste comando no JS? console.log('1'+'1')",
+                AreaConhecimento = "BancoDeDados",
+                Alternativas = new List<AlternativaDto>()
+                {
+                    new AlternativaDto("11", true),
+                    new AlternativaDto("2", false),
+                    new AlternativaDto("Erro", false)
+                }
+            };
+
+            var postPergunta = await _client.PostAsync("/Pergunta/AdicionarPergunta", JsonContent.Create(perguntaDto));
+            postPergunta.EnsureSuccessStatusCode();
+
+            var getAreaConhecimento = await ObterAreaConhecimento("BancoDeDados");
+
+            var alterarAreaConhecimento = new AlterarAreaConhecimentoDto()
+            {
+                Descricao = "JavaScript",
+                Id = getAreaConhecimento.FirstOrDefault()!.Id
+            };
+
+            //Act
+            var putAreaConhecimento = await _client.PutAsync("/AreaConhecimento/AlterarAreaConhecimento", JsonContent.Create(alterarAreaConhecimento));
+
+            //Assert
+            getAreaConhecimento = await ObterAreaConhecimento("JavaScript");
+
+            Assert.Equal(HttpStatusCode.OK, putAreaConhecimento.StatusCode);
+            Assert.NotEmpty(getAreaConhecimento);
+            Assert.Equal(1, getAreaConhecimento.FirstOrDefault()!.PerguntasCadastradas);
+        }
+
+
 
         private static async Task<T> LerDoJson<T>(HttpContent content)
         {
@@ -147,6 +266,19 @@ namespace Interview.Generator.IntegrationTests.Controllers
             getAreaConhecimento.EnsureSuccessStatusCode();
 
             return  await LerDoJson<IEnumerable<AreaConhecimentoViewModel>>(getAreaConhecimento.Content);
+        }
+
+        private async Task<IEnumerable<PerguntaViewModel>> ObterPergunta(string? descricao = null)
+        {
+            var url = "/Pergunta/ObterPerguntas";
+
+            if (descricao != null)
+                url = $"{url}?descricao={descricao}";
+
+            var getAreaConhecimento = await _client.GetAsync(url);
+            getAreaConhecimento.EnsureSuccessStatusCode();
+
+            return await LerDoJson<IEnumerable<PerguntaViewModel>>(getAreaConhecimento.Content);
         }
     }
 }
