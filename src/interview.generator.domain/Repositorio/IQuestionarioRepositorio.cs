@@ -14,5 +14,6 @@ namespace interview.generator.domain.Repositorio
         Task<Questionario?> ObterPorNome(string nome);
         Task Alterar(Questionario entity);
         Task Excluir(Questionario entity);
+        Task<Questionario?> ObterPorCandidato(Guid usuarioId);
     }
 }

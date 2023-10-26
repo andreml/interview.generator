@@ -84,7 +84,7 @@ namespace interview.generator.api.Controllers
             {
                 var usuarioId = ObterUsuarioIdLogado();
 
-                var result = await _questionarioService.ObterQuestionarioPorCandidato(usuarioId);
+                var result =  _questionarioService.ObterQuestionarioPorCandidato(usuarioId);
 
                 return Response(result);
             }
@@ -103,7 +103,7 @@ namespace interview.generator.api.Controllers
             {
                 var usuarioId = ObterUsuarioIdLogado();
 
-                var result = await _questionarioService.ObterQuestionariosPorDescricao(descricao);
+                var result =  _questionarioService.ObterQuestionariosPorDescricao(descricao);
 
                 return Response(result);
             }

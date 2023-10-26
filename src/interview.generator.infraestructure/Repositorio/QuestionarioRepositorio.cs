@@ -50,7 +50,15 @@ namespace interview.generator.infraestructure.Repositorio
             return _context.Questionario
                        .Include(x => x.PerguntasQuestionario)
                        .Where(x => x.Id == id).FirstOrDefaultAsync();
-            ;
+            
+        }
+
+        public Task<Questionario?> ObterPorCandidato(Guid usuarioId)
+        {
+            return _context.Questionario
+                       .Include(x => x.PerguntasQuestionario)
+                       .Where(x => x.UsuarioCriacaoId == usuarioId)
+                       .OrderByDescending(x => x.DataCriacao).FirstOrDefaultAsync();
         }
     }
 }

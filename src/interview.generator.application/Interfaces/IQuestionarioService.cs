@@ -14,9 +14,9 @@ namespace interview.generator.application.Interfaces
         Task<ResponseBase> CadastrarQuestionario(AdicionarQuestionarioDto questionario, Guid usuarioId);
         Task<ResponseBase> AlterarQuestionario(AlterarQuestionarioDto questionario, Guid usuarioId);
         Task<ResponseBase> ExcluirQuestionario(Guid idQuestionario);
-        Task<ResponseBase<QuestionarioViewModel>> ObterQuestionarioPorCandidato(Guid idCandidato);
-        Task<ResponseBase<QuestionarioViewModel>> ObterPorId(Guid id);
-        Task<ResponseBase<QuestionarioViewModel>> ObterQuestionariosPorDescricao(string descricao);
+        ResponseBase<QuestionarioViewModel> ObterQuestionarioPorCandidato(Guid idCandidato);
+        ResponseBase<QuestionarioViewModel> ObterPorId(Guid id);
+        ResponseBase<QuestionarioViewModel> ObterQuestionariosPorDescricao(string descricao);
 
     }
 }

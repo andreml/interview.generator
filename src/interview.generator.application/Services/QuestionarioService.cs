@@ -80,24 +80,117 @@ namespace interview.generator.application.Services
             return response;
         }
 
-        public Task<ResponseBase> ExcluirQuestionario(Guid idQuestionario)
+        public async Task<ResponseBase> ExcluirQuestionario(Guid idQuestionario)
         {
-            throw new NotImplementedException();
+            var response = new ResponseBase();
+
+            var questionario = await _questionarioRepositorio.ObterPorId(idQuestionario);
+            if (questionario == null)
+            {
+                response.AddErro("Questionario não encontrado");
+                return response;
+            }
+
+            //TODO: Adicionar validação de questionários cadastrados com essa pergunta
+            //Se tiver, impedir a exclusão
+
+            await _questionarioRepositorio.Excluir(questionario);
+
+            response.AddData("Pergunta excluída com sucesso!");
+            return response;
         }
 
-        public Task<ResponseBase<QuestionarioViewModel>> ObterPorId(Guid id)
+        public ResponseBase<QuestionarioViewModel> ObterPorId(Guid id)
         {
-            throw new NotImplementedException();
+            var response = new ResponseBase<QuestionarioViewModel>();
+
+            var perguntas = _questionarioRepositorio.ObterPorId(id);
+
+            if (perguntas == null)
+            {
+                response.AddErro("Questionario não encontrado");
+                return response;
+            }
+
+            var questionarioViewModel = new QuestionarioViewModel
+            {
+                DataCriacao = perguntas.Result.DataCriacao,
+                Nome = perguntas.Result.Nome,
+                TipoQuestionarioId = perguntas.Result.TipoQuestionarioId,
+                UsuarioCriacaoId = perguntas.Result.UsuarioCriacaoId,
+            };
+
+            foreach (var item in perguntas.Result.PerguntasQuestionario)
+                questionarioViewModel.Perguntas.Add(new PerguntaQuestionarioViewModel(item.Id.ToString(),
+                                                                                      item.PerguntaId.ToString(),
+                                                                                      item.QuestionarioId.ToString(),
+                                                                                      item.OrdemApresentacao, item.Peso));
+            
+            response.AddData(questionarioViewModel);
+
+            return response;
         }
 
-        public Task<ResponseBase<QuestionarioViewModel>> ObterQuestionarioPorCandidato(Guid idCandidadto)
+        public ResponseBase<QuestionarioViewModel> ObterQuestionarioPorCandidato(Guid idCandidato)
         {
-            throw new NotImplementedException();
+            var response = new ResponseBase<QuestionarioViewModel>();
+
+            var perguntas = _questionarioRepositorio.ObterPorCandidato(idCandidato);
+
+            if (perguntas == null)
+            {
+                response.AddErro("Questionario não encontrado");
+                return response;
+            }
+
+            var questionarioViewModel = new QuestionarioViewModel
+            {
+                DataCriacao = perguntas.Result.DataCriacao,
+                Nome = perguntas.Result.Nome,
+                TipoQuestionarioId = perguntas.Result.TipoQuestionarioId,
+                UsuarioCriacaoId = perguntas.Result.UsuarioCriacaoId
+            };
+
+            foreach (var item in perguntas.Result.PerguntasQuestionario)
+                questionarioViewModel.Perguntas.Add(new PerguntaQuestionarioViewModel(item.Id.ToString(),
+                                                                                      item.PerguntaId.ToString(),
+                                                                                      item.QuestionarioId.ToString(),
+                                                                                      item.OrdemApresentacao, item.Peso));
+
+            response.AddData(questionarioViewModel);
+
+            return response;
         }
 
-        public Task<ResponseBase<QuestionarioViewModel>> ObterQuestionariosPorDescricao(string descricao)
+        public ResponseBase<QuestionarioViewModel> ObterQuestionariosPorDescricao(string descricao)
         {
-            throw new NotImplementedException();
+            var response = new ResponseBase<QuestionarioViewModel>();
+
+            var perguntas = _questionarioRepositorio.ObterPorNome(descricao);
+
+            if (perguntas == null)
+            {
+                response.AddErro("Questionario não encontrado");
+                return response;
+            }
+
+            var questionarioViewModel = new QuestionarioViewModel
+            {
+                DataCriacao = perguntas.Result.DataCriacao,
+                Nome = perguntas.Result.Nome,
+                TipoQuestionarioId = perguntas.Result.TipoQuestionarioId,
+                UsuarioCriacaoId = perguntas.Result.UsuarioCriacaoId
+            };
+
+            foreach (var item in perguntas.Result.PerguntasQuestionario)
+                questionarioViewModel.Perguntas.Add(new PerguntaQuestionarioViewModel(item.Id.ToString(),
+                                                                                      item.PerguntaId.ToString(),
+                                                                                      item.QuestionarioId.ToString(),
+                                                                                      item.OrdemApresentacao, item.Peso));
+
+            response.AddData(questionarioViewModel);
+
+            return response;
         }
 
     }
