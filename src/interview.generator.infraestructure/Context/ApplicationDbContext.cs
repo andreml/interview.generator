@@ -20,7 +20,6 @@ namespace interview.generator.infraestructure.Context
         public DbSet<PerguntaQuestionario> PerguntaQuestionario { get; set; }
         public DbSet<Questionario> Questionario { get; set; }
         public DbSet<RespostaAvaliacao> RespostaAvaliacao { get; set; }
-        public DbSet<TipoQuestionario> TipoQuestionario { get; set; }
         public DbSet<Usuario> Usuario { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
