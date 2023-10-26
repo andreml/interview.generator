@@ -21,9 +21,33 @@ namespace interview.generator.application.Services
             _questionarioRepositorio = questionarioRepositorio;
         }
 
-        public Task<ResponseBase> AlterarQuestionario(AlterarQuestionarioDto questionario, Guid usuarioId)
+        public async Task<ResponseBase> AlterarQuestionario(AlterarQuestionarioDto questionarioDto, Guid usuarioId)
         {
-            throw new NotImplementedException();
+            var response = new ResponseBase();
+
+            var questionario = await _questionarioRepositorio.ObterPorNome(questionarioDto.Nome);
+
+            if (questionario == null)
+            {
+                response.AddErro("Questionario não encontrado");
+                return response;
+            }
+
+            //TODO: Validar se existem questionários com a pergunta
+
+            questionario.Nome = questionarioDto.Nome;
+            questionario.TipoQuestionarioId = questionarioDto.TipoQuestionarioId;
+
+            questionario.RemoverPerguntas();
+            await _questionarioRepositorio.Alterar(questionario);
+
+            foreach (var pergunta in questionarioDto.Perguntas)
+                questionario.AdicionarPergunta(new PerguntaQuestionario { PerguntaId = pergunta.PerguntaId, Peso = pergunta.Peso, OrdemApresentacao = pergunta.OrdemApresentacao });
+
+            await _questionarioRepositorio.Alterar(questionario);
+
+            response.AddData("Questionario alterado com sucesso!");
+            return response;
         }
 
 
@@ -52,7 +76,7 @@ namespace interview.generator.application.Services
 
             await _questionarioRepositorio.Adicionar(novaPergunta);
 
-            response.AddData("Pergunta adicionada com sucesso!");
+            response.AddData("Questionario adicionado com sucesso!");
             return response;
         }
 

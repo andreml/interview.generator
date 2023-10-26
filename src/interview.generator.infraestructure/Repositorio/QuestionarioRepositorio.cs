@@ -25,26 +25,32 @@ namespace interview.generator.infraestructure.Repositorio
             await _context.SaveChangesAsync();
         }
 
-        public Task Alterar(Questionario entity)
+        public async Task Alterar(Questionario entity)
         {
-            throw new NotImplementedException();
+            _dbSet.Update(entity);
+            await _context.SaveChangesAsync();
         }
 
-        public Task Excluir(Questionario entity)
+        public async Task Excluir(Questionario entity)
         {
-            throw new NotImplementedException();
+            _context.Remove(entity);
+            await _context.SaveChangesAsync();
         }
 
         public Task<Questionario?> ObterPorNome(string nome)
         {
             return _context.Questionario
+                        .Include(x => x.PerguntasQuestionario)
                         .Where(x => x.Nome == nome).FirstOrDefaultAsync();
-                        ;
+                        
         }
 
-        public Task<Questionario?> ObterPorId(Guid Id)
+        public Task<Questionario?> ObterPorId(Guid id)
         {
-            throw new NotImplementedException();
+            return _context.Questionario
+                       .Include(x => x.PerguntasQuestionario)
+                       .Where(x => x.Id == id).FirstOrDefaultAsync();
+            ;
         }
     }
 }

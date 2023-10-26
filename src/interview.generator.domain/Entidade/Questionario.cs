@@ -18,5 +18,10 @@ namespace interview.generator.domain.Entidade
         {
             PerguntasQuestionario.Add(perguntaQuestionario);
         }
+
+        public void RemoverPerguntas()
+        {
+            PerguntasQuestionario.Clear();
+        }
     }
 }
