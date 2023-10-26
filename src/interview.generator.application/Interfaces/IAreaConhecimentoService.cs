@@ -7,10 +7,10 @@ namespace interview.generator.application.Interfaces
 {
     public interface IAreaConhecimentoService
     {
-        Task<ResponseBase<IEnumerable<AreaConhecimentoViewModel>>> ListarAreasConhecimento(Guid usuarioId, Guid areaConhecimentoId, string? descricao);
+        Task<ResponseBase<IEnumerable<AreaConhecimentoViewModel>>> ListarAreasConhecimento(Guid usuarioCriacaoId, Guid areaConhecimentoId, string? descricao);
         Task<ResponseBase> CadastrarAreaConhecimento(AdicionarAreaConhecimentoDto areaConhecimento);
         Task<ResponseBase> AlterarAreaConhecimento(AlterarAreaConhecimentoDto areaConhecimento);
-        Task<ResponseBase> ExcluirAreaConhecimento(Guid id, Guid usuarioId);
-        Task<AreaConhecimento> ObterOuCriarAreaConhecimento(Guid usuarioId, string descricao);
+        Task<ResponseBase> ExcluirAreaConhecimento(Guid usuarioCriacaoId, Guid id);
+        Task<AreaConhecimento> ObterOuCriarAreaConhecimento(Guid usuarioCriacaoId, string descricao);
     }
 }

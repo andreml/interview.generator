@@ -47,9 +47,7 @@ namespace interview.generator.api.Controllers
         {
             try
             {
-                var usuarioId = ObterUsuarioIdLogado();
-
-                var result = await _areaConhecimentoService.ListarAreasConhecimento(usuarioId, areaConhecimentoId, descricao);
+                var result = await _areaConhecimentoService.ListarAreasConhecimento(ObterUsuarioIdLogado(), areaConhecimentoId, descricao);
 
                 return Response(result!);
             }
@@ -85,7 +83,7 @@ namespace interview.generator.api.Controllers
         {
             try
             {
-                var result = await _areaConhecimentoService.ExcluirAreaConhecimento(id, ObterUsuarioIdLogado());
+                var result = await _areaConhecimentoService.ExcluirAreaConhecimento(ObterUsuarioIdLogado(), id);
 
                 return Response(result!);
             }
