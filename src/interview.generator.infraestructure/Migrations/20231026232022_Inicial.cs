@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace interview.generator.infraestructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class Inicial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,26 +17,11 @@ namespace interview.generator.infraestructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Descricao = table.Column<string>(type: "VARCHAR(100)", nullable: false),
-                    UsuarioId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    UsuarioCriacaoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AreaConhecimento", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "PerguntaQuestionario",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PerguntaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    QuestionarioId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    OrdemApresentacao = table.Column<int>(type: "int", nullable: false),
-                    Peso = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PerguntaQuestionario", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -52,18 +37,6 @@ namespace interview.generator.infraestructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Questionario", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TipoQuestionario",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Descricao = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TipoQuestionario", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -144,6 +117,33 @@ namespace interview.generator.infraestructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PerguntaQuestionario",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PerguntaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    QuestionarioId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OrdemApresentacao = table.Column<int>(type: "int", nullable: false),
+                    Peso = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PerguntaQuestionario", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PerguntaQuestionario_Pergunta_PerguntaId",
+                        column: x => x.PerguntaId,
+                        principalTable: "Pergunta",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PerguntaQuestionario_Questionario_QuestionarioId",
+                        column: x => x.QuestionarioId,
+                        principalTable: "Questionario",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "RespostaAvaliacao",
                 columns: table => new
                 {
@@ -179,6 +179,16 @@ namespace interview.generator.infraestructure.Migrations
                 column: "AreaConhecimentoId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PerguntaQuestionario_PerguntaId",
+                table: "PerguntaQuestionario",
+                column: "PerguntaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PerguntaQuestionario_QuestionarioId",
+                table: "PerguntaQuestionario",
+                column: "QuestionarioId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_RespostaAvaliacao_AvaliacaoId",
                 table: "RespostaAvaliacao",
                 column: "AvaliacaoId");
@@ -195,9 +205,6 @@ namespace interview.generator.infraestructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "RespostaAvaliacao");
-
-            migrationBuilder.DropTable(
-                name: "TipoQuestionario");
 
             migrationBuilder.DropTable(
                 name: "Usuario");

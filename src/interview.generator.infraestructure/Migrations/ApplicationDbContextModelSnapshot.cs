@@ -304,12 +304,9 @@ namespace interview.generator.infraestructure.Migrations
 
             modelBuilder.Entity("interview.generator.domain.Entidade.Questionario", b =>
                 {
-                    b.Navigation("PerguntasQuestionario");
-                });
-
-            modelBuilder.Entity("interview.generator.domain.Entidade.Questionario", b =>
-                {
                     b.Navigation("Avaliacoes");
+
+                    b.Navigation("PerguntasQuestionario");
                 });
 #pragma warning restore 612, 618
         }

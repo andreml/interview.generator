@@ -1,5 +1,4 @@
 ﻿using interview.generator.domain.Entidade.Common;
-using Microsoft.Identity.Client;
 
 namespace interview.generator.domain.Entidade
 {
