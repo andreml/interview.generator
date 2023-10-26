@@ -10,14 +10,12 @@ namespace interview.generator.application.Services
     public class PerguntaService : IPerguntaService
     {
         private readonly IPerguntaRepositorio _perguntaRepositorio;
-        private readonly IAreaConhecimentoRepositorio _areaConhecimentoRepositorio;
 
         private readonly IAreaConhecimentoService _areaConhecimentoService;
 
-        public PerguntaService(IPerguntaRepositorio perguntaRepositorio, IAreaConhecimentoRepositorio areaConhecimentoRepositorio, IAreaConhecimentoService areaConhecimentoService)
+        public PerguntaService(IPerguntaRepositorio perguntaRepositorio, IAreaConhecimentoService areaConhecimentoService)
         {
             _perguntaRepositorio = perguntaRepositorio;
-            _areaConhecimentoRepositorio = areaConhecimentoRepositorio;
             _areaConhecimentoService = areaConhecimentoService;
         }
 
