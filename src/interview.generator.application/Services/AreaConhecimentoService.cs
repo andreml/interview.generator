@@ -54,7 +54,7 @@ namespace interview.generator.application.Services
                 return response;
             }
 
-            var novaAreaConhecimento = new AreaConhecimento { Descricao = areaConhecimento.Descricao, UsuarioId = areaConhecimento.UsuarioId };
+            var novaAreaConhecimento = new AreaConhecimento { Descricao = areaConhecimento.Descricao, UsuarioCriacaoId = areaConhecimento.UsuarioId };
 
             await _areaConhecimentoRepositorio.Adicionar(novaAreaConhecimento);
 
@@ -113,7 +113,7 @@ namespace interview.generator.application.Services
             if (areaConhecimento != null)
                 return areaConhecimento;
 
-            areaConhecimento = new AreaConhecimento { Descricao = descricao, UsuarioId = usuarioCriacaoId };
+            areaConhecimento = new AreaConhecimento { Descricao = descricao, UsuarioCriacaoId = usuarioCriacaoId };
 
             await _areaConhecimentoRepositorio.Adicionar(areaConhecimento);
 
