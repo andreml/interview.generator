@@ -1,6 +1,5 @@
 ﻿using interview.generator.application.Dto;
 using interview.generator.application.ViewModels;
-using interview.generator.domain.Entidade.Common;
 using interview.generator.domain.Enum;
 using Newtonsoft.Json;
 using System.Net;
@@ -68,28 +67,12 @@ namespace Interview.Generator.IntegrationTests.Controllers
         }
 
         [Fact, TestPriority(3)]
-        public async Task GerarTokenDeUsuario()
-        {
-            //Arrange
-            var loginDto = new GeraTokenUsuario(_loginAvaliador, _senha);
-
-            //Act
-            var postLogin = await _client.PostAsync("/Login/GerarToken", JsonContent.Create(loginDto));
-            var postLoginResponse = await LerDoJson<LoginViewModel>(postLogin.Content);
-
-            //Assert
-            Assert.Equal(HttpStatusCode.OK, postLogin.StatusCode);
-            Assert.NotNull(postLoginResponse);
-            Assert.False(string.IsNullOrEmpty(postLoginResponse.Token));
-        }
-
-        [Fact, TestPriority(4)]
         public async Task AdicionarAreaConhecimento()
         {
             //Arrange
             await Autenticar(_loginAvaliador, _senha);
 
-            var areaConhecimento = new AdicionarAreaConhecimentoDto() { Descricao = ".Net" };
+            var areaConhecimento = new AdicionarAreaConhecimentoDto() { Descricao = "SqlServer" };
 
             //Act
             var postAreaConhecimento = await _client.PostAsync("/AreaConhecimento/AdicionarAreaConhecimento", JsonContent.Create(areaConhecimento));
@@ -98,13 +81,13 @@ namespace Interview.Generator.IntegrationTests.Controllers
             Assert.Equal(HttpStatusCode.Created, postAreaConhecimento.StatusCode);
         }
 
-        [Fact, TestPriority(5)]
+        [Fact, TestPriority(4)]
         public async Task AlterarAreaConhecimento()
         {
             //Arrange
             await Autenticar(_loginAvaliador, _senha);
 
-            var getAreaConhecimento = await ObterAreaConhecimento();
+            var getAreaConhecimento = await ObterAreaConhecimento("SqlServer");
             
             var alterarAreaConhecimento = new AlterarAreaConhecimentoDto() { 
                 Descricao = "Matematica",
@@ -122,17 +105,13 @@ namespace Interview.Generator.IntegrationTests.Controllers
             Assert.Equal(alterarAreaConhecimento.Descricao, getAreaConhecimento.FirstOrDefault()!.Descricao);
         }
 
-        [Fact, TestPriority(6)]
+        [Fact, TestPriority(5)]
         public async Task ExcluirAreaConhecimento()
         {
             //Arrange
             await Autenticar(_loginAvaliador, _senha);
 
-            var areaConhecimentoDescricao = "Portugues";
-
-            var postAreaConhecimento = await _client.PostAsync("/AreaConhecimento/AdicionarAreaConhecimento",
-                                        JsonContent.Create(new AdicionarAreaConhecimentoDto() { Descricao = areaConhecimentoDescricao }));
-            postAreaConhecimento.EnsureSuccessStatusCode();
+            var areaConhecimentoDescricao = "Matematica";
 
             var getAreaConhecimento = await ObterAreaConhecimento(areaConhecimentoDescricao);
 
@@ -146,7 +125,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
             Assert.Empty(getAreaConhecimentoDepoisDelete);
         }
 
-        [Fact, TestPriority(7)]
+        [Fact, TestPriority(6)]
         public async Task AdicionarPergunta()
         {
             //Arrange
@@ -171,13 +150,13 @@ namespace Interview.Generator.IntegrationTests.Controllers
             Assert.Equal(HttpStatusCode.Created, postPergunta.StatusCode);
         }
 
-        [Fact, TestPriority(8)]
+        [Fact, TestPriority(7)]
         public async Task AlterarPergunta()
         {
             //Arrange
             await Autenticar(_loginAvaliador, _senha);
 
-            var pergunta = (await ObterPergunta("Quanto")).FirstOrDefault();
+            var pergunta = (await ObterPergunta()).FirstOrDefault();
 
             var alterarPerguntaDto = new AlterarPerguntaDto()
             {
@@ -207,7 +186,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
             Assert.Equal(alterarPerguntaDto.Alternativas.Count, pergunta.Alternativas.Count);
         }
 
-        [Fact, TestPriority(9)]
+        [Fact, TestPriority(8)]
         public async Task ExcluirPergunta()
         {
             //Arrange
@@ -227,7 +206,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
             Assert.Null(getPergunta);
         }
 
-        [Fact, TestPriority(10)]
+        [Fact, TestPriority(9)]
         public async Task AlterarAreaDeConhecimentoComPerguntasVinculadas()
         {
             //Arrange
@@ -268,7 +247,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
         }
 
 
-
+        //Metodos auxiliares
         private static async Task<T> LerDoJson<T>(HttpContent content)
         {
             var responseString = await content.ReadAsStringAsync();
