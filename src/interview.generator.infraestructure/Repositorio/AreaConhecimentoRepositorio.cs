@@ -36,31 +36,31 @@ namespace interview.generator.infraestructure.Repositorio
             return Task.CompletedTask;
         }
 
-        public async Task<AreaConhecimento?> ObterPorDescricao(string descricao)
-        {
-            return await _context.AreaConhecimento
-                                .Include(x => x.Perguntas)
-                                .FirstOrDefaultAsync(x => x.Descricao == descricao);
-        }
-
-        public async Task<AreaConhecimento?> ObterPorIdComPerguntas(Guid id, Guid usuarioId)
+        public async Task<AreaConhecimento?> ObterPorIdComPerguntas(Guid usuarioCriacaoId, Guid id)
         {
             return await _dbSet
                             .Include(x => x.Perguntas)
                             .FirstOrDefaultAsync(u => u.Id.Equals(id)
-                                                 && u.UsuarioId == usuarioId);
+                                                 && u.UsuarioId == usuarioCriacaoId);
         }
 
-        public async Task<AreaConhecimento?> ObterPorDescricaoEUsuarioId(string descricao, Guid usuarioId)
+        public async Task<AreaConhecimento?> ObterPorIdEUsuarioId(Guid usuarioCriacaoId, Guid id)
         {
-            return await _context.AreaConhecimento.FirstOrDefaultAsync(x => x.Descricao == descricao && x.UsuarioId == usuarioId);
+            return await _dbSet
+                            .FirstOrDefaultAsync(u => u.Id.Equals(id)
+                                                 && u.UsuarioId == usuarioCriacaoId);
         }
 
-        public async Task<IEnumerable<AreaConhecimento>> ObterAreaConhecimentoComPerguntas(Guid usuarioId, Guid areaConhecimentoId, string? descricao)
+        public async Task<AreaConhecimento?> ObterPorDescricaoEUsuarioId(Guid usuarioCriacaoId, string descricao)
+        {
+            return await _context.AreaConhecimento.FirstOrDefaultAsync(x => x.Descricao == descricao && x.UsuarioId == usuarioCriacaoId);
+        }
+
+        public async Task<IEnumerable<AreaConhecimento>> ObterAreaConhecimentoComPerguntas(Guid usuarioCriacaoId, Guid areaConhecimentoId, string? descricao)
         {
             return await _dbSet
                             .Include(x => x.Perguntas)
-                            .Where(x => x.UsuarioId == usuarioId
+                            .Where(x => x.UsuarioId == usuarioCriacaoId
                                     && (areaConhecimentoId == Guid.Empty || areaConhecimentoId == x.Id)
                                     && (string.IsNullOrEmpty(descricao) || x.Descricao.Contains(descricao)))
                             .ToListAsync();

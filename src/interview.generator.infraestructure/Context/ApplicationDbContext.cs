@@ -25,7 +25,10 @@ namespace interview.generator.infraestructure.Context
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(_configuration.GetValue<string>("ConnectionStrings:DataBase"));
+            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Test")
+                optionsBuilder.UseInMemoryDatabase("InMemoryEmployeeTest");
+            else
+                optionsBuilder.UseSqlServer(_configuration.GetValue<string>("ConnectionStrings:DataBase"));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

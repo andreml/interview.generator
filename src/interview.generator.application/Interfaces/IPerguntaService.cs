@@ -7,8 +7,8 @@ namespace interview.generator.application.Interfaces
     public interface IPerguntaService
     { 
         Task<ResponseBase> CadastrarPergunta(AdicionarPerguntaDto pergunta);
-        ResponseBase<IEnumerable<PerguntaViewModel>> ListarPerguntas(Guid userId, Guid perguntaId, string? areaConhecimento, string? descricao);
+        ResponseBase<IEnumerable<PerguntaViewModel>> ListarPerguntas(Guid usuarioCriacaoId, Guid perguntaId, string? areaConhecimento, string? descricao);
         Task<ResponseBase> AlterarPergunta(AlterarPerguntaDto pergunta);
-        Task<ResponseBase> ExcluirPergunta(Guid perguntaId, Guid usuarioId);
+        Task<ResponseBase> ExcluirPergunta(Guid usuarioCriacaoId, Guid perguntaId);
     }
 }

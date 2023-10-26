@@ -20,26 +20,26 @@ namespace interview.generator.infraestructure.Repositorio
             await _context.Pergunta.AddAsync(entity);
             await _context.SaveChangesAsync();
         }
-        public async Task<bool> ExistePorDescricao(string descricao, Guid usuarioId)
+        public async Task<bool> ExistePorDescricao(Guid usuarioCriacaoId, string descricao)
         {
-            return await _context.Pergunta.AnyAsync(x => x.UsuarioCriacaoId == usuarioId 
+            return await _context.Pergunta.AnyAsync(x => x.UsuarioCriacaoId == usuarioCriacaoId
                                                          && x.Descricao == descricao);
         }
 
-        public async Task<Pergunta?> ObterPerguntaPorId(Guid usuarioId, Guid perguntaId)
+        public async Task<Pergunta?> ObterPerguntaPorId(Guid usuarioCriacaoId, Guid perguntaId)
         {
             return await _context.Pergunta
-                            .FirstOrDefaultAsync(x => x.UsuarioCriacaoId == usuarioId
+                            .FirstOrDefaultAsync(x => x.UsuarioCriacaoId == usuarioCriacaoId
                                                  && x.Id == perguntaId);
         }
 
-        public IEnumerable<Pergunta> ObterPerguntas(Guid usuarioId, Guid perguntaId, string? areaConhecimento, string? descricao)
+        public IEnumerable<Pergunta> ObterPerguntas(Guid usuarioCriacaoId, Guid perguntaId, string? areaConhecimento, string? descricao)
         {
             return _context.Pergunta
                         .Include(x => x.AreaConhecimento)
                         .Include(x => x.Alternativas)
                         .Where(x =>
-                            x.UsuarioCriacaoId == usuarioId
+                            x.UsuarioCriacaoId == usuarioCriacaoId
                             && (perguntaId == Guid.Empty || x.Id == perguntaId)
                             && (areaConhecimento == null || x.AreaConhecimento.Descricao.Contains(areaConhecimento!))
                             && (descricao == null || x.Descricao.Contains(descricao!))

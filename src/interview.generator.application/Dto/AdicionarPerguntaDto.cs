@@ -14,6 +14,12 @@ namespace interview.generator.application.Dto
 
     public class AlternativaDto
     {
+        public AlternativaDto(string descricao, bool correta)
+        {
+            Descricao = descricao;
+            Correta = correta;
+        }
+
         public string Descricao { get; set; } = default!;
         public bool Correta { get; set; }
     }

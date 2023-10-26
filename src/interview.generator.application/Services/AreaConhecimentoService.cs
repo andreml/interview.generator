@@ -16,24 +16,27 @@ namespace interview.generator.application.Services
             _areaConhecimentoRepositorio = areaConhecimentoRepositorio;
         }
 
-        public async Task<ResponseBase> AlterarAreaConhecimento(AlterarAreaConhecimentoDto areaConhecimento)
+        public async Task<ResponseBase> AlterarAreaConhecimento(AlterarAreaConhecimentoDto areaConhecimentoDto)
         {
             var response = new ResponseBase();
 
-            var areaConhecimentoExistente = await _areaConhecimentoRepositorio.ObterPorDescricao(areaConhecimento.Descricao);
-            if (areaConhecimentoExistente != null)
+            var areaConhecimento = await _areaConhecimentoRepositorio.ObterPorIdEUsuarioId(areaConhecimentoDto.UsuarioId, areaConhecimentoDto.Id);
+            if (areaConhecimento == null)
             {
-                response.AddErro($"Já existe uma área do conhecimento cadastrada com essa descrição. Id: {areaConhecimentoExistente.Id}");
+                response.AddErro($"Area de conhecimento não encontrada");
                 return response;
             }
 
-            var areaConhecimentoAlterada = new AreaConhecimento { 
-                Descricao = areaConhecimento.Descricao, 
-                UsuarioId = areaConhecimento.UsuarioId, 
-                Id = areaConhecimento.Id 
-            };
+            var areaConhecimentoDescricao = await _areaConhecimentoRepositorio.ObterPorDescricaoEUsuarioId(areaConhecimentoDto.UsuarioId, areaConhecimentoDto.Descricao);
+            if (areaConhecimentoDescricao != null && areaConhecimentoDescricao.Id != areaConhecimento.Id)
+            {
+                response.AddErro($"Já existe uma área do conhecimento cadastrada com essa descrição. Id: {areaConhecimentoDescricao.Id}");
+                return response;
+            }
 
-            await _areaConhecimentoRepositorio.Alterar(areaConhecimentoAlterada);
+            areaConhecimento.AlterarDescricao(areaConhecimentoDto.Descricao);
+
+            await _areaConhecimentoRepositorio.Alterar(areaConhecimento);
 
             response.AddData("Área de Conhecimento alterada com sucesso!");
 
@@ -44,7 +47,7 @@ namespace interview.generator.application.Services
         {
             var response = new ResponseBase();
 
-            var areaConhecimentoExistente = await _areaConhecimentoRepositorio.ObterPorDescricao(areaConhecimento.Descricao);
+            var areaConhecimentoExistente = await _areaConhecimentoRepositorio.ObterPorDescricaoEUsuarioId(areaConhecimento.UsuarioId, areaConhecimento.Descricao);
             if (areaConhecimentoExistente != null)
             {
                 response.AddErro($"Já existe uma área do conhecimento cadastrada com essa descrição. Id: {areaConhecimentoExistente.Id}");
@@ -60,19 +63,19 @@ namespace interview.generator.application.Services
             return response;
         }
 
-        public async Task<ResponseBase> ExcluirAreaConhecimento(Guid id, Guid usuarioId)
+        public async Task<ResponseBase> ExcluirAreaConhecimento(Guid usuarioCriacaoId, Guid id)
         {
             var response = new ResponseBase();
 
-            var areaConhecimento = await _areaConhecimentoRepositorio.ObterPorIdComPerguntas(id, usuarioId);
+            var areaConhecimento = await _areaConhecimentoRepositorio.ObterPorIdComPerguntas(usuarioCriacaoId, id);
 
-            if(areaConhecimento == null)
+            if (areaConhecimento == null)
             {
                 response.AddErro("Area de conhecimento não encontrada");
                 return response;
             }
 
-            if(areaConhecimento.Perguntas!.Count > 0)
+            if (areaConhecimento.Perguntas!.Count > 0)
             {
                 response.AddErro("Area de conhecimento possui uma ou mais perguntas relacionadas");
                 return response;
@@ -85,11 +88,11 @@ namespace interview.generator.application.Services
             return response;
         }
 
-        public async Task<ResponseBase<IEnumerable<AreaConhecimentoViewModel>>> ListarAreasConhecimento(Guid usuarioId, Guid areaConhecimentoId, string? descricao)
+        public async Task<ResponseBase<IEnumerable<AreaConhecimentoViewModel>>> ListarAreasConhecimento(Guid usuarioCriacaoId, Guid areaConhecimentoId, string? descricao)
         {
             var response = new ResponseBase<IEnumerable<AreaConhecimentoViewModel>>();
 
-            var areasConhecimento = await _areaConhecimentoRepositorio.ObterAreaConhecimentoComPerguntas(usuarioId, areaConhecimentoId, descricao);
+            var areasConhecimento = await _areaConhecimentoRepositorio.ObterAreaConhecimentoComPerguntas(usuarioCriacaoId, areaConhecimentoId, descricao);
 
             if (areasConhecimento == null)
                 return response;
@@ -103,14 +106,14 @@ namespace interview.generator.application.Services
             return response;
         }
 
-        public async Task<AreaConhecimento> ObterOuCriarAreaConhecimento(Guid usuarioId, string descricao)
+        public async Task<AreaConhecimento> ObterOuCriarAreaConhecimento(Guid usuarioCriacaoId, string descricao)
         {
-            var areaConhecimento = await _areaConhecimentoRepositorio.ObterPorDescricaoEUsuarioId(descricao, usuarioId);
+            var areaConhecimento = await _areaConhecimentoRepositorio.ObterPorDescricaoEUsuarioId(usuarioCriacaoId, descricao);
 
             if (areaConhecimento != null)
                 return areaConhecimento;
 
-            areaConhecimento = new AreaConhecimento { Descricao = descricao, UsuarioId = usuarioId };
+            areaConhecimento = new AreaConhecimento { Descricao = descricao, UsuarioId = usuarioCriacaoId };
 
             await _areaConhecimentoRepositorio.Adicionar(areaConhecimento);
 
