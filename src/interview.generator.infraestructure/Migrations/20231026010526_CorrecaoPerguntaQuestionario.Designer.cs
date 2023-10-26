@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using interview.generator.infraestructure.Context;
 
@@ -11,9 +12,11 @@ using interview.generator.infraestructure.Context;
 namespace interview.generator.infraestructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231026010526_CorrecaoPerguntaQuestionario")]
+    partial class CorrecaoPerguntaQuestionario
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -131,8 +134,6 @@ namespace interview.generator.infraestructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("PerguntaId");
-
-                    b.HasIndex("QuestionarioId");
 
                     b.ToTable("PerguntaQuestionario");
                 });
@@ -256,13 +257,11 @@ namespace interview.generator.infraestructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("interview.generator.domain.Entidade.Questionario", "Questionario")
-                        .WithMany("PerguntasQuestionario")
-                        .HasForeignKey("QuestionarioId")
+                    b.HasOne("interview.generator.domain.Entidade.Questionario", null)
+                        .WithMany("Perguntas")
+                        .HasForeignKey("PerguntaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Questionario");
                 });
 
             modelBuilder.Entity("interview.generator.domain.Entidade.RespostaAvaliacao", b =>
@@ -293,7 +292,7 @@ namespace interview.generator.infraestructure.Migrations
 
             modelBuilder.Entity("interview.generator.domain.Entidade.Questionario", b =>
                 {
-                    b.Navigation("PerguntasQuestionario");
+                    b.Navigation("Perguntas");
                 });
 #pragma warning restore 612, 618
         }

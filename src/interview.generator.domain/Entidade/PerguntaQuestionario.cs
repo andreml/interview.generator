@@ -1,4 +1,5 @@
 ﻿using interview.generator.domain.Entidade.Common;
+using Microsoft.Identity.Client;
 
 namespace interview.generator.domain.Entidade
 {
@@ -8,6 +9,8 @@ namespace interview.generator.domain.Entidade
         public Guid QuestionarioId { get; set; }
         public int OrdemApresentacao { get; set; }
         public int Peso { get; set; }
+
+        public Questionario Questionario { get; set; }
         
 
         public PerguntaQuestionario()

@@ -28,9 +28,9 @@ namespace interview.generator.infraestructure.Mapping
                 .IsRequired();
 
             builder
-                .HasMany(x => x.Perguntas)
-                .WithOne()
-                .HasForeignKey(x => x.PerguntaId);
+               .HasMany(x => x.PerguntasQuestionario)
+               .WithOne(x => x.Questionario)
+               .HasForeignKey(x => x.QuestionarioId);
         }
     }
 }

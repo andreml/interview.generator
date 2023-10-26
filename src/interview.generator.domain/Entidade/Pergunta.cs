@@ -9,6 +9,8 @@ namespace interview.generator.domain.Entidade
         public AreaConhecimento AreaConhecimento { get; set; }
         public List<Alternativa> Alternativas { get; set; } = new();
 
+        public ICollection<PerguntaQuestionario>? PerguntasQuestionario { get; set; }
+
         public Pergunta()
         { 
         }

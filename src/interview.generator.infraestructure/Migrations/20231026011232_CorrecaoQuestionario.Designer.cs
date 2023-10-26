@@ -12,8 +12,8 @@ using interview.generator.infraestructure.Context;
 namespace interview.generator.infraestructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231025005409_PerguntaQuestionario")]
-    partial class PerguntaQuestionario
+    [Migration("20231026011232_CorrecaoQuestionario")]
+    partial class CorrecaoQuestionario
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -135,6 +135,8 @@ namespace interview.generator.infraestructure.Migrations
 
                     b.HasIndex("PerguntaId");
 
+                    b.HasIndex("QuestionarioId");
+
                     b.ToTable("PerguntaQuestionario");
                 });
 
@@ -251,11 +253,19 @@ namespace interview.generator.infraestructure.Migrations
 
             modelBuilder.Entity("interview.generator.domain.Entidade.PerguntaQuestionario", b =>
                 {
-                    b.HasOne("interview.generator.domain.Entidade.Questionario", null)
-                        .WithMany("Perguntas")
+                    b.HasOne("interview.generator.domain.Entidade.Pergunta", null)
+                        .WithMany("PerguntasQuestionario")
                         .HasForeignKey("PerguntaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("interview.generator.domain.Entidade.Questionario", "Questionario")
+                        .WithMany("PerguntasQuestionario")
+                        .HasForeignKey("QuestionarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Questionario");
                 });
 
             modelBuilder.Entity("interview.generator.domain.Entidade.RespostaAvaliacao", b =>
@@ -280,11 +290,13 @@ namespace interview.generator.infraestructure.Migrations
             modelBuilder.Entity("interview.generator.domain.Entidade.Pergunta", b =>
                 {
                     b.Navigation("Alternativas");
+
+                    b.Navigation("PerguntasQuestionario");
                 });
 
             modelBuilder.Entity("interview.generator.domain.Entidade.Questionario", b =>
                 {
-                    b.Navigation("Perguntas");
+                    b.Navigation("PerguntasQuestionario");
                 });
 #pragma warning restore 612, 618
         }
