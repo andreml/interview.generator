@@ -10,22 +10,20 @@ namespace interview.generator.application.Services
     public class PerguntaService : IPerguntaService
     {
         private readonly IPerguntaRepositorio _perguntaRepositorio;
-        private readonly IAreaConhecimentoRepositorio _areaConhecimentoRepositorio;
 
         private readonly IAreaConhecimentoService _areaConhecimentoService;
 
-        public PerguntaService(IPerguntaRepositorio perguntaRepositorio, IAreaConhecimentoRepositorio areaConhecimentoRepositorio, IAreaConhecimentoService areaConhecimentoService)
+        public PerguntaService(IPerguntaRepositorio perguntaRepositorio, IAreaConhecimentoService areaConhecimentoService)
         {
             _perguntaRepositorio = perguntaRepositorio;
-            _areaConhecimentoRepositorio = areaConhecimentoRepositorio;
             _areaConhecimentoService = areaConhecimentoService;
         }
 
-        public async Task<ResponseBase> AlterarPergunta(AlterarPerguntaDto perguntaDto, Guid usuarioId)
+        public async Task<ResponseBase> AlterarPergunta(AlterarPerguntaDto perguntaDto)
         {
             var response = new ResponseBase();
 
-            var pergunta = await _perguntaRepositorio.ObterPerguntaPorId(usuarioId, perguntaDto.Id);
+            var pergunta = await _perguntaRepositorio.ObterPerguntaPorId(perguntaDto.UsuarioId, perguntaDto.Id);
 
             if(pergunta == null)
             {
@@ -33,7 +31,7 @@ namespace interview.generator.application.Services
                 return response;
             }
 
-            var areaConhecimento = await _areaConhecimentoService.ObterOuCriarAreaConhecimento(usuarioId, perguntaDto.AreaConhecimento);
+            var areaConhecimento = await _areaConhecimentoService.ObterOuCriarAreaConhecimento(perguntaDto.UsuarioId, perguntaDto.AreaConhecimento);
 
             //TODO: Validar se existem questionários com a pergunta
 
@@ -51,20 +49,20 @@ namespace interview.generator.application.Services
             return response;
         }
 
-        public async Task<ResponseBase> CadastrarPergunta(AdicionarPerguntaDto pergunta, Guid usuarioId)
+        public async Task<ResponseBase> CadastrarPergunta(AdicionarPerguntaDto pergunta)
         {
             var response = new ResponseBase();
 
-            var perguntaDuplicada = await _perguntaRepositorio.ExistePorDescricao(pergunta.Descricao, usuarioId);
+            var perguntaDuplicada = await _perguntaRepositorio.ExistePorDescricao(pergunta.UsuarioId, pergunta.Descricao);
             if (perguntaDuplicada)
             {
                 response.AddErro("Pergunta já cadastrada");
                 return response;
             }
 
-            var areaConhecimento = await _areaConhecimentoService.ObterOuCriarAreaConhecimento(usuarioId, pergunta.AreaConhecimento);
+            var areaConhecimento = await _areaConhecimentoService.ObterOuCriarAreaConhecimento(pergunta.UsuarioId, pergunta.AreaConhecimento);
 
-            var novaPergunta = new Pergunta(areaConhecimento, pergunta.Descricao, usuarioId);
+            var novaPergunta = new Pergunta(areaConhecimento, pergunta.Descricao, pergunta.UsuarioId);
 
             foreach (var alternativa in pergunta.Alternativas)
                 novaPergunta.AdicionarAlternativa(new Alternativa(alternativa.Descricao, alternativa.Correta));
@@ -75,11 +73,11 @@ namespace interview.generator.application.Services
             return response;
         }
 
-        public ResponseBase<IEnumerable<PerguntaViewModel>> ListarPerguntas(Guid userId, Guid perguntaId, string? areaConhecimento, string? descricao)
+        public ResponseBase<IEnumerable<PerguntaViewModel>> ListarPerguntas(Guid usuarioCriacaoId, Guid perguntaId, string? areaConhecimento, string? descricao)
         {
             var response = new ResponseBase<IEnumerable<PerguntaViewModel>>();
 
-            var perguntas = _perguntaRepositorio.ObterPerguntas(userId, perguntaId, areaConhecimento, descricao);
+            var perguntas = _perguntaRepositorio.ObterPerguntas(usuarioCriacaoId, perguntaId, areaConhecimento, descricao);
 
             if(perguntas.Count() == 0)
                 return response;
@@ -99,11 +97,11 @@ namespace interview.generator.application.Services
             return response;
         }
 
-        public async Task<ResponseBase> ExcluirPergunta(Guid perguntaId, Guid usuarioId)
+        public async Task<ResponseBase> ExcluirPergunta(Guid usuarioCriacaoId, Guid perguntaId)
         {
             var response = new ResponseBase();
 
-            var pergunta = await _perguntaRepositorio.ObterPerguntaPorId(usuarioId, perguntaId);
+            var pergunta = await _perguntaRepositorio.ObterPerguntaPorId(usuarioCriacaoId, perguntaId);
             if (pergunta == null)
             {
                 response.AddErro("Pergunta não encontrada");

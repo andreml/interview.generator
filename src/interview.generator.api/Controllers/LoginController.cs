@@ -1,5 +1,7 @@
 ﻿using interview.generator.application.Dto;
 using interview.generator.application.Interfaces;
+using interview.generator.application.ViewModels;
+using interview.generator.domain.Entidade.Common;
 using Microsoft.AspNetCore.Mvc;
 
 namespace interview.generator.api.Controllers
@@ -16,14 +18,19 @@ namespace interview.generator.api.Controllers
             
         }
 
-        [HttpPost("GeraToken")]
-        public async Task<IActionResult> GeraToken(GeraTokenUsuario usuario)
+        /// <summary>
+        /// Gera token do usuário (Avaliador | Candidato)
+        /// </summary>
+        [HttpPost("GerarToken")]
+        [ProducesResponseType(typeof(LoginViewModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ResponseErro), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GerarToken(GeraTokenUsuario usuario)
         {
             try
             {
-                var result = await _loginService.BuscaTokenUsuario(usuario);
+                var result = await _loginService.BuscarTokenUsuario(usuario);
 
-                return Response(result);
+                return Response(result!);
             }
             catch (Exception e)
             {

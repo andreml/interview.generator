@@ -29,50 +29,38 @@ namespace interview.generator.infraestructure.Repositorio
             return Task.CompletedTask;
         }
 
-        public Task Excluir(Guid id)
+        public Task Excluir(AreaConhecimento entity)
         {
-            var result = ObterPorId(id).Result;
-            if (result is null) throw new Exception("Area de conhecimento não encontrada");
-
-            _context.Remove(result);
+            _context.Remove(entity);
+            _context.SaveChanges();
             return Task.CompletedTask;
         }
 
-        public async Task<AreaConhecimento?> ObterPorDescricao(string descricao)
-        {
-            return await _context.AreaConhecimento
-                                .Include(x => x.Perguntas)
-                                .FirstOrDefaultAsync(x => x.Descricao == descricao);
-        }
-
-        public async Task<AreaConhecimento?> ObterPorId(Guid id)
-        {
-            return await _dbSet.FirstOrDefaultAsync(u => u.Id.Equals(id));
-        }
-
-        public async Task<AreaConhecimento?> ObterPorIdComPerguntas(Guid id)
+        public async Task<AreaConhecimento?> ObterPorIdComPerguntas(Guid usuarioCriacaoId, Guid id)
         {
             return await _dbSet
                             .Include(x => x.Perguntas)
-                            .FirstOrDefaultAsync(u => u.Id.Equals(id));
+                            .FirstOrDefaultAsync(u => u.Id.Equals(id)
+                                                 && u.UsuarioCriacaoId == usuarioCriacaoId);
         }
 
-        public async Task<AreaConhecimento?> ObterPorDescricaoEUsuarioId(string descricao, Guid usuarioId)
+        public async Task<AreaConhecimento?> ObterPorIdEUsuarioId(Guid usuarioCriacaoId, Guid id)
         {
-            return await _context.AreaConhecimento.FirstOrDefaultAsync(x => x.Descricao == descricao && x.UsuarioId == usuarioId);
+            return await _dbSet
+                            .FirstOrDefaultAsync(u => u.Id.Equals(id)
+                                                 && u.UsuarioCriacaoId == usuarioCriacaoId);
         }
 
-        public async Task<IEnumerable<AreaConhecimento>> ObterTodos()
+        public async Task<AreaConhecimento?> ObterPorDescricaoEUsuarioId(Guid usuarioCriacaoId, string descricao)
         {
-            var result = _dbSet.ToListAsync().Result;
-            return await Task.FromResult(result);
+            return await _context.AreaConhecimento.FirstOrDefaultAsync(x => x.Descricao == descricao && x.UsuarioCriacaoId == usuarioCriacaoId);
         }
 
-        public async Task<IEnumerable<AreaConhecimento>> ObterAreaConhecimentoComPerguntas(Guid usuarioId, Guid areaConhecimentoId, string? descricao)
+        public async Task<IEnumerable<AreaConhecimento>> ObterAreaConhecimentoComPerguntas(Guid usuarioCriacaoId, Guid areaConhecimentoId, string? descricao)
         {
             return await _dbSet
                             .Include(x => x.Perguntas)
-                            .Where(x => x.UsuarioId == usuarioId
+                            .Where(x => x.UsuarioCriacaoId == usuarioCriacaoId
                                     && (areaConhecimentoId == Guid.Empty || areaConhecimentoId == x.Id)
                                     && (string.IsNullOrEmpty(descricao) || x.Descricao.Contains(descricao)))
                             .ToListAsync();

@@ -49,30 +49,5 @@ namespace interview.generator.test.Infraestructure
             var result = await mockRepositorio.Object.ObterPorId(Guid.Empty);
             Assert.True(result is null);
         }
-
-        [Fact]
-        public async void ListarUsuariosCadastrados()
-        {
-            var usuarios = new Usuario()
-            {
-                Cpf = "12345679811",
-                Id = Guid.NewGuid(),
-                Nome = "Andre Teste 1",
-                Perfil = Perfil.Avaliador
-            };
-            await mockRepositorio.Object.Adicionar(usuarios);
-
-            var usuarios1 = new Usuario()
-            {
-                Cpf = "12345679811",
-                Id = Guid.NewGuid(),
-                Nome = "Andre Teste 1",
-                Perfil = Perfil.Avaliador
-            };
-
-            await mockRepositorio.Object.Adicionar(usuarios1);
-            var result = await mockRepositorio.Object.ObterTodos();
-            Assert.True(result.Count() > 0);
-        }
     }
 }

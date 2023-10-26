@@ -82,37 +82,6 @@ namespace interview.generator.application.Services
             return response;
         }
 
-        public async Task<ResponseBase> ExcluirUsuario(Guid id)
-        {
-            var response = new ResponseBase();
-
-            //Adicionar validações
-
-            await _repositorio.Excluir(id);
-
-            response.AddData("Usuário excluído com sucesso!");
-
-            return response;
-        }
-
-        public async Task<ResponseBase<IEnumerable<UsuarioViewModel>>> ListarUsuarios()
-        {
-            var response = new ResponseBase<IEnumerable<UsuarioViewModel>>();
-
-            var usuarios = await _repositorio.ObterTodos();
-
-            if (usuarios.Count() == 0)
-                return response;
-
-            var usuariosViewModel = usuarios
-                                        .Select(u => new UsuarioViewModel(u.Id, u.Nome, u.Cpf, u.Login, u.Perfil))
-                                        .ToList();
-
-            response.AddData(usuariosViewModel);
-
-            return response;
-        }
-
         public async Task<ResponseBase<UsuarioViewModel>> ObterUsuario(Guid id)
         {
             var response = new ResponseBase<UsuarioViewModel>();

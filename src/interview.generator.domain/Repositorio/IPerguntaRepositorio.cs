@@ -2,13 +2,11 @@
 
 namespace interview.generator.domain.Repositorio
 {
-    public interface IPerguntaRepositorio
+    public interface IPerguntaRepositorio : ICommonRepository<Pergunta>
     {
-        Task Adicionar(Pergunta entity);
-        Task<bool> ExistePorDescricao(string descricao, Guid usuarioId);
-        IEnumerable<Pergunta> ObterPerguntas(Guid usuarioId, Guid perguntaId, string? areaConhecimento, string? descricao);
-        Task<Pergunta?> ObterPerguntaPorId(Guid usuarioId, Guid perguntaId);
-        Task Alterar(Pergunta entity);
+        Task<bool> ExistePorDescricao(Guid usuarioCriacaoId, string descricao);
+        IEnumerable<Pergunta> ObterPerguntas(Guid usuarioCriacaoId, Guid perguntaId, string? areaConhecimento, string? descricao);
+        Task<Pergunta?> ObterPerguntaPorId(Guid usuarioCriacaoId, Guid perguntaId);
         Task Excluir(Pergunta entity);
     }
 }

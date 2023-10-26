@@ -12,7 +12,7 @@ using interview.generator.infraestructure.Context;
 namespace interview.generator.infraestructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231022143305_Initial")]
+    [Migration("20231025141920_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -29,7 +29,8 @@ namespace interview.generator.infraestructure.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasAnnotation("Relational:JsonPropertyName", "Id");
 
                     b.Property<bool>("Correta")
                         .HasColumnType("bit");
@@ -52,7 +53,8 @@ namespace interview.generator.infraestructure.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasAnnotation("Relational:JsonPropertyName", "Id");
 
                     b.Property<string>("Descricao")
                         .IsRequired()
@@ -70,22 +72,28 @@ namespace interview.generator.infraestructure.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasAnnotation("Relational:JsonPropertyName", "Id");
 
                     b.Property<Guid>("CandidatoId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasAnnotation("Relational:JsonPropertyName", "CandidatoId");
 
                     b.Property<DateTime>("DataAplicacao")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasAnnotation("Relational:JsonPropertyName", "DataAplicacao");
 
                     b.Property<string>("ObservacaoAplicador")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(500)");
+                        .HasColumnType("VARCHAR(500)")
+                        .HasAnnotation("Relational:JsonPropertyName", "ObservacaoAplicador");
 
                     b.Property<Guid>("QuestionarioId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("QuestionarioId");
 
                     b.ToTable("Avaliacao");
                 });
@@ -94,7 +102,8 @@ namespace interview.generator.infraestructure.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasAnnotation("Relational:JsonPropertyName", "Id");
 
                     b.Property<Guid>("AreaConhecimentoId")
                         .HasColumnType("uniqueidentifier");
@@ -117,7 +126,8 @@ namespace interview.generator.infraestructure.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasAnnotation("Relational:JsonPropertyName", "Id");
 
                     b.Property<int>("OrdemApresentacao")
                         .HasColumnType("int");
@@ -140,7 +150,8 @@ namespace interview.generator.infraestructure.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasAnnotation("Relational:JsonPropertyName", "Id");
 
                     b.Property<DateTime>("DataCriacao")
                         .HasColumnType("datetime2");
@@ -164,7 +175,8 @@ namespace interview.generator.infraestructure.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasAnnotation("Relational:JsonPropertyName", "Id");
 
                     b.Property<Guid>("AlternativaEscolhidaId")
                         .HasColumnType("uniqueidentifier");
@@ -180,13 +192,16 @@ namespace interview.generator.infraestructure.Migrations
                     b.HasIndex("AvaliacaoId");
 
                     b.ToTable("RespostaAvaliacao");
+
+                    b.HasAnnotation("Relational:JsonPropertyName", "Respostas");
                 });
 
             modelBuilder.Entity("interview.generator.domain.Entidade.TipoQuestionario", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasAnnotation("Relational:JsonPropertyName", "Id");
 
                     b.Property<string>("Descricao")
                         .IsRequired()
@@ -201,7 +216,8 @@ namespace interview.generator.infraestructure.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasAnnotation("Relational:JsonPropertyName", "Id");
 
                     b.Property<string>("Cpf")
                         .IsRequired()
@@ -234,6 +250,17 @@ namespace interview.generator.infraestructure.Migrations
                         .HasForeignKey("PerguntaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("interview.generator.domain.Entidade.Avaliacao", b =>
+                {
+                    b.HasOne("interview.generator.domain.Entidade.Questionario", "Questionario")
+                        .WithMany("Avaliacoes")
+                        .HasForeignKey("QuestionarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Questionario");
                 });
 
             modelBuilder.Entity("interview.generator.domain.Entidade.Pergunta", b =>
@@ -269,6 +296,11 @@ namespace interview.generator.infraestructure.Migrations
             modelBuilder.Entity("interview.generator.domain.Entidade.Pergunta", b =>
                 {
                     b.Navigation("Alternativas");
+                });
+
+            modelBuilder.Entity("interview.generator.domain.Entidade.Questionario", b =>
+                {
+                    b.Navigation("Avaliacoes");
                 });
 #pragma warning restore 612, 618
         }

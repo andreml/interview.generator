@@ -20,12 +20,14 @@ namespace interview.generator.infraestructure.Context
         public DbSet<PerguntaQuestionario> PerguntaQuestionario { get; set; }
         public DbSet<Questionario> Questionario { get; set; }
         public DbSet<RespostaAvaliacao> RespostaAvaliacao { get; set; }
-        public DbSet<TipoQuestionario> TipoQuestionario { get; set; }
         public DbSet<Usuario> Usuario { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(_configuration.GetValue<string>("ConnectionStrings:DataBase"));
+            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Test")
+                optionsBuilder.UseInMemoryDatabase("InMemoryEmployeeTest");
+            else
+                optionsBuilder.UseSqlServer(_configuration.GetValue<string>("ConnectionStrings:DataBase"));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

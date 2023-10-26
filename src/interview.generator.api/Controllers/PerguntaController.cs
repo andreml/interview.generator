@@ -32,9 +32,9 @@ namespace interview.generator.api.Controllers
         {
             try
             {
-                var userId = ObterUsuarioIdLogado();
+                var usuarioId = ObterUsuarioIdLogado();
 
-                var result = _perguntaService.ListarPerguntas(userId, perguntaId, areaConhecimento, descricao);
+                var result = _perguntaService.ListarPerguntas(usuarioId, perguntaId, areaConhecimento, descricao);
 
                 return Response(result);
             }
@@ -55,11 +55,11 @@ namespace interview.generator.api.Controllers
         {
             try
             {
-                var usuarioId = ObterUsuarioIdLogado();
+                pergunta.UsuarioId = ObterUsuarioIdLogado();
 
-                var result = await _perguntaService.CadastrarPergunta(pergunta, usuarioId);
+                var result = await _perguntaService.CadastrarPergunta(pergunta);
 
-                return Response(result);
+                return Response(result!);
             }
             catch (Exception e)
             {
@@ -70,7 +70,7 @@ namespace interview.generator.api.Controllers
         /// <summary>
         /// Altera uma pergunta existente (Avaliador)
         /// </summary>
-        [HttpPost("AlterarPergunta")]
+        [HttpPut("AlterarPergunta")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status400BadRequest)]
@@ -78,9 +78,9 @@ namespace interview.generator.api.Controllers
         {
             try
             {
-                var usuarioId = ObterUsuarioIdLogado();
+                pergunta.UsuarioId = ObterUsuarioIdLogado();
 
-                var result = await _perguntaService.AlterarPergunta(pergunta, usuarioId);
+                var result = await _perguntaService.AlterarPergunta(pergunta);
 
                 return Response(result);
             }
@@ -103,7 +103,7 @@ namespace interview.generator.api.Controllers
             {
                 var usuarioId = ObterUsuarioIdLogado();
 
-                var result = await _perguntaService.ExcluirPergunta(perguntaId, usuarioId);
+                var result = await _perguntaService.ExcluirPergunta(usuarioId, perguntaId);
 
                 return Response(result);
             }

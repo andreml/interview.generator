@@ -1,7 +1,6 @@
 ﻿using interview.generator.application.Dto;
 using interview.generator.application.Interfaces;
 using interview.generator.application.ViewModels;
-using interview.generator.domain.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,41 +18,19 @@ namespace interview.generator.api.Controllers
         }
 
         /// <summary>
-        /// Obtém todos os usuários (Necessário estar autenticado com usuário Avaliador)
+        /// Obtém usuário (Avaliador | Candidato)
         /// </summary>
-        [HttpGet("ObterTodos")]
-        [Authorize(Roles = $"{Perfis.Avaliador}")]
-        [ProducesResponseType(typeof(IEnumerable<UsuarioViewModel>), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<IActionResult> ObterUsuariosAsync()
-        {
-            try
-            {
-                var result = await _usuarioService.ListarUsuarios();
-
-                return Response(result);
-            }
-            catch (Exception e)
-            {
-                return ResponseErro(e.Message, "Erro ao obter os usuários");
-            }
-        }
-
-        /// <summary>
-        /// Obtém usuário por Id
-        /// </summary>
-        /// <param name="id">Id do usuário</param>
-        /// <returns></returns>
-        [HttpGet("ObterPorId/{id}")]
+        [Authorize]
+        [HttpGet("ObterUsuario")]
         [ProducesResponseType(typeof(UsuarioViewModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<IActionResult> ObterPorId(Guid id)
+        public async Task<IActionResult> ObterPorId()
         {
             try
             {
-                var result = await _usuarioService.ObterUsuario(id);
+                var result = await _usuarioService.ObterUsuario(ObterUsuarioIdLogado());
 
-                return Response(result);
+                return Response(result!);
             }
             catch (Exception e)
             {
@@ -74,7 +51,7 @@ namespace interview.generator.api.Controllers
             {
                 var result = await _usuarioService.CadastrarUsuario(usuario);
 
-                return Response(result);
+                return Response(result!);
             }
             catch (Exception e)
             {
@@ -94,12 +71,10 @@ namespace interview.generator.api.Controllers
         {
             try
             {
-                if (ObterUsuarioIdLogado() != usuario.Id)
-                    return Unauthorized();
-
+                usuario.Id = ObterUsuarioIdLogado();
                 var result = await _usuarioService.AlterarUsuario(usuario);
 
-                return Response(result);
+                return Response(result!);
             }
             catch (Exception e)
             {

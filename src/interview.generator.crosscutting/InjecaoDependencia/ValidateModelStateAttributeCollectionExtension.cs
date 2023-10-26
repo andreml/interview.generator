@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using interview.generator.domain.Entidade.Common;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Net;
 
@@ -15,7 +16,13 @@ namespace interview.generator.crosscutting.InjecaoDependencia
                         .Select(v => v.ErrorMessage)
                         .ToList();
 
-                context.Result = new JsonResult(errors) { StatusCode = (int)HttpStatusCode.BadRequest };
+                var responseErro = new ResponseErro()
+                {
+                    Codigo = 400,
+                    Mensagens = errors
+                };
+
+                context.Result = new JsonResult(responseErro) { StatusCode = (int)HttpStatusCode.BadRequest };
             }
         }
     }

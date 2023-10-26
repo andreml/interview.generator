@@ -1,7 +1,10 @@
-﻿namespace interview.generator.domain.Entidade.Common
+﻿using System.Text.Json.Serialization;
+
+namespace interview.generator.domain.Entidade.Common
 {
     public class EntidadeBase
     {
-        public Guid Id { get; set; }
+        [JsonPropertyOrder(1)]
+        [JsonPropertyName("Id")] public Guid Id { get; set; }
     }
 }

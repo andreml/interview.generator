@@ -23,11 +23,11 @@ namespace interview.generator.api.Controllers
         {
             try
             {
-                var usuarioId = ObterUsuarioIdLogado();
+                areaConhecimento.UsuarioId = ObterUsuarioIdLogado();
 
-                var result = await _areaConhecimentoService.CadastrarAreaConhecimento(areaConhecimento, usuarioId);
+                var result = await _areaConhecimentoService.CadastrarAreaConhecimento(areaConhecimento);
 
-                return Response(result);
+                return Response(result!);
             }
             catch (Exception e)
             {
@@ -47,11 +47,9 @@ namespace interview.generator.api.Controllers
         {
             try
             {
-                var usuarioId = ObterUsuarioIdLogado();
+                var result = await _areaConhecimentoService.ListarAreasConhecimento(ObterUsuarioIdLogado(), areaConhecimentoId, descricao);
 
-                var result = await _areaConhecimentoService.ListarAreasConhecimento(usuarioId, areaConhecimentoId, descricao);
-
-                return Response(result);
+                return Response(result!);
             }
             catch (Exception e)
             {
@@ -66,11 +64,11 @@ namespace interview.generator.api.Controllers
         {
             try
             {
-                var usuarioLogado = ObterUsuarioIdLogado();
+                areaConhecimento.UsuarioId = ObterUsuarioIdLogado();
 
-                var result = await _areaConhecimentoService.AlterarAreaConhecimento(areaConhecimento, usuarioLogado);
+                var result = await _areaConhecimentoService.AlterarAreaConhecimento(areaConhecimento);
 
-                return Response(result);
+                return Response(result!);
             }
             catch (Exception e)
             {
@@ -85,9 +83,9 @@ namespace interview.generator.api.Controllers
         {
             try
             {
-                var result = await _areaConhecimentoService.ExcluirAreaConhecimento(id);
+                var result = await _areaConhecimentoService.ExcluirAreaConhecimento(ObterUsuarioIdLogado(), id);
 
-                return Response(result);
+                return Response(result!);
             }
             catch (Exception e)
             {

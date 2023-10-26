@@ -15,6 +15,7 @@ namespace interview.generator.infraestructure.Repositorio
             _context = context;
             _dbSet = _context.Set<Usuario>();
         }
+
         public Task Adicionar(Usuario entity)
         {
             _context.Usuario.Add(entity);
@@ -29,24 +30,9 @@ namespace interview.generator.infraestructure.Repositorio
             return Task.CompletedTask;
         }
 
-        public Task Excluir(Guid id)
-        {
-            var result = ObterPorId(id).Result;
-            if (result is null) throw new Exception("Usuario não encontrado");
-
-            _dbSet.Remove(result);
-            return Task.CompletedTask;
-        }
-
         public async Task<Usuario?> ObterPorId(Guid id)
         {
             return await _dbSet.FirstOrDefaultAsync(u => u.Id.Equals(id));
-        }
-
-        public async Task<IEnumerable<Usuario>> ObterTodos()
-        {
-            var result = _dbSet.ToListAsync().Result;
-            return await Task.FromResult(result);
         }
 
         public Task<Usuario?> ObterUsuarioPorLoginESenha(string login, string senha)
