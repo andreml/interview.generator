@@ -27,7 +27,7 @@ namespace interview.generator.api.Controllers
         /// </summary>
         [HttpPost("AdicionarQuestionario")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ResponseErro), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AdicionarQuestionario(AdicionarQuestionarioDto questionario)
         {
