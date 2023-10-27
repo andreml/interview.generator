@@ -6,7 +6,7 @@
 
 Sistema de focado em empresas de recrutamento que desejam aplicar testes em candidatos durante as entrevistas para uma vaga de emprego.
 
-O Sistema permite cadastrar por áreas de conhecimento, realizar testes com perguntas aletórias para candidatos.
+O Sistema permite cadastrar por áreas de conhecimento, realizar testes com perguntas aleatórias para candidatos.
 
 
 ## Autores
