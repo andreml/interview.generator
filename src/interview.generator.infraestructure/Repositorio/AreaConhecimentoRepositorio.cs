@@ -17,7 +17,7 @@ namespace interview.generator.infraestructure.Repositorio
 
         public Task Adicionar(AreaConhecimento entity)
         {
-            _context.AreaConhecimento.Add(entity);
+            _dbSet.Add(entity);
             _context.SaveChanges();
             return Task.CompletedTask;
         }
@@ -53,7 +53,7 @@ namespace interview.generator.infraestructure.Repositorio
 
         public async Task<AreaConhecimento?> ObterPorDescricaoEUsuarioId(Guid usuarioCriacaoId, string descricao)
         {
-            return await _context.AreaConhecimento.FirstOrDefaultAsync(x => x.Descricao == descricao && x.UsuarioCriacaoId == usuarioCriacaoId);
+            return await _dbSet.FirstOrDefaultAsync(x => x.Descricao == descricao && x.UsuarioCriacaoId == usuarioCriacaoId);
         }
 
         public async Task<IEnumerable<AreaConhecimento>> ObterAreaConhecimentoComPerguntas(Guid usuarioCriacaoId, Guid areaConhecimentoId, string? descricao)

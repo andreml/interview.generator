@@ -18,22 +18,22 @@ namespace interview.generator.infraestructure.Repositorio
 
         public async Task Adicionar(Avaliacao entity)
         {
-            await _context.Avaliacao.AddAsync(entity);
+            await _dbSet.AddAsync(entity);
             await _context.SaveChangesAsync();
         }
 
         public async Task<ICollection<Avaliacao>> ObterAvaliacoesPorFiltro(Guid usuarioIdCriacaoQuestionario, Guid QuestionarioId, string? nomeQuestionario, string? nomeCandidato)
         {
-            return await _context.Avaliacao
-                                    .Include(x => x.Respostas)
-                                    .Include(x => x.Candidato)
-                                    .Include(x => x.Questionario)
-                                    .Where(x => x.Questionario.UsuarioCriacaoId == usuarioIdCriacaoQuestionario
-                                                && (QuestionarioId == Guid.Empty || x.Questionario.Id == QuestionarioId)
-                                                && (string.IsNullOrEmpty(nomeQuestionario) || x.Questionario.Nome.Contains(nomeQuestionario))
-                                                && (string.IsNullOrEmpty(nomeCandidato) || x.Candidato.Nome.Contains(nomeCandidato))
-                                     )
-                                     .ToListAsync();
+            return await _dbSet
+                            .Include(x => x.Respostas)
+                            .Include(x => x.Candidato)
+                            .Include(x => x.Questionario)
+                            .Where(x => x.Questionario.UsuarioCriacaoId == usuarioIdCriacaoQuestionario
+                                        && (QuestionarioId == Guid.Empty || x.Questionario.Id == QuestionarioId)
+                                        && (string.IsNullOrEmpty(nomeQuestionario) || x.Questionario.Nome.Contains(nomeQuestionario))
+                                        && (string.IsNullOrEmpty(nomeCandidato) || x.Candidato.Nome.Contains(nomeCandidato))
+                                   )
+                                   .ToListAsync();
         }
 
         public async Task<Avaliacao?> ObterAvaliacaoPorIdEUsuarioCriacaoQuestionario(Guid id, Guid usuarioIdCriacaoQuestionario)
