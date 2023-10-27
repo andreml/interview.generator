@@ -79,6 +79,29 @@ Instale as dependências
 ```bash
   dotnet restore
 ```
+- Baixar o docker no Windows em https://docker.com/products/docker-desktop/ e instale em sua máquina
+- Abra o PowerShell do Windows como Administrador
+- Acessar pasta da Solução interview.generator
+- Digite o comando abaixo 
+
+```bash
+docker-compose -f .\docker-compose.yml up
+```
+<a href='https://postimages.org/' target='_blank'><img src='https://i.postimg.cc/MZvtJFyB/powershell.png' border='0' alt='powershell'/></a><br />
+
+Abra o Visual Studio e no Package Manager Console digite o comando abaixo
+```bash
+dotnet add package Microsoft.EntityFrameworkCore.Tools --version 7.0.13
+```
+
+Altere o Default project para src\interview.generator.infraestructure conforme abaixo
+<a href='https://postimg.cc/3yyJ4CCg' target='_blank'><img src='https://i.postimg.cc/R0d3YgWb/migrations-update-database.png' border='0' alt='migrations-update-database'/></a>
+
+Execute o comando abaixo
+
+```bash
+  Update-Database
+```
 
 Inicie o servidor
 
@@ -90,15 +113,29 @@ Abra o navegador
 
 ```bash
    E digite o endereço http://localhost:5133/swagger/index.html
+```
 
-   Usuário de teste:
-   Avaliador:
-     login: avaliador
-     senha: avaliador@2023
-   
-   Candidato:
-     login: candidato
-     senha: candidato@2023
+Adicione novos usuários no método /Usuario/AdicionarUsuario (POST)
+
+Request de exemplo 1
+```bash
+{
+  "cpf": "84942793009",
+  "nome": "Candidato da Silva",
+  "perfil": "Candidato",
+  "login": "candidato.silva",
+  "senha": "Silva@2023"
+}
+```
+```bash
+Request de exemplo 2
+{
+  "cpf": "31762831058",
+  "nome": "Avaliador Ferreira",
+  "perfil": "Avaliador",
+  "login": "avaliador.ferreira",
+  "senha": "Ferreira@2023"
+}
 ```
 
 ## Rodando os testes
