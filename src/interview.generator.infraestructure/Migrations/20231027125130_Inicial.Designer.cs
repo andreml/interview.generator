@@ -12,15 +12,15 @@ using interview.generator.infraestructure.Context;
 namespace interview.generator.infraestructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231025141920_Initial")]
-    partial class Initial
+    [Migration("20231027125130_Inicial")]
+    partial class Inicial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.12")
+                .HasAnnotation("ProductVersion", "7.0.13")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -60,7 +60,7 @@ namespace interview.generator.infraestructure.Migrations
                         .IsRequired()
                         .HasColumnType("VARCHAR(100)");
 
-                    b.Property<Guid>("UsuarioId")
+                    b.Property<Guid>("UsuarioCriacaoId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -135,13 +135,14 @@ namespace interview.generator.infraestructure.Migrations
                     b.Property<Guid>("PerguntaId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Peso")
-                        .HasColumnType("int");
-
                     b.Property<Guid>("QuestionarioId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PerguntaId");
+
+                    b.HasIndex("QuestionarioId");
 
                     b.ToTable("PerguntaQuestionario");
                 });
@@ -159,9 +160,6 @@ namespace interview.generator.infraestructure.Migrations
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("VARCHAR(200)");
-
-                    b.Property<Guid>("TipoQuestionarioId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("UsuarioCriacaoId")
                         .HasColumnType("uniqueidentifier");
@@ -194,22 +192,6 @@ namespace interview.generator.infraestructure.Migrations
                     b.ToTable("RespostaAvaliacao");
 
                     b.HasAnnotation("Relational:JsonPropertyName", "Respostas");
-                });
-
-            modelBuilder.Entity("interview.generator.domain.Entidade.TipoQuestionario", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasAnnotation("Relational:JsonPropertyName", "Id");
-
-                    b.Property<string>("Descricao")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TipoQuestionario");
                 });
 
             modelBuilder.Entity("interview.generator.domain.Entidade.Usuario", b =>
@@ -274,6 +256,25 @@ namespace interview.generator.infraestructure.Migrations
                     b.Navigation("AreaConhecimento");
                 });
 
+            modelBuilder.Entity("interview.generator.domain.Entidade.PerguntaQuestionario", b =>
+                {
+                    b.HasOne("interview.generator.domain.Entidade.Pergunta", "Pergunta")
+                        .WithMany("PerguntasQuestionario")
+                        .HasForeignKey("PerguntaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("interview.generator.domain.Entidade.Questionario", "Questionario")
+                        .WithMany("PerguntasQuestionario")
+                        .HasForeignKey("QuestionarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Pergunta");
+
+                    b.Navigation("Questionario");
+                });
+
             modelBuilder.Entity("interview.generator.domain.Entidade.RespostaAvaliacao", b =>
                 {
                     b.HasOne("interview.generator.domain.Entidade.Avaliacao", null)
@@ -296,11 +297,15 @@ namespace interview.generator.infraestructure.Migrations
             modelBuilder.Entity("interview.generator.domain.Entidade.Pergunta", b =>
                 {
                     b.Navigation("Alternativas");
+
+                    b.Navigation("PerguntasQuestionario");
                 });
 
             modelBuilder.Entity("interview.generator.domain.Entidade.Questionario", b =>
                 {
                     b.Navigation("Avaliacoes");
+
+                    b.Navigation("PerguntasQuestionario");
                 });
 #pragma warning restore 612, 618
         }

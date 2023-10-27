@@ -156,7 +156,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
             //Arrange
             await Autenticar(_loginAvaliador, _senha);
 
-            var pergunta = (await ObterPergunta()).FirstOrDefault();
+            var pergunta = (await ObterPerguntas()).FirstOrDefault();
 
             var alterarPerguntaDto = new AlterarPerguntaDto()
             {
@@ -176,7 +176,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
             var putPergunta = await _client.PutAsync("/Pergunta/AlterarPergunta", JsonContent.Create(alterarPerguntaDto));
             putPergunta.EnsureSuccessStatusCode();
 
-            pergunta = (await ObterPergunta(alterarPerguntaDto.Descricao)).FirstOrDefault();
+            pergunta = (await ObterPerguntas(alterarPerguntaDto.Descricao)).FirstOrDefault();
 
             //Assert
             Assert.Equal(HttpStatusCode.OK, putPergunta.StatusCode);
@@ -193,14 +193,14 @@ namespace Interview.Generator.IntegrationTests.Controllers
             await Autenticar(_loginAvaliador, _senha);
             var perguntaDescricao = "descricaoPergunta2432";
 
-            var pergunta = (await ObterPergunta(perguntaDescricao)).FirstOrDefault();
+            var pergunta = (await ObterPerguntas(perguntaDescricao)).FirstOrDefault();
 
             //Act
             var deletePergunta = await _client.DeleteAsync($"/Pergunta/ExcluirPergunta/{pergunta!.Id}");
             deletePergunta.EnsureSuccessStatusCode();
 
             //Assert
-            var getPergunta = await ObterPergunta(perguntaDescricao);
+            var getPergunta = await ObterPerguntas(perguntaDescricao);
 
             Assert.Equal(HttpStatusCode.OK, deletePergunta.StatusCode);
             Assert.Null(getPergunta);
@@ -246,6 +246,182 @@ namespace Interview.Generator.IntegrationTests.Controllers
             Assert.Equal(1, getAreaConhecimento.FirstOrDefault()!.PerguntasCadastradas);
         }
 
+        [Fact, TestPriority(10)]
+        public async Task AdicionarQuestionario()
+        {
+            //Arrange
+            await Autenticar(_loginAvaliador, _senha);
+
+            var perguntaDto1 = new AdicionarPerguntaDto()
+            {
+                Descricao = "TesteQuestionario: Pergunta Um",
+                AreaConhecimento = "TesteQuestionario",
+                Alternativas = new List<AlternativaDto>()
+                {
+                    new AlternativaDto("PerguntaUm Alternativa1", true),
+                    new AlternativaDto("PerguntaUm Alternativa2", false),
+                    new AlternativaDto("PerguntaUm Alternativa3", false)
+                }
+            };
+
+            var perguntaDto2 = new AdicionarPerguntaDto()
+            {
+                Descricao = "TesteQuestionario: Pergunta Dois",
+                AreaConhecimento = "TesteQuestionario",
+                Alternativas = new List<AlternativaDto>()
+                {
+                    new AlternativaDto("PerguntaDois Alternativa1", false),
+                    new AlternativaDto("PerguntaDois Alternativa2", false),
+                    new AlternativaDto("PerguntaDois Alternativa3", false),
+                    new AlternativaDto("PerguntaDois Alternativa4", true)
+                }
+            };
+
+            var perguntaDto3 = new AdicionarPerguntaDto()
+            {
+                Descricao = "TesteQuestionario: Pergunta Tres",
+                AreaConhecimento = "TesteQuestionario",
+                Alternativas = new List<AlternativaDto>()
+                {
+                    new AlternativaDto("PerguntaTres Alternativa1", false),
+                    new AlternativaDto("PerguntaTres Alternativa2", false),
+                    new AlternativaDto("PerguntaTres Alternativa3", true),
+                    new AlternativaDto("PerguntaTres Alternativa4", false),
+                    new AlternativaDto("PerguntaTres Alternativa5", false)
+                }
+            };
+
+            await _client.PostAsync("/Pergunta/AdicionarPergunta", JsonContent.Create(perguntaDto1));
+            await _client.PostAsync("/Pergunta/AdicionarPergunta", JsonContent.Create(perguntaDto2));
+            await _client.PostAsync("/Pergunta/AdicionarPergunta", JsonContent.Create(perguntaDto3));
+
+            var perguntas = await ObterPerguntas("TesteQuestionario");
+
+            int ordem = 1;
+            var addQuestionarioDto = new AdicionarQuestionarioDto()
+            {
+                Nome = "Questionario Teste 1",
+                Perguntas = perguntas.Select(x => new PerguntaQuestionarioDto(x.Id, ordem++)).ToList()
+            };
+
+            //Act
+            var postQuestionario = await _client.PostAsync("/Questionario/AdicionarQuestionario", JsonContent.Create(addQuestionarioDto));
+            postQuestionario.EnsureSuccessStatusCode();
+
+            //Assert
+            var getQuestionario = await ObterQuestionarios(addQuestionarioDto.Nome);
+
+            Assert.Equal(HttpStatusCode.Created, postQuestionario.StatusCode);
+            Assert.NotEmpty(getQuestionario);
+            Assert.Equal(getQuestionario.FirstOrDefault()!.Nome, addQuestionarioDto.Nome);
+
+            Assert.Contains(perguntaDto1.Descricao, getQuestionario.FirstOrDefault()!.Perguntas.Select(x => x.Descricao));
+            Assert.Contains(perguntaDto2.Descricao, getQuestionario.FirstOrDefault()!.Perguntas.Select(x => x.Descricao));
+            Assert.Contains(perguntaDto3.Descricao, getQuestionario.FirstOrDefault()!.Perguntas.Select(x => x.Descricao));
+        }
+
+        [Fact, TestPriority(11)]
+        public async Task AlterarQuestionario()
+        {
+            //Arrange
+            await Autenticar(_loginAvaliador, _senha);
+
+            var perguntaDto1 = new AdicionarPerguntaDto()
+            {
+                Descricao = "TesteQuestionario: Nova Pergunta Um",
+                AreaConhecimento = "TesteQuestionario 2",
+                Alternativas = new List<AlternativaDto>()
+                {
+                    new AlternativaDto("Nova PerguntaUm Alternativa1", true),
+                    new AlternativaDto("Nova PerguntaUm Alternativa2", false),
+                    new AlternativaDto("Nova PerguntaUm Alternativa3", false)
+                }
+            };
+
+            var perguntaDto2 = new AdicionarPerguntaDto()
+            {
+                Descricao = "TesteQuestionario: Nova Pergunta Dois",
+                AreaConhecimento = "TesteQuestionario 2",
+                Alternativas = new List<AlternativaDto>()
+                {
+                    new AlternativaDto("Nova PerguntaDois Alternativa1", false),
+                    new AlternativaDto("Nova PerguntaDois Alternativa2", false),
+                    new AlternativaDto("Nova PerguntaDois Alternativa3", false),
+                    new AlternativaDto("Nova PerguntaDois Alternativa4", true)
+                }
+            };
+
+            var perguntaDto3 = new AdicionarPerguntaDto()
+            {
+                Descricao = "TesteQuestionario: Nova Pergunta Tres",
+                AreaConhecimento = "TesteQuestionario 2",
+                Alternativas = new List<AlternativaDto>()
+                {
+                    new AlternativaDto("Nova PerguntaTres Alternativa1", false),
+                    new AlternativaDto("Nova PerguntaTres Alternativa2", false),
+                    new AlternativaDto("Nova PerguntaTres Alternativa3", true),
+                    new AlternativaDto("Nova PerguntaTres Alternativa4", false),
+                    new AlternativaDto("Nova PerguntaTres Alternativa5", false)
+                }
+            };
+
+            await _client.PostAsync("/Pergunta/AdicionarPergunta", JsonContent.Create(perguntaDto1));
+            await _client.PostAsync("/Pergunta/AdicionarPergunta", JsonContent.Create(perguntaDto2));
+            await _client.PostAsync("/Pergunta/AdicionarPergunta", JsonContent.Create(perguntaDto3));
+
+            var perguntas = await ObterPerguntas("TesteQuestionario: Nova Pergunta");
+
+            var questionario = await ObterQuestionarios("Questionario Teste 1");
+
+            int ordem = 1;
+            var alterarQuestionarioDto = new AlterarQuestionarioDto()
+            {
+                QuestionarioId = questionario.FirstOrDefault()!.Id,
+                Nome = "Questionario Teste 1 Alterado",
+                Perguntas = perguntas.Select(x => new PerguntaQuestionarioDto(x.Id, ordem++)).ToList()
+            };
+
+            //Act
+            var putQuestionario = await _client.PutAsync("/Questionario/AlterarQuestionario", JsonContent.Create(alterarQuestionarioDto));
+            putQuestionario.EnsureSuccessStatusCode();
+
+            //Assert
+            questionario = await ObterQuestionarios("Questionario Teste 1 Alterado");
+            perguntas = await ObterPerguntas();
+
+            Assert.Equal(HttpStatusCode.OK, putQuestionario.StatusCode);
+            Assert.NotEmpty(questionario);
+
+            Assert.Equal(alterarQuestionarioDto.Nome, questionario.FirstOrDefault()!.Nome);
+            Assert.Contains(perguntaDto1.Descricao, questionario.FirstOrDefault()!.Perguntas.Select(x => x.Descricao));
+            Assert.Contains(perguntaDto2.Descricao, questionario.FirstOrDefault()!.Perguntas.Select(x => x.Descricao));
+            Assert.Contains(perguntaDto3.Descricao, questionario.FirstOrDefault()!.Perguntas.Select(x => x.Descricao));
+
+            Assert.NotEmpty(perguntas);
+            Assert.Equal(7, perguntas.Count());
+        }
+
+        [Fact, TestPriority(13)]
+        public async Task ExcluirQuestionarioSemExcluirPerguntas()
+        {
+            //Arrange
+            await Autenticar(_loginAvaliador, _senha);
+
+            var getQuestionario = await ObterQuestionarios("Questionario Teste 1 Alterado");
+
+            //Act
+            var deleteQuestionario = await _client.DeleteAsync($"/Questionario/ExcluirQuestionario/{getQuestionario.FirstOrDefault()!.Id}");
+            deleteQuestionario.EnsureSuccessStatusCode();
+
+            //Assert
+            var perguntas = await ObterPerguntas();
+
+            getQuestionario = await ObterQuestionarios("Questionario Teste 1");
+
+            Assert.Equal(7, perguntas.Count());
+            Assert.Empty(getQuestionario);
+        }
+
 
         //Metodos auxiliares
         private static async Task<T> LerDoJson<T>(HttpContent content)
@@ -277,7 +453,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
             return  await LerDoJson<IEnumerable<AreaConhecimentoViewModel>>(getAreaConhecimento.Content);
         }
 
-        private async Task<IEnumerable<PerguntaViewModel>> ObterPergunta(string? descricao = null)
+        private async Task<IEnumerable<PerguntaViewModel>> ObterPerguntas(string? descricao = null)
         {
             var url = "/Pergunta/ObterPerguntas";
 
@@ -288,6 +464,19 @@ namespace Interview.Generator.IntegrationTests.Controllers
             getAreaConhecimento.EnsureSuccessStatusCode();
 
             return await LerDoJson<IEnumerable<PerguntaViewModel>>(getAreaConhecimento.Content);
+        }
+
+        private async Task<IEnumerable<QuestionarioViewModel>> ObterQuestionarios(string? nome = null)
+        {
+            var url = "/Questionario/ObterQuestionarios";
+
+            if (nome != null)
+                url = $"{url}?nome={nome}";
+
+            var getQuestionario = await _client.GetAsync(url);
+            getQuestionario.EnsureSuccessStatusCode();
+
+            return await LerDoJson<IEnumerable<QuestionarioViewModel>>(getQuestionario.Content);
         }
     }
 }

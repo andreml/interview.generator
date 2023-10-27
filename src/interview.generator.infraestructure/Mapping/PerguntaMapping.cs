@@ -24,6 +24,12 @@ namespace interview.generator.infraestructure.Mapping
                 .WithOne()
                 .HasForeignKey(x => x.PerguntaId)
                 .IsRequired();
+
+            builder
+               .HasMany(x => x.PerguntasQuestionario)
+               .WithOne(x => x.Pergunta)
+               .HasForeignKey("PerguntaId");
+
         }
     }
 }
