@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace interview.generator.api.Controllers
 {
+    /// <summary>
+    /// Controller responsável pelo gerenciamento das Areas de Conhecimento (Categoria de perguntas)
+    /// </summary>
     [Route("[controller]")]
     [ApiController]
     public class AreaConhecimentoController : BaseController

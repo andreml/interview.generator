@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace interview.generator.api.Controllers
 {
+    /// <summary>
+    /// Controller responsável pelo gerenciamento de Questionários (Conjunto de perguntas)
+    /// </summary>
     [Route("[controller]")]
     [ApiController]
     public class QuestionarioController : BaseController
