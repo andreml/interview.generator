@@ -41,6 +41,17 @@ namespace interview.generator.infraestructure.Repositorio
                         .FirstOrDefaultAsync();              
         }
 
+        public async Task<Questionario?> ObterPorId(Guid questionarioId)
+        {
+            return await _context.Questionario
+                        .Include(x => x.Avaliacoes)
+                        .Include(x => x.PerguntasQuestionario)
+                            .ThenInclude(x => x.Pergunta)
+                                .ThenInclude(x => x.Alternativas)
+                        .Where(x => x.Id == questionarioId)
+                        .FirstOrDefaultAsync();
+        }
+
         public async Task<Questionario?> ObterPorIdComAvaliacoesEPerguntas(Guid usuarioCriacaoId, Guid id)
         {
             return await _context.Questionario

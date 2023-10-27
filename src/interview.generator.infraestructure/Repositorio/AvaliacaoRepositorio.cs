@@ -22,16 +22,18 @@ namespace interview.generator.infraestructure.Repositorio
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Avaliacao?> ObterAvaliacaoPorFiltro(Guid usuarioIdCriacaoQuestionario, Guid? candidatoId, Guid? questionarioId)
+        public async Task<ICollection<Avaliacao>> ObterAvaliacoesPorFiltro(Guid usuarioIdCriacaoQuestionario, Guid QuestionarioId, string? nomeQuestionario, string? nomeCandidato)
         {
-            var resultado = await _context.Avaliacao.Include(x => x.Respostas)
-                                                    .Where(x => x.Questionario.UsuarioCriacaoId == usuarioIdCriacaoQuestionario &&
-                                                                ( x.CandidatoId.Equals(candidatoId!) ||
-                                                                  x.Questionario.Id.Equals(questionarioId!))
-                                                    )
-                                                    .FirstOrDefaultAsync();
-
-            return resultado; 
+            return await _context.Avaliacao
+                                    .Include(x => x.Respostas)
+                                    .Include(x => x.Candidato)
+                                    .Include(x => x.Questionario)
+                                    .Where(x => x.Questionario.UsuarioCriacaoId == usuarioIdCriacaoQuestionario
+                                                && (QuestionarioId == Guid.Empty || x.Questionario.Id == QuestionarioId)
+                                                && (string.IsNullOrEmpty(nomeQuestionario) || x.Questionario.Nome.Contains(nomeQuestionario))
+                                                && (string.IsNullOrEmpty(nomeCandidato) || x.Candidato.Nome.Contains(nomeCandidato))
+                                     )
+                                     .ToListAsync();
         }
 
         public async Task<Avaliacao?> ObterAvaliacaoPorIdEUsuarioCriacaoQuestionario(Guid id, Guid usuarioIdCriacaoQuestionario)

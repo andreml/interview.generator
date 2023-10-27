@@ -4,7 +4,7 @@ namespace interview.generator.domain.Repositorio
 {
     public interface IAvaliacaoRepositorio : ICommonRepository<Avaliacao>
     {
-        Task<Avaliacao?> ObterAvaliacaoPorFiltro(Guid usuarioIdCriacaoQuestionario, Guid? CandidatoId, Guid? QuestionarioId);
+        Task<ICollection<Avaliacao>> ObterAvaliacoesPorFiltro(Guid usuarioIdCriacaoQuestionario, Guid QuestionarioId, string? nomeQuestionario, string? nomeCandidato);
         Task<Avaliacao?> ObterAvaliacaoPorIdEUsuarioCriacaoQuestionario(Guid id, Guid usuarioIdCriacaoQuestionario);
     }
 }

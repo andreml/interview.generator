@@ -29,12 +29,10 @@ namespace interview.generator.infraestructure.Mapping
                .WithOne(x => x.Questionario)
                .HasForeignKey("QuestionarioId");
 
-
             builder
                 .HasMany(x => x.Avaliacoes)
                 .WithOne(x => x.Questionario)
                 .HasForeignKey("QuestionarioId");
-
         }
     }
 }

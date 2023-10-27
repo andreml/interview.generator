@@ -11,23 +11,24 @@ namespace interview.generator.api.Controllers
     [Produces("application/json")]
     public class AvaliacaoController : BaseController
     {
-        readonly IAvaliacaoService _;
-        public AvaliacaoController(IAvaliacaoService service) { _ = service; }
+        readonly IAvaliacaoService _avaliacaoService;
+        public AvaliacaoController(IAvaliacaoService service) { _avaliacaoService = service; }
 
         /// <summary>
         /// Obtém avaliações cadastradas (Avaliador)
         /// </summary>
-        /// <param name="CandidatoId?">Id do Candidato</param>
-        /// <param name="QuestionarioId?">Id do Questionário</param>
+        /// <param name="QuestionarioId">Id do questionário (opcional)</param>
+        /// <param name="nomeQuestionario">Nome do questionário (opcional)</param>
+        /// <param name="nomeCandidato">Nome do candidato (opcional)</param>
         [HttpGet("ObterAvaliacoesPorFiltro")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
-        public async Task<IActionResult> ObterAvaliacoesPorFiltroAsync(Guid? CandidatoId, Guid? QuestionarioId)
+        public async Task<IActionResult> ObterAvaliacoesPorFiltroAsync([FromQuery] Guid QuestionarioId, [FromQuery] string? nomeQuestionario, [FromQuery] string? nomeCandidato)
         {
             try
             {
-                var result = await _.ObterAvaliacaoPorFiltro(ObterUsuarioIdLogado(), CandidatoId, QuestionarioId);
+                var result = await _avaliacaoService.ObterAvaliacoesPorFiltro(ObterUsuarioIdLogado(), QuestionarioId, nomeQuestionario, nomeCandidato);
 
-                return Response(result!);
+                return Response(result);
             }
             catch (Exception e)
             {
@@ -44,9 +45,10 @@ namespace interview.generator.api.Controllers
         {
             try
             {
-                var result = await _.AdicionarAvaliacao(obj);
+                obj.CandidatoId = ObterUsuarioIdLogado();
+                var result = await _avaliacaoService.AdicionarAvaliacao(obj);
 
-                return Response(result!);
+                return Response(result);
             }
             catch (Exception e)
             {
@@ -57,16 +59,16 @@ namespace interview.generator.api.Controllers
         /// <summary>
         /// Adiciona uma observação na avaliação do candidato (Avaliador)
         /// </summary>
-        [HttpPut("AdicionarObservacaoAvaliador")]
+        [HttpPut("AdicionarObservacao")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
         public async Task<IActionResult> AdicionarObservacaoAvaliacaoAsync(AdicionarObservacaoAvaliadorDto obj)
         {
             try
             {
                 obj.UsuarioIdCriacaoQuestionario = ObterUsuarioIdLogado();
-                var result = await _.AdicionarObservacaoAvaliacao(obj);
+                var result = await _avaliacaoService.AdicionarObservacaoAvaliacao(obj);
 
-                return Response(result!);
+                return Response(result);
             }
             catch (Exception e)
             {

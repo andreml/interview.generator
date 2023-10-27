@@ -2,6 +2,7 @@
 using interview.generator.application.ViewModels;
 using interview.generator.domain.Enum;
 using Newtonsoft.Json;
+using System.Linq;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -15,6 +16,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
         private readonly HttpClient _client;
 
         private readonly string _loginAvaliador = "teste.integrado.avaliador";
+        private readonly string _loginCandidato = "teste.integrado.candidato";
         private readonly string _senha = "Teste@integrado123";
 
         public ControllersTests(InterviewGeneratorWebAppFactory<Program> factory)
@@ -25,7 +27,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
         }
 
         [Fact, TestPriority(1)]
-        public async Task AdicionarUsuario()
+        public async Task AdicionarUsuarioAvaliador()
         {
             //Arrange
             var novoUsuario = new AdicionarUsuarioDto("89660569467", "João da Silva", Perfil.Avaliador, _loginAvaliador, _senha);
@@ -38,6 +40,19 @@ namespace Interview.Generator.IntegrationTests.Controllers
         }
 
         [Fact, TestPriority(2)]
+        public async Task AdicionarUsuarioCandidato()
+        {
+            //Arrange
+            var novoUsuario = new AdicionarUsuarioDto("13971371426", "Maria Lima", Perfil.Candidato, _loginCandidato, _senha);
+
+            //Act
+            var responseNovoUsuario = await _client.PostAsync("/Usuario/AdicionarUsuario", JsonContent.Create(novoUsuario));
+
+            //Assert
+            Assert.Equal(HttpStatusCode.Created, responseNovoUsuario.StatusCode);
+        }
+
+        [Fact, TestPriority(3)]
         public async Task AlterarUsuario()
         {
             //Arrange
@@ -66,7 +81,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
             Assert.Equal(alterarUsuarioDto.Login, getUsuarioResponse.Login);
         }
 
-        [Fact, TestPriority(3)]
+        [Fact, TestPriority(4)]
         public async Task AdicionarAreaConhecimento()
         {
             //Arrange
@@ -81,7 +96,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
             Assert.Equal(HttpStatusCode.Created, postAreaConhecimento.StatusCode);
         }
 
-        [Fact, TestPriority(4)]
+        [Fact, TestPriority(5)]
         public async Task AlterarAreaConhecimento()
         {
             //Arrange
@@ -105,7 +120,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
             Assert.Equal(alterarAreaConhecimento.Descricao, getAreaConhecimento.FirstOrDefault()!.Descricao);
         }
 
-        [Fact, TestPriority(5)]
+        [Fact, TestPriority(6)]
         public async Task ExcluirAreaConhecimento()
         {
             //Arrange
@@ -125,7 +140,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
             Assert.Empty(getAreaConhecimentoDepoisDelete);
         }
 
-        [Fact, TestPriority(6)]
+        [Fact, TestPriority(7)]
         public async Task AdicionarPergunta()
         {
             //Arrange
@@ -150,7 +165,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
             Assert.Equal(HttpStatusCode.Created, postPergunta.StatusCode);
         }
 
-        [Fact, TestPriority(7)]
+        [Fact, TestPriority(8)]
         public async Task AlterarPergunta()
         {
             //Arrange
@@ -186,7 +201,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
             Assert.Equal(alterarPerguntaDto.Alternativas.Count, pergunta.Alternativas.Count);
         }
 
-        [Fact, TestPriority(8)]
+        [Fact, TestPriority(9)]
         public async Task ExcluirPergunta()
         {
             //Arrange
@@ -206,7 +221,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
             Assert.Null(getPergunta);
         }
 
-        [Fact, TestPriority(9)]
+        [Fact, TestPriority(10)]
         public async Task AlterarAreaDeConhecimentoComPerguntasVinculadas()
         {
             //Arrange
@@ -246,7 +261,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
             Assert.Equal(1, getAreaConhecimento.FirstOrDefault()!.PerguntasCadastradas);
         }
 
-        [Fact, TestPriority(10)]
+        [Fact, TestPriority(11)]
         public async Task AdicionarQuestionario()
         {
             //Arrange
@@ -320,7 +335,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
             Assert.Contains(perguntaDto3.Descricao, getQuestionario.FirstOrDefault()!.Perguntas.Select(x => x.Descricao));
         }
 
-        [Fact, TestPriority(11)]
+        [Fact, TestPriority(12)]
         public async Task AlterarQuestionario()
         {
             //Arrange
@@ -422,6 +437,138 @@ namespace Interview.Generator.IntegrationTests.Controllers
             Assert.Empty(getQuestionario);
         }
 
+        [Fact, TestPriority(14)]
+        public async Task AdicionarAvaliacao()
+        {
+            //Arrange
+            await Autenticar(_loginAvaliador, _senha);
+
+            var perguntaDto1 = new AdicionarPerguntaDto()
+            {
+                Descricao = "Calcule o resultado de 1 + 1?",
+                AreaConhecimento = "Matematica Teste",
+                Alternativas = new List<AlternativaDto>()
+                {
+                    new AlternativaDto("2", true),
+                    new AlternativaDto("11", false),
+                    new AlternativaDto("3", false)
+                }
+            };
+
+            var perguntaDto2 = new AdicionarPerguntaDto()
+            {
+                Descricao = "Calcule o resultado de 8 * 7",
+                AreaConhecimento = "Matematica Teste",
+                Alternativas = new List<AlternativaDto>()
+                {
+                    new AlternativaDto("52", false),
+                    new AlternativaDto("34", false),
+                    new AlternativaDto("48", false),
+                    new AlternativaDto("56", true)
+                }
+            };
+
+            var perguntaDto3 = new AdicionarPerguntaDto()
+            {
+                Descricao = "Calcule o resultado de 50% de 200",
+                AreaConhecimento = "Matematica Teste",
+                Alternativas = new List<AlternativaDto>()
+                {
+                    new AlternativaDto("50", false),
+                    new AlternativaDto("200", false),
+                    new AlternativaDto("100", true),
+                    new AlternativaDto("1000", false),
+                    new AlternativaDto("0", false)
+                }
+            };
+
+            var perguntaDto4 = new AdicionarPerguntaDto()
+            {
+                Descricao = "Calcule o resultado de 1000 / 4",
+                AreaConhecimento = "Matematica Teste",
+                Alternativas = new List<AlternativaDto>()
+                {
+                    new AlternativaDto("500", false),
+                    new AlternativaDto("250", true),
+                    new AlternativaDto("4000", false),
+                    new AlternativaDto("1000", false),
+                    new AlternativaDto("666", false)
+                }
+            };
+
+            await _client.PostAsync("/Pergunta/AdicionarPergunta", JsonContent.Create(perguntaDto1));
+            await _client.PostAsync("/Pergunta/AdicionarPergunta", JsonContent.Create(perguntaDto2));
+            await _client.PostAsync("/Pergunta/AdicionarPergunta", JsonContent.Create(perguntaDto3));
+            await _client.PostAsync("/Pergunta/AdicionarPergunta", JsonContent.Create(perguntaDto4));
+
+            var perguntas = await ObterPerguntas("Calcule o resultado de");
+
+            int ordem = 1;
+            var addQuestionarioDto = new AdicionarQuestionarioDto()
+            {
+                Nome = "Questionario matemática teste",
+                Perguntas = perguntas.Select(x => new PerguntaQuestionarioDto(x.Id, ordem++)).ToList()
+            };
+
+            var postQuestionario = await _client.PostAsync("/Questionario/AdicionarQuestionario", JsonContent.Create(addQuestionarioDto));
+            postQuestionario.EnsureSuccessStatusCode();
+
+            var questionario = await ObterQuestionarios("Questionario matemática teste");
+
+            var auxSkip = 0;
+            var adicionarAvaliacaoDto = new AdicionarAvaliacaoDto()
+            {
+                QuestionarioId = questionario.FirstOrDefault()!.Id,
+                Respostas = perguntas.Select(p => new RespostaAvaliacaoDto(
+                                                        p.Id,
+                                                        p.Alternativas.Skip(auxSkip++).FirstOrDefault()!.Id)
+                                             ).ToList()
+            };
+
+            //Act
+            await Autenticar(_loginCandidato, _senha);
+
+            var postAvaliacao = await _client.PostAsync("Avaliacao/Adicionar", JsonContent.Create(adicionarAvaliacaoDto));
+            postAvaliacao.EnsureSuccessStatusCode();
+
+            //Assert
+            await Autenticar(_loginAvaliador, _senha);
+
+            var getAvaliacoes = await _client.GetAsync("Avaliacao/ObterAvaliacoesPorFiltro?nomeQuestionario=Questionario matemática teste");
+            var getAvaliacoesResponse = await LerDoJson<ICollection<AvaliacaoViewModel>>(getAvaliacoes.Content);
+
+            Assert.NotEmpty(getAvaliacoesResponse);
+            Assert.Equal(questionario.FirstOrDefault()!.Nome, getAvaliacoesResponse.FirstOrDefault()!.NomeQuestionario);
+            Assert.Equal(questionario.FirstOrDefault()!.Perguntas.Count, getAvaliacoesResponse.FirstOrDefault()!.Respostas.Count());
+        }
+
+        [Fact, TestPriority(15)]
+        public async Task AdicionarObservacaoAvaliacao()
+        {
+            //Arrange
+            await Autenticar(_loginAvaliador, _senha);
+
+            var getAvaliacoes = await _client.GetAsync("Avaliacao/ObterAvaliacoesPorFiltro?nomeQuestionario=Questionario matemática teste");
+            var getAvaliacoesResponse = await LerDoJson<ICollection<AvaliacaoViewModel>>(getAvaliacoes.Content);
+
+            var putObservacaoAvaliacao = new AdicionarObservacaoAvaliadorDto()
+            {
+                AvaliacaoId = getAvaliacoesResponse.FirstOrDefault()!.Id,
+                ObservacaoAvaliador = "Observação teste"
+            };
+
+            //Act
+            var putObservacao = await _client.PutAsync("/Avaliacao/AdicionarObservacao", JsonContent.Create(putObservacaoAvaliacao));
+            putObservacao.EnsureSuccessStatusCode();
+
+            //Assert
+            getAvaliacoes = await _client.GetAsync("Avaliacao/ObterAvaliacoesPorFiltro?nomeQuestionario=Questionario matemática teste");
+            getAvaliacoesResponse = await LerDoJson<ICollection<AvaliacaoViewModel>>(getAvaliacoes.Content);
+
+            Assert.Equal(HttpStatusCode.OK, putObservacao.StatusCode);
+            Assert.NotEmpty(getAvaliacoesResponse);
+            Assert.Equal(putObservacaoAvaliacao.ObservacaoAvaliador, getAvaliacoesResponse.FirstOrDefault()!.ObservacaoAvaliador);
+        }
 
         //Metodos auxiliares
         private static async Task<T> LerDoJson<T>(HttpContent content)

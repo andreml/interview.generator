@@ -31,9 +31,13 @@ namespace interview.generator.application.Services
                 return response;
             }
 
-            var areaConhecimento = await _areaConhecimentoService.ObterOuCriarAreaConhecimento(perguntaDto.UsuarioId, perguntaDto.AreaConhecimento);
+            if(pergunta.PerguntasQuestionario!.Count > 0)
+            {
+                response.AddErro("Já existem questionários cadastrados com esta pergunta");
+                return response;
+            }
 
-            //TODO: Validar se existem questionários com a pergunta
+            var areaConhecimento = await _areaConhecimentoService.ObterOuCriarAreaConhecimento(perguntaDto.UsuarioId, perguntaDto.AreaConhecimento);
 
             pergunta.Descricao = perguntaDto.Descricao;
             pergunta.AreaConhecimento = areaConhecimento;
@@ -89,7 +93,7 @@ namespace interview.generator.application.Services
                         Id = p.Id,
                         Areaconhecimento = p.AreaConhecimento.Descricao,
                         Descricao = p.Descricao,
-                        Alternativas = p.Alternativas.Select(a => new AlternativaViewModel(a.Descricao, a.Correta)).ToList()
+                        Alternativas = p.Alternativas.Select(a => new AlternativaViewModel(a.Id, a.Descricao, a.Correta)).ToList()
                     });
 
             response.AddData(perguntasViewModel);
@@ -108,8 +112,11 @@ namespace interview.generator.application.Services
                 return response;
             }
 
-            //TODO: Adicionar validação de questionários cadastrados com essa pergunta
-            //Se siver, impedir a exclusão
+            if (pergunta.PerguntasQuestionario!.Count > 0)
+            {
+                response.AddErro("Já existem questionários cadastrados com esta pergunta");
+                return response;
+            }
 
             await _perguntaRepositorio.Excluir(pergunta);
 
