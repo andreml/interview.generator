@@ -31,7 +31,6 @@ namespace interview.generator.infraestructure.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Nome = table.Column<string>(type: "VARCHAR(200)", nullable: false),
                     UsuarioCriacaoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TipoQuestionarioId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     DataCriacao = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>

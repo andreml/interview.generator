@@ -246,6 +246,103 @@ namespace Interview.Generator.IntegrationTests.Controllers
             Assert.Equal(1, getAreaConhecimento.FirstOrDefault()!.PerguntasCadastradas);
         }
 
+        [Fact, TestPriority(10)]
+        public async Task AdicionarQuestionario()
+        {
+            //Arrange
+            await Autenticar(_loginAvaliador, _senha);
+
+            var perguntaDto1 = new AdicionarPerguntaDto()
+            {
+                Descricao = "TesteQuestionario: Pergunta Um",
+                AreaConhecimento = "TesteQuestionario",
+                Alternativas = new List<AlternativaDto>()
+                {
+                    new AlternativaDto("PerguntaUm Alternativa1", true),
+                    new AlternativaDto("PerguntaUm Alternativa2", false),
+                    new AlternativaDto("PerguntaUm Alternativa3", false)
+                }
+            };
+
+            var perguntaDto2 = new AdicionarPerguntaDto()
+            {
+                Descricao = "TesteQuestionario: Pergunta Dois",
+                AreaConhecimento = "TesteQuestionario",
+                Alternativas = new List<AlternativaDto>()
+                {
+                    new AlternativaDto("PerguntaDois Alternativa1", false),
+                    new AlternativaDto("PerguntaDois Alternativa2", false),
+                    new AlternativaDto("PerguntaDois Alternativa3", false),
+                    new AlternativaDto("PerguntaDois Alternativa4", true)
+                }
+            };
+
+            var perguntaDto3 = new AdicionarPerguntaDto()
+            {
+                Descricao = "TesteQuestionario: Pergunta Tres",
+                AreaConhecimento = "TesteQuestionario",
+                Alternativas = new List<AlternativaDto>()
+                {
+                    new AlternativaDto("PerguntaTres Alternativa1", false),
+                    new AlternativaDto("PerguntaTres Alternativa2", false),
+                    new AlternativaDto("PerguntaTres Alternativa3", true),
+                    new AlternativaDto("PerguntaTres Alternativa4", false),
+                    new AlternativaDto("PerguntaTres Alternativa5", false)
+                }
+            };
+
+            await _client.PostAsync("/Pergunta/AdicionarPergunta", JsonContent.Create(perguntaDto1));
+            await _client.PostAsync("/Pergunta/AdicionarPergunta", JsonContent.Create(perguntaDto2));
+            await _client.PostAsync("/Pergunta/AdicionarPergunta", JsonContent.Create(perguntaDto3));
+
+            var perguntas = await ObterPergunta("TesteQuestionario");
+
+            var addQuestionarioDto = new AdicionarQuestionarioDto()
+            {
+                Nome = "Questionario Teste 1",
+                Perguntas = perguntas.Select(x => new PerguntaQuestionarioDto(x.Id, 0, 1)).ToList()
+            };
+
+            //Act
+            var postQuestionario = await _client.PostAsync("/Questionario/AdicionarQuestionario", JsonContent.Create(addQuestionarioDto));
+            postQuestionario.EnsureSuccessStatusCode();
+
+            //Assert
+            var getQuestionario = await _client.GetAsync($"/Questionario/ObterQuestionarios?nome={addQuestionarioDto.Nome}");
+            var getQuestionarioresponse = await LerDoJson<ICollection<QuestionarioViewModel>>(getQuestionario.Content);
+
+            Assert.Equal(HttpStatusCode.Created, postQuestionario.StatusCode);
+            Assert.NotEmpty(getQuestionarioresponse);
+            Assert.Equal(getQuestionarioresponse.FirstOrDefault()!.Nome, addQuestionarioDto.Nome);
+
+            Assert.Contains(perguntaDto1.Descricao, getQuestionarioresponse.FirstOrDefault()!.Perguntas.Select(x => x.Descricao));
+            Assert.Contains(perguntaDto2.Descricao, getQuestionarioresponse.FirstOrDefault()!.Perguntas.Select(x => x.Descricao));
+            Assert.Contains(perguntaDto3.Descricao, getQuestionarioresponse.FirstOrDefault()!.Perguntas.Select(x => x.Descricao));
+        }
+
+        [Fact, TestPriority(11)]
+        public async Task ExcluirQuestionarioSemExcluirPerguntas()
+        {
+            //Arrange
+            await Autenticar(_loginAvaliador, _senha);
+
+            var getQuestionario = await _client.GetAsync($"/Questionario/ObterQuestionarios?nome=Questionario Teste 1");
+            var getQuestionarioresponse = await LerDoJson<ICollection<QuestionarioViewModel>>(getQuestionario.Content);
+
+            //Act
+            var deleteQuestionario = await _client.DeleteAsync($"/Questionario/ExcluirQuestionario/{getQuestionarioresponse.FirstOrDefault()!.Id}");
+            deleteQuestionario.EnsureSuccessStatusCode();
+
+            //Assert
+            var perguntas = await ObterPergunta("TesteQuestionario");
+
+            getQuestionario = await _client.GetAsync($"/Questionario/ObterQuestionarios?nome=Questionario Teste 1");
+            getQuestionarioresponse = await LerDoJson<ICollection<QuestionarioViewModel>>(getQuestionario.Content);
+
+            Assert.Equal(3, perguntas.Count());
+            Assert.Empty(getQuestionarioresponse);
+        }
+
 
         //Metodos auxiliares
         private static async Task<T> LerDoJson<T>(HttpContent content)

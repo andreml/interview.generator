@@ -1,11 +1,6 @@
 ﻿using interview.generator.domain.Entidade;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace interview.generator.infraestructure.Mapping
 {
@@ -21,10 +16,6 @@ namespace interview.generator.infraestructure.Mapping
 
             builder
                 .Property(x => x.OrdemApresentacao)
-                .IsRequired();
-
-            builder
-                .Property(x => x.PerguntaId)
                 .IsRequired();
 
             builder

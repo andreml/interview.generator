@@ -1,17 +1,9 @@
-﻿using interview.generator.domain.Entidade;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace interview.generator.application.ViewModels
+﻿namespace interview.generator.application.ViewModels
 {
     public class QuestionarioViewModel
     {
+        public Guid Id { get; set; }
         public string Nome { get; set; }
-        public Guid UsuarioCriacaoId { get; set; }
-        public Guid TipoQuestionarioId { get; set; }
         public DateTime DataCriacao { get; set; }
         public ICollection<PerguntaQuestionarioViewModel> Perguntas { get; set; }
 
@@ -23,19 +15,17 @@ namespace interview.generator.application.ViewModels
 
     public class PerguntaQuestionarioViewModel
     {
-        public PerguntaQuestionarioViewModel(string id, string perguntaId, string questionarioId, int ordemApresentacao, int peso)
+        public PerguntaQuestionarioViewModel(Guid id, int ordemApresentacao, int peso, string descricao)
         {
             Id = id;
-            PerguntaId = perguntaId;
-            QuestionarioId = questionarioId;
             OrdemApresentacao = ordemApresentacao;
             Peso = peso;
+            Descricao = descricao;
         }
 
-        public string Id { get; set; }
-        public string PerguntaId { get; set; }
-        public string QuestionarioId { get; set;}
+        public Guid Id { get; set; }
         public int OrdemApresentacao { get; set; }
         public int Peso { get; set; }
+        public string Descricao { get; set;}
     }
 }

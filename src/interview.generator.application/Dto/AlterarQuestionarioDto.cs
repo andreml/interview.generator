@@ -1,23 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
 
 namespace interview.generator.application.Dto
 {
     public class AlterarQuestionarioDto
     {
-        public string Nome { get; set; }
-        public Guid TipoQuestionarioId { get; set; }
-        public DateTime DataCriacao { get; set; }
-        public ICollection<AlterarPerguntaQuestionarioDto> Perguntas { get; set; }
-
-        public class AlterarPerguntaQuestionarioDto
-        {
-            public Guid PerguntaId { get; set; }
-            public int OrdemApresentacao { get; set; }
-            public int Peso { get; set; }
-        }
+        [JsonIgnore]
+        public Guid UsuarioId { get; set; }
+        public Guid QuestionarioId { get; set; }
+        public string Nome { get; set; } = default!;
+        public ICollection<PerguntaQuestionarioDto> Perguntas { get; set; }
     }
 }

@@ -1,11 +1,9 @@
 ﻿using interview.generator.application.Dto;
 using interview.generator.application.Interfaces;
-using interview.generator.application.Services;
 using interview.generator.application.ViewModels;
-using interview.generator.domain.Entidade;
+using interview.generator.domain.Entidade.Common;
 using interview.generator.domain.Enum;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace interview.generator.api.Controllers
@@ -21,95 +19,93 @@ namespace interview.generator.api.Controllers
             _questionarioService = questionarioService;
         }
 
+        /// <summary>
+        /// Adiciona um novo questionário (Avaliador)
+        /// </summary>
         [HttpPost("AdicionarQuestionario")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ResponseErro), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AdicionarQuestionario(AdicionarQuestionarioDto questionario)
         {
             try
             {
-                var usuarioId = ObterUsuarioIdLogado();
-
-                var result = await _questionarioService.CadastrarQuestionario(questionario, usuarioId);
+                questionario.UsuarioId = ObterUsuarioIdLogado();
+                var result = await _questionarioService.CadastrarQuestionario(questionario);
 
                 return Response(result);
             }
             catch (Exception e)
             {
-                return ResponseErro(e.Message, "Erro ao incluir area do conhecimento");
+                return ResponseErro(e.Message, "Erro ao incluir questionário");
             }
         }
 
+
+        /// <summary>
+        /// Altera um questionário existente (Avaliador)
+        /// </summary>
+        /// <param name="questionario"></param>
         [HttpPut("AlterarQuestionario")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ResponseErro), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AlterarQuestionario(AlterarQuestionarioDto questionario)
         {
             try
             {
-                var usuarioId = ObterUsuarioIdLogado();
-
-                var result = await _questionarioService.AlterarQuestionario(questionario, usuarioId);
+                questionario.UsuarioId = ObterUsuarioIdLogado();
+                var result = await _questionarioService.AlterarQuestionario(questionario);
 
                 return Response(result);
             }
             catch (Exception e)
             {
-                return ResponseErro(e.Message, "Erro ao incluir area do conhecimento");
+                return ResponseErro(e.Message, "Erro ao alterar questionário");
             }
         }
 
+        /// <summary>
+        /// Exclui um  um questionário existente (Avaliador)
+        /// </summary>
         [HttpDelete("ExcluirQuestionario/{id}")]
-        [Authorize(Roles = $"{Perfis.Candidato}")]
+        [Authorize(Roles = $"{Perfis.Avaliador}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ResponseErro), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> ExcluirQuestionario(Guid id)
         {
             try
             {
-                var usuarioId = ObterUsuarioIdLogado();
-
-                var result = await _questionarioService.ExcluirQuestionario(id);
+                var result = await _questionarioService.ExcluirQuestionario(ObterUsuarioIdLogado(), id);
 
                 return Response(result);
             }
             catch (Exception e)
             {
-                return ResponseErro(e.Message, "Erro ao incluir questionario");
+                return ResponseErro(e.Message, "Erro ao excluir questionario");
             }
         }
 
-        [HttpGet("ObterQuestionarioPorCandidato/")]
-
-        [Authorize(Roles = $"{Perfis.Candidato}")]
-        public async Task<IActionResult> ObterQuestionarioPorCandidato()
-        {
-            try
-            {
-                var usuarioId = ObterUsuarioIdLogado();
-
-                var result =  _questionarioService.ObterQuestionarioPorCandidato(usuarioId);
-
-                return Response(result);
-            }
-            catch (Exception e)
-            {
-                return ResponseErro(e.Message, "Erro ao incluir area do conhecimento");
-            }
-        }
-
-        [HttpGet("ObterQuestionariosPorDescricao/{descricao}")]
-
+        /// <summary>
+        /// Obém questionários cadastrados (Avaliador)
+        /// </summary>
+        /// <param name="questionarioId">Id do questionário (opcional)</param>
+        /// <param name="nome">Nome do questionário (opcional)</param>
+        [HttpGet("ObterQuestionarios")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
-        public async Task<IActionResult> ObterQuestionariosPorFiltro(string descricao)
+        [ProducesResponseType(typeof(ICollection<QuestionarioViewModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ResponseErro), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ObterQuestionariosPorFiltro([FromQuery] Guid questionarioId, [FromQuery] string? nome)
         {
             try
             {
-                var usuarioId = ObterUsuarioIdLogado();
-
-                var result =  _questionarioService.ObterQuestionariosPorDescricao(descricao);
+                var result =  await _questionarioService.ObterQuestionarios(ObterUsuarioIdLogado(), questionarioId, nome);
 
                 return Response(result);
             }
             catch (Exception e)
             {
-                return ResponseErro(e.Message, "Erro ao incluir area do conhecimento");
+                return ResponseErro(e.Message, "Erro ao obter questionários");
             }
         }
 

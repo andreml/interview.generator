@@ -2,11 +2,6 @@
 using interview.generator.domain.Repositorio;
 using interview.generator.infraestructure.Context;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace interview.generator.infraestructure.Repositorio
 {
@@ -37,28 +32,37 @@ namespace interview.generator.infraestructure.Repositorio
             await _context.SaveChangesAsync();
         }
 
-        public Task<Questionario?> ObterPorNome(string nome)
+        public async Task<Questionario?> ObterPorNome(Guid usuarioCriacaoId, string nome)
         {
-            return _context.Questionario
+            return await _context.Questionario
                         .Include(x => x.PerguntasQuestionario)
-                        .Where(x => x.Nome == nome).FirstOrDefaultAsync();
-                        
+                        .Where(x => x.UsuarioCriacaoId == usuarioCriacaoId
+                                    && x.Nome == nome)
+                        .FirstOrDefaultAsync();              
         }
 
-        public Task<Questionario?> ObterPorId(Guid id)
+        public async Task<Questionario?> ObterPorIdComAvaliacoesEPerguntas(Guid usuarioCriacaoId, Guid id)
         {
-            return _context.Questionario
-                       .Include(x => x.PerguntasQuestionario)
-                       .Where(x => x.Id == id).FirstOrDefaultAsync();
+            return await _context.Questionario
+                        .Include(x => x.PerguntasQuestionario)
+                        .Include(x => x.Avaliacoes)
+                        .Where(x => x.UsuarioCriacaoId == usuarioCriacaoId
+                                    && x.Id == id)
+                        .FirstOrDefaultAsync();
             
         }
 
-        public Task<Questionario?> ObterPorCandidato(Guid usuarioId)
+        public async Task<ICollection<Questionario>> ObterQuestionarios(Guid usuarioCriacaoId, Guid questionarioId, string? nome)
         {
-            return _context.Questionario
-                       .Include(x => x.PerguntasQuestionario)
-                       .Where(x => x.UsuarioCriacaoId == usuarioId)
-                       .OrderByDescending(x => x.DataCriacao).FirstOrDefaultAsync();
+            return await _context.Questionario
+                                    .Include(x => x.PerguntasQuestionario)
+                                        .ThenInclude(x => x.Pergunta)
+                                    .Where(x => x.UsuarioCriacaoId == usuarioCriacaoId
+                                                && (questionarioId == Guid.Empty || x.Id == questionarioId)
+                                                && (string.IsNullOrEmpty(nome) || x.Nome.Contains(nome))
+                                    )
+                                    .OrderByDescending(x => x.DataCriacao)
+                                    .ToListAsync();
         }
     }
 }

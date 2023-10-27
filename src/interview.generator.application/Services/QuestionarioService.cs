@@ -4,45 +4,67 @@ using interview.generator.application.ViewModels;
 using interview.generator.domain.Entidade;
 using interview.generator.domain.Entidade.Common;
 using interview.generator.domain.Repositorio;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace interview.generator.application.Services
 {
     public class QuestionarioService : IQuestionarioService
     {
         private readonly IQuestionarioRepositorio _questionarioRepositorio;
+        private readonly IPerguntaRepositorio _perguntaRepositorio;
 
-        public QuestionarioService(IQuestionarioRepositorio questionarioRepositorio)
+        public QuestionarioService(IQuestionarioRepositorio questionarioRepositorio, IPerguntaRepositorio perguntaRepositorio)
         {
             _questionarioRepositorio = questionarioRepositorio;
+            _perguntaRepositorio = perguntaRepositorio;
         }
 
-        public async Task<ResponseBase> AlterarQuestionario(AlterarQuestionarioDto questionarioDto, Guid usuarioId)
+        public async Task<ResponseBase> AlterarQuestionario(AlterarQuestionarioDto questionarioDto)
         {
             var response = new ResponseBase();
 
-            var questionario = await _questionarioRepositorio.ObterPorNome(questionarioDto.Nome);
 
-            if (questionario == null)
+            var questionario = await _questionarioRepositorio.ObterPorIdComAvaliacoesEPerguntas(questionarioDto.UsuarioId, questionarioDto.QuestionarioId);
+            if(questionario == null)
             {
                 response.AddErro("Questionario não encontrado");
                 return response;
             }
 
-            //TODO: Validar se existem questionários com a pergunta
+            if(questionario.Avaliacoes != null && questionario.Avaliacoes.Count > 0)
+            {
+                response.AddErro("Não é possível alterar o questionário, existem avaliações feitas");
+                return response;
+            }
 
-            questionario.Nome = questionarioDto.Nome;
-            questionario.TipoQuestionarioId = questionarioDto.TipoQuestionarioId;
+            if(questionarioDto.Nome != questionario.Nome)
+            {
+                var questionarioPorNome = await _questionarioRepositorio.ObterPorNome(questionarioDto.UsuarioId, questionarioDto.Nome);
+                if(questionarioPorNome != null && questionarioPorNome.Id != questionarioDto.QuestionarioId)
+                {
+                    response.AddErro("Já existe um questionário com este nome");
+                    return response;
+                }
+            }
 
             questionario.RemoverPerguntas();
-            await _questionarioRepositorio.Alterar(questionario);
+            questionario.Nome = questionarioDto.Nome;
 
             foreach (var pergunta in questionarioDto.Perguntas)
-                questionario.AdicionarPergunta(new PerguntaQuestionario { PerguntaId = pergunta.PerguntaId, Peso = pergunta.Peso, OrdemApresentacao = pergunta.OrdemApresentacao });
+            {
+                var perguntaExistente = await _perguntaRepositorio.ObterPerguntaPorId(questionarioDto.UsuarioId, pergunta.PerguntaId);
+                if (perguntaExistente == null)
+                {
+                    response.AddErro($"Pergunta {pergunta.PerguntaId} não encontrada");
+                    return response;
+                }
+
+                questionario.AdicionarPergunta(new PerguntaQuestionario
+                {
+                    OrdemApresentacao = pergunta.OrdemApresentacao,
+                    Peso = pergunta.Peso,
+                    Pergunta = perguntaExistente
+                });
+            }
 
             await _questionarioRepositorio.Alterar(questionario);
 
@@ -50,148 +72,91 @@ namespace interview.generator.application.Services
             return response;
         }
 
-
-        public async Task<ResponseBase> CadastrarQuestionario(AdicionarQuestionarioDto questionario, Guid usuarioId)
+        public async Task<ResponseBase> CadastrarQuestionario(AdicionarQuestionarioDto questionario)
         {
             var response = new ResponseBase();
 
-            var quesitonarioDuplicado = await _questionarioRepositorio.ObterPorNome(questionario.Nome);
+            var quesitonarioDuplicado = await _questionarioRepositorio.ObterPorNome(questionario.UsuarioId, questionario.Nome);
             if (quesitonarioDuplicado != null)
             {
                 response.AddErro("Questionário com esse nome já cadastrado");
                 return response;
             }
 
-            var novaPergunta = new Questionario { 
+            var novoQuestionario = new Questionario { 
                 Nome = questionario.Nome,
-                DataCriacao = questionario.DataCriacao,
-                UsuarioCriacaoId = usuarioId,
-                TipoQuestionarioId = questionario.TipoQuestionarioId
+                UsuarioCriacaoId = questionario.UsuarioId
             };
 
             foreach (var pergunta in questionario.Perguntas)
-                novaPergunta.AdicionarPergunta(new PerguntaQuestionario { OrdemApresentacao = pergunta.OrdemApresentacao, 
-                                                                          Peso = pergunta.Peso,
-                                                                          PerguntaId = pergunta.PerguntaId });
+            {
+                var perguntaExistente = await _perguntaRepositorio.ObterPerguntaPorId(questionario.UsuarioId, pergunta.PerguntaId);
+                if(perguntaExistente == null)
+                {
+                    response.AddErro($"Pergunta {pergunta.PerguntaId} não encontrada");
+                    return response;
+                }
 
-            await _questionarioRepositorio.Adicionar(novaPergunta);
+                novoQuestionario.AdicionarPergunta(new PerguntaQuestionario
+                {
+                    OrdemApresentacao = pergunta.OrdemApresentacao,
+                    Peso = pergunta.Peso,
+                    Pergunta = perguntaExistente
+                });
+            }
+
+            await _questionarioRepositorio.Adicionar(novoQuestionario);
 
             response.AddData("Questionario adicionado com sucesso!");
             return response;
         }
 
-        public async Task<ResponseBase> ExcluirQuestionario(Guid idQuestionario)
+        public async Task<ResponseBase> ExcluirQuestionario(Guid usuarioCriacaoId, Guid idQuestionario)
         {
             var response = new ResponseBase();
 
-            var questionario = await _questionarioRepositorio.ObterPorId(idQuestionario);
+            var questionario = await _questionarioRepositorio.ObterPorIdComAvaliacoesEPerguntas(usuarioCriacaoId, idQuestionario);
             if (questionario == null)
             {
                 response.AddErro("Questionario não encontrado");
                 return response;
             }
 
-            //TODO: Adicionar validação de questionários cadastrados com essa pergunta
-            //Se tiver, impedir a exclusão
+            if(questionario.Avaliacoes != null && questionario.Avaliacoes.Count > 0)
+            {
+                response.AddErro("Não é possível excluir o questionário, existem avaliações feitas");
+                return response;
+            }
 
             await _questionarioRepositorio.Excluir(questionario);
 
-            response.AddData("Pergunta excluída com sucesso!");
+            response.AddData("Questionario excluído com sucesso!");
             return response;
         }
 
-        public ResponseBase<QuestionarioViewModel> ObterPorId(Guid id)
+        public async Task<ResponseBase<ICollection<QuestionarioViewModel>>> ObterQuestionarios(Guid usuarioCriacaoId, Guid questionarioId, string? nome)
         {
-            var response = new ResponseBase<QuestionarioViewModel>();
+            var response = new ResponseBase<ICollection<QuestionarioViewModel>>();
 
-            var perguntas = _questionarioRepositorio.ObterPorId(id);
-
-            if (perguntas == null)
-            {
-                response.AddErro("Questionario não encontrado");
+            var questionarios = await _questionarioRepositorio.ObterQuestionarios(usuarioCriacaoId, questionarioId, nome);
+            if (questionarios == null)
                 return response;
-            }
 
-            var questionarioViewModel = new QuestionarioViewModel
+            var questionariosViewModel = questionarios.Select(x => new QuestionarioViewModel()
             {
-                DataCriacao = perguntas.Result.DataCriacao,
-                Nome = perguntas.Result.Nome,
-                TipoQuestionarioId = perguntas.Result.TipoQuestionarioId,
-                UsuarioCriacaoId = perguntas.Result.UsuarioCriacaoId,
-            };
+                Id = x.Id,
+                DataCriacao = x.DataCriacao,
+                Nome = x.Nome,
+                Perguntas = x.PerguntasQuestionario.Select(y => new PerguntaQuestionarioViewModel(
+                                                                                        y.Pergunta.Id,
+                                                                                        y.OrdemApresentacao,
+                                                                                        y.Peso,
+                                                                                        y.Pergunta.Descricao)).ToList()
+            }).ToList();
 
-            foreach (var item in perguntas.Result.PerguntasQuestionario)
-                questionarioViewModel.Perguntas.Add(new PerguntaQuestionarioViewModel(item.Id.ToString(),
-                                                                                      item.PerguntaId.ToString(),
-                                                                                      item.QuestionarioId.ToString(),
-                                                                                      item.OrdemApresentacao, item.Peso));
-            
-            response.AddData(questionarioViewModel);
+            response.AddData(questionariosViewModel);
 
             return response;
         }
-
-        public ResponseBase<QuestionarioViewModel> ObterQuestionarioPorCandidato(Guid idCandidato)
-        {
-            var response = new ResponseBase<QuestionarioViewModel>();
-
-            var perguntas = _questionarioRepositorio.ObterPorCandidato(idCandidato);
-
-            if (perguntas == null)
-            {
-                response.AddErro("Questionario não encontrado");
-                return response;
-            }
-
-            var questionarioViewModel = new QuestionarioViewModel
-            {
-                DataCriacao = perguntas.Result.DataCriacao,
-                Nome = perguntas.Result.Nome,
-                TipoQuestionarioId = perguntas.Result.TipoQuestionarioId,
-                UsuarioCriacaoId = perguntas.Result.UsuarioCriacaoId
-            };
-
-            foreach (var item in perguntas.Result.PerguntasQuestionario)
-                questionarioViewModel.Perguntas.Add(new PerguntaQuestionarioViewModel(item.Id.ToString(),
-                                                                                      item.PerguntaId.ToString(),
-                                                                                      item.QuestionarioId.ToString(),
-                                                                                      item.OrdemApresentacao, item.Peso));
-
-            response.AddData(questionarioViewModel);
-
-            return response;
-        }
-
-        public ResponseBase<QuestionarioViewModel> ObterQuestionariosPorDescricao(string descricao)
-        {
-            var response = new ResponseBase<QuestionarioViewModel>();
-
-            var perguntas = _questionarioRepositorio.ObterPorNome(descricao);
-
-            if (perguntas == null)
-            {
-                response.AddErro("Questionario não encontrado");
-                return response;
-            }
-
-            var questionarioViewModel = new QuestionarioViewModel
-            {
-                DataCriacao = perguntas.Result.DataCriacao,
-                Nome = perguntas.Result.Nome,
-                TipoQuestionarioId = perguntas.Result.TipoQuestionarioId,
-                UsuarioCriacaoId = perguntas.Result.UsuarioCriacaoId
-            };
-
-            foreach (var item in perguntas.Result.PerguntasQuestionario)
-                questionarioViewModel.Perguntas.Add(new PerguntaQuestionarioViewModel(item.Id.ToString(),
-                                                                                      item.PerguntaId.ToString(),
-                                                                                      item.QuestionarioId.ToString(),
-                                                                                      item.OrdemApresentacao, item.Peso));
-
-            response.AddData(questionarioViewModel);
-
-            return response;
-        }
-
     }
 }

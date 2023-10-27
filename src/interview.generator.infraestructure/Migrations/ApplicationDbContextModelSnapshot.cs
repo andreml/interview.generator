@@ -161,9 +161,6 @@ namespace interview.generator.infraestructure.Migrations
                         .IsRequired()
                         .HasColumnType("VARCHAR(200)");
 
-                    b.Property<Guid>("TipoQuestionarioId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("UsuarioCriacaoId")
                         .HasColumnType("uniqueidentifier");
 
@@ -261,7 +258,7 @@ namespace interview.generator.infraestructure.Migrations
 
             modelBuilder.Entity("interview.generator.domain.Entidade.PerguntaQuestionario", b =>
                 {
-                    b.HasOne("interview.generator.domain.Entidade.Pergunta", null)
+                    b.HasOne("interview.generator.domain.Entidade.Pergunta", "Pergunta")
                         .WithMany("PerguntasQuestionario")
                         .HasForeignKey("PerguntaId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -272,6 +269,8 @@ namespace interview.generator.infraestructure.Migrations
                         .HasForeignKey("QuestionarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Pergunta");
 
                     b.Navigation("Questionario");
                 });

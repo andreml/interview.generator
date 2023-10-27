@@ -20,10 +20,6 @@ namespace interview.generator.infraestructure.Mapping
                 .IsRequired();
 
             builder
-                .Property(x => x.TipoQuestionarioId)
-                .IsRequired();
-
-            builder
                 .Property(x => x.DataCriacao)
                 .IsRequired();
 
