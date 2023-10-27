@@ -12,7 +12,7 @@ using interview.generator.infraestructure.Context;
 namespace interview.generator.infraestructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231027005126_Inicial")]
+    [Migration("20231027125130_Inicial")]
     partial class Inicial
     {
         /// <inheritdoc />
@@ -134,9 +134,6 @@ namespace interview.generator.infraestructure.Migrations
 
                     b.Property<Guid>("PerguntaId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Peso")
-                        .HasColumnType("int");
 
                     b.Property<Guid>("QuestionarioId")
                         .HasColumnType("uniqueidentifier");

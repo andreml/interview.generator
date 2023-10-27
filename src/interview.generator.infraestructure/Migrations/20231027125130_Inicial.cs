@@ -121,9 +121,8 @@ namespace interview.generator.infraestructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PerguntaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    QuestionarioId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     OrdemApresentacao = table.Column<int>(type: "int", nullable: false),
-                    Peso = table.Column<int>(type: "int", nullable: false)
+                    QuestionarioId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {

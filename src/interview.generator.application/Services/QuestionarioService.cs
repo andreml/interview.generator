@@ -61,7 +61,6 @@ namespace interview.generator.application.Services
                 questionario.AdicionarPergunta(new PerguntaQuestionario
                 {
                     OrdemApresentacao = pergunta.OrdemApresentacao,
-                    Peso = pergunta.Peso,
                     Pergunta = perguntaExistente
                 });
             }
@@ -100,7 +99,6 @@ namespace interview.generator.application.Services
                 novoQuestionario.AdicionarPergunta(new PerguntaQuestionario
                 {
                     OrdemApresentacao = pergunta.OrdemApresentacao,
-                    Peso = pergunta.Peso,
                     Pergunta = perguntaExistente
                 });
             }
@@ -150,8 +148,9 @@ namespace interview.generator.application.Services
                 Perguntas = x.PerguntasQuestionario.Select(y => new PerguntaQuestionarioViewModel(
                                                                                         y.Pergunta.Id,
                                                                                         y.OrdemApresentacao,
-                                                                                        y.Peso,
-                                                                                        y.Pergunta.Descricao)).ToList()
+                                                                                        y.Pergunta.Descricao))
+                                                                                        .OrderBy(z => z.OrdemApresentacao)
+                                                                                        .ToList()
             }).ToList();
 
             response.AddData(questionariosViewModel);

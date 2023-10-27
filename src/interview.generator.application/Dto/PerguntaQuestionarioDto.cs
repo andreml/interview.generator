@@ -4,13 +4,11 @@
     {
         public Guid PerguntaId { get; set; }
         public int OrdemApresentacao { get; set; }
-        public int Peso { get; set; }
 
-        public PerguntaQuestionarioDto(Guid perguntaId, int ordemApresentacao, int peso)
+        public PerguntaQuestionarioDto(Guid perguntaId, int ordemApresentacao)
         {
             PerguntaId = perguntaId;
             OrdemApresentacao = ordemApresentacao;
-            Peso = peso;
         }
     }
 }

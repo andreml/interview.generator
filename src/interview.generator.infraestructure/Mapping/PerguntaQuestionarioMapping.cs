@@ -11,15 +11,7 @@ namespace interview.generator.infraestructure.Mapping
             builder.HasKey(x => x.Id);
 
             builder
-                .Property(x => x.Peso)
-                .IsRequired();
-
-            builder
                 .Property(x => x.OrdemApresentacao)
-                .IsRequired();
-
-            builder
-                .Property(x => x.QuestionarioId)
                 .IsRequired();
         }
     }

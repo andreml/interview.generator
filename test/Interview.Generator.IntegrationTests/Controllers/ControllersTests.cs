@@ -297,10 +297,11 @@ namespace Interview.Generator.IntegrationTests.Controllers
 
             var perguntas = await ObterPergunta("TesteQuestionario");
 
+            int ordem = 1;
             var addQuestionarioDto = new AdicionarQuestionarioDto()
             {
                 Nome = "Questionario Teste 1",
-                Perguntas = perguntas.Select(x => new PerguntaQuestionarioDto(x.Id, 0, 1)).ToList()
+                Perguntas = perguntas.Select(x => new PerguntaQuestionarioDto(x.Id, ordem++)).ToList()
             };
 
             //Act

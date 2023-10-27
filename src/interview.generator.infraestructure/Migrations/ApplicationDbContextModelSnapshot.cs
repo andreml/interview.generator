@@ -132,9 +132,6 @@ namespace interview.generator.infraestructure.Migrations
                     b.Property<Guid>("PerguntaId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Peso")
-                        .HasColumnType("int");
-
                     b.Property<Guid>("QuestionarioId")
                         .HasColumnType("uniqueidentifier");
 

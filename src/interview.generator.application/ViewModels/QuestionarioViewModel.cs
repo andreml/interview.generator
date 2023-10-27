@@ -15,17 +15,15 @@
 
     public class PerguntaQuestionarioViewModel
     {
-        public PerguntaQuestionarioViewModel(Guid id, int ordemApresentacao, int peso, string descricao)
+        public PerguntaQuestionarioViewModel(Guid id, int ordemApresentacao, string descricao)
         {
             Id = id;
             OrdemApresentacao = ordemApresentacao;
-            Peso = peso;
             Descricao = descricao;
         }
 
         public Guid Id { get; set; }
         public int OrdemApresentacao { get; set; }
-        public int Peso { get; set; }
         public string Descricao { get; set;}
     }
 }
