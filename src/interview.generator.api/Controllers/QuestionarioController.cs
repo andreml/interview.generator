@@ -112,5 +112,27 @@ namespace interview.generator.api.Controllers
             }
         }
 
+        /// <summary>
+        /// Obém estaísticas de um questionário (Avaliador)
+        /// </summary>
+        /// <param name="id">Id do questionário (opcional)</param>
+        [HttpGet("ObterEstatisticasQuestionario/{id}")]
+        [Authorize(Roles = $"{Perfis.Avaliador}")]
+        [ProducesResponseType(typeof(QuestionarioEstatisticasViewModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ResponseErro), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ObterEstatisticasQuestionario([FromRoute] Guid id)
+        {
+            try
+            {
+                var result = await _questionarioService.ObterEstatisticasQuestionario(ObterUsuarioIdLogado(), id);
+
+                return Response(result);
+            }
+            catch (Exception e)
+            {
+                return ResponseErro(e.Message, "Erro ao obter estatísticas do questionário");
+            }
+        }
+
     }
 }

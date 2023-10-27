@@ -24,22 +24,22 @@ namespace interview.generator.application.Services
 
 
             var questionario = await _questionarioRepositorio.ObterPorIdComAvaliacoesEPerguntas(questionarioDto.UsuarioId, questionarioDto.QuestionarioId);
-            if(questionario == null)
+            if (questionario == null)
             {
                 response.AddErro("Questionario não encontrado");
                 return response;
             }
 
-            if(questionario.Avaliacoes != null && questionario.Avaliacoes.Count > 0)
+            if (questionario.Avaliacoes != null && questionario.Avaliacoes.Count > 0)
             {
                 response.AddErro("Não é possível alterar o questionário, existem avaliações feitas");
                 return response;
             }
 
-            if(questionarioDto.Nome != questionario.Nome)
+            if (questionarioDto.Nome != questionario.Nome)
             {
                 var questionarioPorNome = await _questionarioRepositorio.ObterPorNome(questionarioDto.UsuarioId, questionarioDto.Nome);
-                if(questionarioPorNome != null && questionarioPorNome.Id != questionarioDto.QuestionarioId)
+                if (questionarioPorNome != null && questionarioPorNome.Id != questionarioDto.QuestionarioId)
                 {
                     response.AddErro("Já existe um questionário com este nome");
                     return response;
@@ -82,7 +82,8 @@ namespace interview.generator.application.Services
                 return response;
             }
 
-            var novoQuestionario = new Questionario { 
+            var novoQuestionario = new Questionario
+            {
                 Nome = questionario.Nome,
                 UsuarioCriacaoId = questionario.UsuarioId
             };
@@ -90,7 +91,7 @@ namespace interview.generator.application.Services
             foreach (var pergunta in questionario.Perguntas)
             {
                 var perguntaExistente = await _perguntaRepositorio.ObterPerguntaPorId(questionario.UsuarioId, pergunta.PerguntaId);
-                if(perguntaExistente == null)
+                if (perguntaExistente == null)
                 {
                     response.AddErro($"Pergunta {pergunta.PerguntaId} não encontrada");
                     return response;
@@ -120,7 +121,7 @@ namespace interview.generator.application.Services
                 return response;
             }
 
-            if(questionario.Avaliacoes != null && questionario.Avaliacoes.Count > 0)
+            if (questionario.Avaliacoes != null && questionario.Avaliacoes.Count > 0)
             {
                 response.AddErro("Não é possível excluir o questionário, existem avaliações feitas");
                 return response;
@@ -156,6 +157,41 @@ namespace interview.generator.application.Services
 
             response.AddData(questionariosViewModel);
 
+            return response;
+        }
+
+        public async Task<ResponseBase<QuestionarioEstatisticasViewModel>> ObterEstatisticasQuestionario(Guid usuarioCriacaoId, Guid questionarioId)
+        {
+            var response = new ResponseBase<QuestionarioEstatisticasViewModel>();
+
+            var questionario = await _questionarioRepositorio.ObterPorIdComAvaliacoesEPerguntas(usuarioCriacaoId, questionarioId);
+            if (questionario == null)
+                return response;
+
+            var estatisticas = new QuestionarioEstatisticasViewModel()
+            {
+                Id = questionario.Id,
+                Nome = questionario.Nome,
+                AvaliacoesRespondidas = questionario.Avaliacoes.Count
+            };
+
+            if(estatisticas.AvaliacoesRespondidas > 0)
+            {
+                estatisticas.MediaNota = questionario.Avaliacoes.Select(a => a.Nota).Average();
+
+                var maiorNota = questionario.Avaliacoes.Select(a => a.Nota).Max();
+
+                estatisticas.MaiorNota = new MaiorNotaViewModel()
+                {
+                    Nota = maiorNota,
+                    Candidatos = questionario.Avaliacoes
+                                                .Where(a => a.Nota == maiorNota)
+                                                .Select(a => a.Candidato.Nome)
+                                                .ToList()
+                };
+            }
+
+            response.AddData(estatisticas);
             return response;
         }
     }

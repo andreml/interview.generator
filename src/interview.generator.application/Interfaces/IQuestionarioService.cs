@@ -10,6 +10,7 @@ namespace interview.generator.application.Interfaces
         Task<ResponseBase> AlterarQuestionario(AlterarQuestionarioDto questionarioDto);
         Task<ResponseBase> ExcluirQuestionario(Guid usuarioCriacaoId, Guid idQuestionario);
         Task<ResponseBase<ICollection<QuestionarioViewModel>>> ObterQuestionarios(Guid usuarioCriacaoId, Guid questionarioId, string? nome);
+        Task<ResponseBase<QuestionarioEstatisticasViewModel>> ObterEstatisticasQuestionario(Guid usuarioCriacaoId, Guid questionarioId);
 
     }
 }
