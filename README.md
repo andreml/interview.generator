@@ -14,6 +14,8 @@ O Sistema permite cadastrar por áreas de conhecimento, realizar testes com perg
 - [@guilhermeTaira](https://github.com/guilhermeTaira)
 - [@lirajon1988](https://github.com/lirajon1988)
 - [@andreml](https://github.com/andreml)
+- [@Daniellyaraujo](https://github.com/Daniellyaraujo)
+- [@RobertoSRMJunior](https://github.com/RobertoSRMJunior)
 
 
 ## Stack utilizada
