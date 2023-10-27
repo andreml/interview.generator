@@ -145,6 +145,7 @@ namespace interview.generator.application.Services
                 Id = x.Id,
                 DataCriacao = x.DataCriacao,
                 Nome = x.Nome,
+                AvaliacoesRespondidas = x.Avaliacoes.Count,
                 Perguntas = x.PerguntasQuestionario.Select(y => new PerguntaQuestionarioViewModel(
                                                                                         y.Pergunta.Id,
                                                                                         y.OrdemApresentacao,

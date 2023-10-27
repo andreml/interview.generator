@@ -66,6 +66,7 @@ namespace interview.generator.infraestructure.Repositorio
         public async Task<ICollection<Questionario>> ObterQuestionarios(Guid usuarioCriacaoId, Guid questionarioId, string? nome)
         {
             return await _dbSet
+                            .Include(x => x.Avaliacoes)
                             .Include(x => x.PerguntasQuestionario)
                                 .ThenInclude(x => x.Pergunta)
                             .Where(x => x.UsuarioCriacaoId == usuarioCriacaoId
