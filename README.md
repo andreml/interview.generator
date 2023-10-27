@@ -156,3 +156,23 @@ O teste result ficará salvo na pasta abaixo
 ```bash
   cd .\test\Interview.Generator.IntegrationTests\TestResults\
 ```
+ 
+ ## Usando SQL Server para conectar com o Banco
+
+Dados de conexão local
+```bash
+Nome do servidor: 127.0.0.1
+Login: sa
+Senha: interview@2023
+```
+ <a href='https://postimages.org/' target='_blank'><img src='https://i.postimg.cc/7YpqndNn/sql-server-login.png' border='0' alt='sql-server-login'/></a>
+
+ - Consultando a tabela usuários após a inclusão
+```bash
+USE InterviewGenerator
+GO
+
+SELECT * FROM USUARIO
+```
+
+<a href='https://postimages.org/' target='_blank'><img src='https://i.postimg.cc/9fyPQ6L8/consulta-sql.png' border='0' alt='consulta-sql'/></a>
