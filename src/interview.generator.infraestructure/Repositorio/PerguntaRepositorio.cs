@@ -22,20 +22,21 @@ namespace interview.generator.infraestructure.Repositorio
         }
         public async Task<bool> ExistePorDescricao(Guid usuarioCriacaoId, string descricao)
         {
-            return await _context.Pergunta.AnyAsync(x => x.UsuarioCriacaoId == usuarioCriacaoId
-                                                         && x.Descricao == descricao);
+            return await _dbSet.AnyAsync(x => x.UsuarioCriacaoId == usuarioCriacaoId
+                                              && x.Descricao == descricao);
         }
 
         public async Task<Pergunta?> ObterPerguntaPorId(Guid usuarioCriacaoId, Guid perguntaId)
         {
-            return await _context.Pergunta
+            return await _dbSet
+                            .Include(x => x.Questionarios)
                             .FirstOrDefaultAsync(x => x.UsuarioCriacaoId == usuarioCriacaoId
                                                  && x.Id == perguntaId);
         }
 
         public IEnumerable<Pergunta> ObterPerguntas(Guid usuarioCriacaoId, Guid perguntaId, string? areaConhecimento, string? descricao)
         {
-            return _context.Pergunta
+            return _dbSet
                         .Include(x => x.AreaConhecimento)
                         .Include(x => x.Alternativas)
                         .Where(x =>

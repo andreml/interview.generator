@@ -11,10 +11,6 @@ namespace interview.generator.infraestructure.Mapping
             builder.HasKey(x => x.Id);
 
             builder
-                .Property(x => x.CandidatoId)
-                .IsRequired();
-
-            builder
                 .Property(x => x.DataAplicacao)
                 .IsRequired();
 
@@ -23,9 +19,12 @@ namespace interview.generator.infraestructure.Mapping
                 .HasColumnType("VARCHAR(500)");
 
             builder
-                .HasMany(x => x.Respostas)
-                .WithOne()
-                .HasForeignKey(x => x.AvaliacaoId);
+                .Property(x => x.Nota)
+                .IsRequired()
+                .HasPrecision(3, 3);
+
+            builder
+                .HasOne(x => x.Candidato);
         }
     }
 }

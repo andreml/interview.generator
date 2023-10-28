@@ -18,7 +18,7 @@ namespace interview.generator.infraestructure.Repositorio
 
         public Task Adicionar(Usuario entity)
         {
-            _context.Usuario.Add(entity);
+            _dbSet.Add(entity);
             _context.SaveChanges();
             return Task.CompletedTask;
         }

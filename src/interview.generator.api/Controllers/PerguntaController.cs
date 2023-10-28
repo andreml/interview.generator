@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace interview.generator.api.Controllers
 {
+    /// <summary>
+    /// Controller responsável pelo gerenciamento das perguntas
+    /// </summary>
     [ApiController]
     [Route("[controller]")]
     [Produces("application/json")]

@@ -8,6 +8,6 @@ namespace interview.generator.application.Dto
         public Guid UsuarioId { get; set; }
         public Guid QuestionarioId { get; set; }
         public string Nome { get; set; } = default!;
-        public ICollection<PerguntaQuestionarioDto> Perguntas { get; set; }
+        public ICollection<Guid> Perguntas { get; set; }
     }
 }

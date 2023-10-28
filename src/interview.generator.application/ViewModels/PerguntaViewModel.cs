@@ -10,12 +10,14 @@
 
     public class AlternativaViewModel
     {
-        public AlternativaViewModel(string descricao, bool correta)
+        public AlternativaViewModel(Guid id, string descricao, bool correta)
         {
+            Id = id;
             Descricao = descricao;
             Correta = correta;
         }
 
+        public Guid Id { get; set; }
         public string Descricao { get; set; }
         public bool Correta { get; set; }
     }

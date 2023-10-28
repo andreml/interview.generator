@@ -7,6 +7,8 @@ namespace interview.generator.domain.Entidade
         public Guid PerguntaId { get; set; }
         public bool Correta { get; set; }
         public string Descricao { get; set; }
+
+        public ICollection<RespostaAvaliacao>? RespostasAvaliacao { get; set; }
         
         public Alternativa()
         {    

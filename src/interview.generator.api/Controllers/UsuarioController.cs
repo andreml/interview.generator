@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace interview.generator.api.Controllers
 {
+    /// <summary>
+    /// Controller responsável pelo gerenciamento do Usuário
+    /// </summary>
     [ApiController]
     [Route("[controller]")]
     [Produces("application/json")]
@@ -39,7 +42,7 @@ namespace interview.generator.api.Controllers
         }
 
         /// <summary>
-        /// Adicionar um novo usuário
+        /// Adicionar um novo usuário (Avaliador | Candidato)
         /// </summary>
         /// <returns></returns>
         [HttpPost("AdicionarUsuario")]
@@ -60,7 +63,7 @@ namespace interview.generator.api.Controllers
         }
 
         /// <summary>
-        /// Altera um usuário existente
+        /// Altera um usuário existente (Avaliador | Candidato)
         /// </summary>
         /// <returns></returns>
         [Authorize]

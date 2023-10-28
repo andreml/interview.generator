@@ -1,4 +1,5 @@
-﻿using interview.generator.domain.Entidade;
+﻿using Azure;
+using interview.generator.domain.Entidade;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -25,16 +26,17 @@ namespace interview.generator.infraestructure.Mapping
 
 
             builder
-               .HasMany(x => x.PerguntasQuestionario)
-               .WithOne(x => x.Questionario)
-               .HasForeignKey("QuestionarioId");
-
+                .HasMany(x => x.Perguntas)
+                .WithMany(x => x.Questionarios)
+                .UsingEntity<Dictionary<Guid, Guid>>(
+                    "QuestionarioPergunta",
+                    l => l.HasOne<Pergunta>().WithMany().HasForeignKey("PerguntaId"),
+                    r => r.HasOne<Questionario>().WithMany().HasForeignKey("QuestionarioId"));
 
             builder
                 .HasMany(x => x.Avaliacoes)
                 .WithOne(x => x.Questionario)
                 .HasForeignKey("QuestionarioId");
-
         }
     }
 }

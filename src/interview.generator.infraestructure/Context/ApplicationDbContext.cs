@@ -17,7 +17,6 @@ namespace interview.generator.infraestructure.Context
         public DbSet<AreaConhecimento> AreaConhecimento { get; set; }
         public DbSet<Avaliacao> Avaliacao { get; set; }
         public DbSet<Pergunta> Pergunta { get; set; }
-        public DbSet<PerguntaQuestionario> PerguntaQuestionario { get; set; }
         public DbSet<Questionario> Questionario { get; set; }
         public DbSet<RespostaAvaliacao> RespostaAvaliacao { get; set; }
         public DbSet<Usuario> Usuario { get; set; }

@@ -19,6 +19,11 @@ namespace interview.generator.infraestructure.Mapping
             builder.Property(x => x.Descricao)
                 .IsRequired()
                 .HasColumnType("VARCHAR(1000)");
+
+            builder
+                .HasMany(x => x.RespostasAvaliacao)
+                .WithOne(x => x.AlternativaEscolhida)
+                .IsRequired(false);
         }
     }
 }

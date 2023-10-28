@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace interview.generator.api.Controllers
 {
+    /// <summary>
+    /// Controller responsável pelo gerenciamento de Questionários (Conjunto de perguntas)
+    /// </summary>
     [Route("[controller]")]
     [ApiController]
     public class QuestionarioController : BaseController
@@ -24,7 +27,7 @@ namespace interview.generator.api.Controllers
         /// </summary>
         [HttpPost("AdicionarQuestionario")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ResponseErro), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AdicionarQuestionario(AdicionarQuestionarioDto questionario)
         {
@@ -93,7 +96,7 @@ namespace interview.generator.api.Controllers
         /// <param name="nome">Nome do questionário (opcional)</param>
         [HttpGet("ObterQuestionarios")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
-        [ProducesResponseType(typeof(ICollection<QuestionarioViewModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ICollection<QuestionarioViewModelAvaliador>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ResponseErro), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> ObterQuestionariosPorFiltro([FromQuery] Guid questionarioId, [FromQuery] string? nome)
         {
@@ -109,5 +112,47 @@ namespace interview.generator.api.Controllers
             }
         }
 
+        /// <summary>
+        /// Obém questionário para realizar avaliação (Candidato)
+        /// </summary>
+        [HttpGet("ObterQuestionarioParaPreenchimento/{id}")]
+        [Authorize(Roles = $"{Perfis.Candidato}")]
+        [ProducesResponseType(typeof(QuestionarioViewModelCandidato), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ResponseErro), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ObterQuestionarioParaPreenchimento([FromRoute] Guid id)
+        {
+            try
+            {
+                var result = await _questionarioService.ObterQuestionarioParaPreenchimento(ObterUsuarioIdLogado(), id);
+
+                return Response(result);
+            }
+            catch (Exception e)
+            {
+                return ResponseErro(e.Message, "Erro ao obter questionário");
+            }
+        }
+
+        /// <summary>
+        /// Obém estatísticas de um questionário (Avaliador)
+        /// </summary>
+        /// <param name="id">Id do questionário (opcional)</param>
+        [HttpGet("ObterEstatisticasQuestionario/{id}")]
+        [Authorize(Roles = $"{Perfis.Avaliador}")]
+        [ProducesResponseType(typeof(QuestionarioEstatisticasViewModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ResponseErro), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ObterEstatisticasQuestionario([FromRoute] Guid id)
+        {
+            try
+            {
+                var result = await _questionarioService.ObterEstatisticasQuestionario(ObterUsuarioIdLogado(), id);
+
+                return Response(result);
+            }
+            catch (Exception e)
+            {
+                return ResponseErro(e.Message, "Erro ao obter estatísticas do questionário");
+            }
+        }
     }
 }

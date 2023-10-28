@@ -1,15 +1,15 @@
 ﻿using interview.generator.domain.Entidade.Common;
-using System.Text.Json.Serialization;
 
 namespace interview.generator.domain.Entidade
 {
     public class Avaliacao : EntidadeBase
     {
-        [JsonPropertyName("CandidatoId")] public Guid CandidatoId { get; set; }
+        public Usuario Candidato { get; set; }
         public Questionario Questionario { get; set; }
-        [JsonPropertyName("DataAplicacao")] public DateTime DataAplicacao { get; set; }
-        [JsonPropertyName("ObservacaoAplicador")] public string ObservacaoAplicador { get; set; }
-        [JsonPropertyName("Respostas")] public ICollection<RespostaAvaliacao> Respostas { get; set; }
+        public DateTime DataAplicacao { get; set; }
+        public string ObservacaoAplicador { get; set; }
+        public decimal Nota { get; set; }
+        public ICollection<RespostaAvaliacao> Respostas { get; set; }
 
         public Avaliacao()
         {
@@ -17,5 +17,13 @@ namespace interview.generator.domain.Entidade
 
         public void AdicionarObservacao(string observacao) =>
             ObservacaoAplicador = observacao;
+
+        public void CalcularNota()
+        {
+            var totalPerguntas = Questionario.Perguntas.Count;
+            var acertos = Respostas.Where(r => r.AlternativaEscolhida.Correta).Count();
+
+            Nota = ((decimal)acertos / totalPerguntas) * 100;
+        }
     }
 }

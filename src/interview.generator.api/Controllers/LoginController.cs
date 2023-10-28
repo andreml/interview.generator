@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace interview.generator.api.Controllers
 {
+    /// <summary>
+    /// Controller responsável pelo gerenciamento do Login
+    /// </summary>
     [Route("[controller]")]
     [ApiController]
     public class LoginController : BaseController

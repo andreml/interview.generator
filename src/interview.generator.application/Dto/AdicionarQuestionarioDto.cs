@@ -7,7 +7,7 @@ namespace interview.generator.application.Dto
         [JsonIgnore]
         public Guid UsuarioId { get; set; }
         public string Nome { get; set; } = default!;
-        public ICollection<PerguntaQuestionarioDto> Perguntas { get; set; } = default!;
+        public ICollection<Guid> Perguntas { get; set; } = default!;
     }
 
     

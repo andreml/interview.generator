@@ -8,7 +8,7 @@ namespace interview.generator.domain.Entidade
         public Guid UsuarioCriacaoId { get; set; }
         public DateTime DataCriacao { get; set; }
 
-        public List<PerguntaQuestionario> PerguntasQuestionario { get; set; } = new();
+        public List<Pergunta> Perguntas { get; set; } = new();
 
         public List<Avaliacao> Avaliacoes { get; set; }
 
@@ -18,14 +18,14 @@ namespace interview.generator.domain.Entidade
             DataCriacao = DateTime.Now;
         }
 
-        public void AdicionarPergunta(PerguntaQuestionario perguntaQuestionario)
+        public void AdicionarPergunta(Pergunta pergunta)
         {
-            PerguntasQuestionario.Add(perguntaQuestionario);
+            Perguntas.Add(pergunta);
         }
 
         public void RemoverPerguntas()
         {
-            PerguntasQuestionario.Clear();
+            Perguntas.Clear();
         }
     }
 }
