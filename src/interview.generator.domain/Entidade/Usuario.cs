@@ -27,15 +27,12 @@ namespace interview.generator.domain.Entidade
 
         public DateTime VerificaValidadeTokenUsuario()
         {
-            switch (this.Perfil)
+            return Perfil switch
             {
-                case Perfil.Avaliador:
-                    return DateTime.Now.AddYears(1);
-                case Perfil.Candidato:
-                    return DateTime.Now.AddDays(1);
-                default:
-                    return DateTime.Now;
-            }
+                Perfil.Avaliador => DateTime.Now.AddYears(1),
+                Perfil.Candidato => DateTime.Now.AddDays(1),
+                _ => DateTime.Now,
+            };
         }
 
         public void Atualizar(string cpf, string nome, string login, string senha)
