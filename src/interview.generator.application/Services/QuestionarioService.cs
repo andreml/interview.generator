@@ -131,7 +131,7 @@ namespace interview.generator.application.Services
             var response = new ResponseBase<ICollection<QuestionarioViewModelAvaliador>>();
 
             var questionarios = await _questionarioRepositorio.ObterQuestionarios(usuarioCriacaoId, questionarioId, nome);
-            if (questionarios == null)
+            if (questionarios.Count() == 0)
                 return response;
 
             var questionariosViewModel = questionarios.Select(x => new QuestionarioViewModelAvaliador()

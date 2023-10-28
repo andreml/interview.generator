@@ -94,7 +94,7 @@ namespace interview.generator.application.Services
 
             var areasConhecimento = await _areaConhecimentoRepositorio.ObterAreaConhecimentoComPerguntas(usuarioCriacaoId, areaConhecimentoId, descricao);
 
-            if (areasConhecimento == null)
+            if (areasConhecimento.Count() == 0)
                 return response;
 
             var areasViewModel = areasConhecimento

@@ -107,7 +107,7 @@ namespace interview.generator.application.Services
 
             var avaliacoes = await _repositorio.ObterAvaliacoesPorFiltro(usuarioIdCriacaoQuestionario, QuestionarioId, nomeQuestionario, nomeCandidato);
 
-            if (avaliacoes == null || avaliacoes.Count == 0)
+            if (avaliacoes.Count == 0)
                 return response;
 
             var avaliacoesViewModel = avaliacoes.Select(a => new AvaliacaoViewModel()

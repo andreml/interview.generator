@@ -54,7 +54,6 @@ namespace interview.generator.api.Controllers
         [Authorize(Roles = $"{Perfis.Avaliador}")]
         [ProducesResponseType(typeof(IEnumerable<AreaConhecimentoViewModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(typeof(ResponseErro), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> ObterAreasConhecimentoAsync([FromQuery] Guid areaConhecimentoId, [FromQuery] string? descricao)
         {
             try
