@@ -20,7 +20,7 @@ namespace interview.generator.api.Controllers
         public AvaliacaoController(IAvaliacaoService service) { _avaliacaoService = service; }
 
         /// <summary>
-        /// Obtém Avaliações cadastradas (Avaliador)
+        /// Obtém Avaliações feitas pelos Candidatos (Avaliador)
         /// </summary>
         /// <param name="QuestionarioId">Id do questionário (opcional)</param>
         /// <param name="nomeQuestionario">Nome do questionário (opcional)</param>

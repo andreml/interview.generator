@@ -22,7 +22,7 @@ namespace interview.generator.api.Controllers
         }
 
         /// <summary>
-        /// Obtém perguntas cadastradas (Avaliador)
+        /// Obtém Perguntas (Avaliador)
         /// </summary>
         /// <param name="perguntaId">Id da Pergunta (Opcional)</param>
         /// <param name="areaConhecimento">Area de conhecimento (Opcional)</param>
@@ -48,7 +48,7 @@ namespace interview.generator.api.Controllers
         }
 
         /// <summary>
-        /// Adiciona nova pergunta (Avaliador)
+        /// Adiciona Pergunta (Avaliador)
         /// </summary>
         [HttpPost("AdicionarPergunta")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
@@ -71,7 +71,7 @@ namespace interview.generator.api.Controllers
         }
 
         /// <summary>
-        /// Altera uma pergunta existente (Avaliador)
+        /// Altera uma Pergunta (Avaliador)
         /// </summary>
         [HttpPut("AlterarPergunta")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
@@ -94,7 +94,7 @@ namespace interview.generator.api.Controllers
         }
 
         /// <summary>
-        /// Exclui uma pergunta existente (Avaliador)
+        /// Exclui uma Pergunta (Avaliador)
         /// </summary>
         [HttpDelete("ExcluirPergunta/{id}")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]

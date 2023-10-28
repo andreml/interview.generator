@@ -21,7 +21,7 @@ namespace interview.generator.api.Controllers
         }
 
         /// <summary>
-        /// Obtém usuário (Avaliador | Candidato)
+        /// Obtém Usuário (Avaliador | Candidato)
         /// </summary>
         [Authorize]
         [HttpGet("ObterUsuario")]
@@ -42,7 +42,7 @@ namespace interview.generator.api.Controllers
         }
 
         /// <summary>
-        /// Adicionar um novo usuário (Avaliador | Candidato)
+        /// Adiciona Usuário (Avaliador | Candidato)
         /// </summary>
         /// <returns></returns>
         [HttpPost("AdicionarUsuario")]
@@ -63,7 +63,7 @@ namespace interview.generator.api.Controllers
         }
 
         /// <summary>
-        /// Altera um usuário existente (Avaliador | Candidato)
+        /// Altera Usuário (Avaliador | Candidato)
         /// </summary>
         /// <returns></returns>
         [Authorize]
