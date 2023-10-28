@@ -27,7 +27,7 @@ namespace interview.generator.api.Controllers
         [HttpPost("GerarToken")]
         [ProducesResponseType(typeof(LoginViewModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ResponseErro), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> GerarToken(GeraTokenUsuario usuario)
+        public async Task<IActionResult> GerarToken(GerarTokenUsuarioDto usuario)
         {
             try
             {

@@ -583,7 +583,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
 
         private async Task Autenticar(string login, string senha)
         {
-            var postLogin = await _client.PostAsync("/Login/GerarToken", JsonContent.Create(new GeraTokenUsuario(login, senha)));
+            var postLogin = await _client.PostAsync("/Login/GerarToken", JsonContent.Create(new GerarTokenUsuarioDto(login, senha)));
 
             var postLoginResponse = await LerDoJson<LoginViewModel>(postLogin.Content);
 

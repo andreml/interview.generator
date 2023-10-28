@@ -51,6 +51,8 @@ namespace interview.generator.application.Dto
                 .WithMessage("A pergunda teve ter somente uma alternativa correta");
 
             RuleFor(x => x.Alternativas)
+                .Must(x => x.Select(x => x.Descricao).Count() == x.Select(x => x.Descricao).Distinct().Count())
+                .WithMessage("Uma ou mais alternativas estão duplicadas")
                 .ForEach(alternativa =>
                 {
                     RuleFor(alternativa => alternativa.Descricao)

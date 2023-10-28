@@ -27,9 +27,13 @@ namespace interview.generator.application.Dto
     {
         public AdicionarAvaliacaoDtoValidator()
         {
-            RuleFor(x => x.QuestionarioId).NotNull().NotEmpty().WithMessage("Questionário é obrigatório");
+            RuleFor(x => x.QuestionarioId)
+                .NotNull().NotEmpty().WithMessage("Questionário é obrigatório");
 
-            RuleFor(x => x.Respostas).NotNull().NotEmpty().WithMessage("Respostas são obrigatórias é obrigatório");
+            RuleFor(x => x.Respostas)
+                .NotNull().NotEmpty().WithMessage("Respostas são obrigatórias")
+                .Must(x => x.Select(x => x.PerguntaId).Count() == x.Select(x => x.PerguntaId).Distinct().Count())
+                    .WithMessage("Uma ou mais respostas estão duplicadas");
         }
     }
 }

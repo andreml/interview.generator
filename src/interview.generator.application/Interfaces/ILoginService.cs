@@ -6,6 +6,6 @@ namespace interview.generator.application.Interfaces
 {
     public interface ILoginService
     {
-        Task<ResponseBase<LoginViewModel>> BuscarTokenUsuario(GeraTokenUsuario usuario);
+        Task<ResponseBase<LoginViewModel>> BuscarTokenUsuario(GerarTokenUsuarioDto usuario);
     }
 }

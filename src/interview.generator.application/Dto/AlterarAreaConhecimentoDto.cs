@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using FluentValidation;
+using System.Text.Json.Serialization;
 
 namespace interview.generator.application.Dto
 {
@@ -9,5 +10,19 @@ namespace interview.generator.application.Dto
         public string Descricao { get; set; } = default!;
 
         public Guid Id { get; set; }
+    }
+
+    public class AlterarAreaConhecimentoDtoValidator : AbstractValidator<AlterarAreaConhecimentoDto>
+    {
+        public AlterarAreaConhecimentoDtoValidator()
+        {
+            RuleFor(x => x.Id)
+                .NotNull().NotEmpty().WithMessage("Id é obrigatório");
+
+            RuleFor(x => x.Descricao)
+                .NotNull().NotEmpty().WithMessage("Descrição é obrigatória")
+                .MinimumLength(3).WithMessage("Descrição deve ter no mínimo 3 caracteres")
+                .MaximumLength(100).WithMessage("Descrição deve ter até 100 caracteres");
+        }
     }
 }
