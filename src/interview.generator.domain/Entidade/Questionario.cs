@@ -4,13 +4,13 @@ namespace interview.generator.domain.Entidade
 {
     public class Questionario : EntidadeBase
     {
-        public string Nome { get; set; }
+        public string Nome { get; set; } = default!;
         public Guid UsuarioCriacaoId { get; set; }
         public DateTime DataCriacao { get; set; }
 
         public List<Pergunta> Perguntas { get; set; } = new();
 
-        public List<Avaliacao> Avaliacoes { get; set; }
+        public List<Avaliacao> Avaliacoes { get; set; } = default!;
 
 
         public Questionario()

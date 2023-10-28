@@ -20,11 +20,12 @@ namespace interview.generator.domain.Utils
             string password = "bd449573-f048-40b7-bf61-0a2ec0c9f15e";
             byte[] bytes = Encoding.Unicode.GetBytes(value);
             using Aes aes = Aes.Create();
+
             Rfc2898DeriveBytes rfc2898DeriveBytes = new Rfc2898DeriveBytes(password, new byte[13]
             {
-                73, 118, 97, 110, 32, 77, 101, 100, 118, 101,
-                100, 101, 118
-            });
+                73, 118, 97, 110, 32, 77, 101, 100, 118, 101, 100, 101, 118
+            }, 1000, HashAlgorithmName.SHA1);
+
             aes.Key = rfc2898DeriveBytes.GetBytes(32);
             aes.IV = rfc2898DeriveBytes.GetBytes(16);
             using MemoryStream memoryStream = new MemoryStream();
@@ -53,11 +54,12 @@ namespace interview.generator.domain.Utils
             string password = "bd449573-f048-40b7-bf61-0a2ec0c9f15e";
             byte[] array = Convert.FromBase64String(value);
             using Aes aes = Aes.Create();
+
             Rfc2898DeriveBytes rfc2898DeriveBytes = new Rfc2898DeriveBytes(password, new byte[13]
             {
-                73, 118, 97, 110, 32, 77, 101, 100, 118, 101,
-                100, 101, 118
-            });
+                73, 118, 97, 110, 32, 77, 101, 100, 118, 101, 100, 101, 118
+            }, 1000, HashAlgorithmName.SHA1);
+
             aes.Key = rfc2898DeriveBytes.GetBytes(32);
             aes.IV = rfc2898DeriveBytes.GetBytes(16);
             using MemoryStream memoryStream = new MemoryStream();

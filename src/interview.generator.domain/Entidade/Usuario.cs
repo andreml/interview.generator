@@ -6,11 +6,11 @@ namespace interview.generator.domain.Entidade
 {
     public class Usuario : EntidadeBase
     {
-        public string Cpf { get; set; }
-        public string Nome { get; set; }
+        public string Cpf { get; set; } = default!;
+        public string Nome { get; set; } = default!;
         public Perfil Perfil { get; set; }
-        public string Login { get; set; }
-        public string Senha { get; set; }
+        public string Login { get; set; } = default!;
+        public string Senha { get; set; } = default!;
 
         public Usuario()
         {
