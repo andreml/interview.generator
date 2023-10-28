@@ -2,7 +2,6 @@
 using interview.generator.application.ViewModels;
 using interview.generator.domain.Enum;
 using Newtonsoft.Json;
-using System.Linq;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
