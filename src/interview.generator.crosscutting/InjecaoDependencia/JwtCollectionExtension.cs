@@ -29,8 +29,7 @@ namespace interview.generator.crosscutting.InjecaoDependencia
                 {
                     OnChallenge = c =>
                     {
-                        var errors = new List<string>();
-                        errors.Add("Usuário não está autenticado");
+                        var errors = new List<string> { "Usuário não está autenticado" };
                         c.HandleResponse();
                         var response = JsonSerializer.Serialize(new ResponseErro() { Codigo = (int)HttpStatusCode.Unauthorized, Mensagens = errors, Excecao = "Autenticação obrigatória" });
                         c.Response.StatusCode = 401;
@@ -39,8 +38,7 @@ namespace interview.generator.crosscutting.InjecaoDependencia
                     },
                     OnForbidden = c =>
                     {
-                        var errors = new List<string>();
-                        errors.Add("Usuário não tem permissão para acessar essa funcionalidade");
+                        var errors = new List<string> { "Usuário não tem permissão para acessar essa funcionalidade" };
                         var response = JsonSerializer.Serialize(new ResponseErro() { Codigo = (int)HttpStatusCode.Forbidden, Mensagens = errors, Excecao = "Permissão negada" });
                         c.Response.StatusCode = 403;
                         c.Response.ContentType = "application/json;charset=utf-8";
