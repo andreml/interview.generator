@@ -16,7 +16,6 @@ namespace interview.generator.crosscutting.InjecaoDependencia
             service.AddScoped<IAvaliacaoRepositorio, AvaliacaoRepositorio>();
             service.AddScoped<IQuestionarioRepositorio, QuestionarioRepositorio>();
 
-
             service.AddScoped<ILoginService, LoginService>();
             service.AddScoped<IUsuarioService, UsuarioService>();
             service.AddScoped<IPerguntaService, PerguntaService>();

@@ -11,7 +11,6 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.13" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.13" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
     <PackageReference Include="xunit" Version="2.5.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3">
@@ -26,7 +25,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\interview.generator.api\interview.generator.api.csproj" />
-    <ProjectReference Include="..\..\src\interview.generator.application\interview.generator.application.csproj" />
     <ProjectReference Include="..\..\src\interview.generator.infraestructure\interview.generator.infraestructure.csproj" />
   </ItemGroup>
 
