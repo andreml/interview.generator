@@ -13,6 +13,7 @@ namespace interview.generator.domain.Entidade
 
         public Avaliacao()
         {
+            DataAplicacao = DateTime.Now;
         }
 
         public void AdicionarObservacao(string observacao) =>
@@ -23,7 +24,7 @@ namespace interview.generator.domain.Entidade
             var totalPerguntas = Questionario.Perguntas.Count;
             var acertos = Respostas.Where(r => r.AlternativaEscolhida.Correta).Count();
 
-            Nota = ((decimal)acertos / totalPerguntas) * 100;
+            Nota = decimal.Round(((decimal)acertos / totalPerguntas) * 100, 2);
         }
     }
 }

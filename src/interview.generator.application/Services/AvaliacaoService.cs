@@ -42,7 +42,6 @@ namespace interview.generator.application.Services
             var avaliacao = new Avaliacao()
             {
                 Candidato = candidato!,
-                DataAplicacao = DateTime.Now,
                 Questionario = questionario,
                 ObservacaoAplicador = string.Empty
             };
