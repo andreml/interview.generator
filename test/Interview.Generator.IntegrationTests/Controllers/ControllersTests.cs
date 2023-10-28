@@ -389,7 +389,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
 
             var alterarQuestionarioDto = new AlterarQuestionarioDto()
             {
-                QuestionarioId = questionario.FirstOrDefault()!.Id,
+                Id = questionario.FirstOrDefault()!.Id,
                 Nome = "Questionario Teste 1 Alterado",
                 Perguntas = perguntas.Select(x => x.Id).ToList()
             };

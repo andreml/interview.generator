@@ -7,7 +7,7 @@ namespace interview.generator.application.Dto
     {
         [JsonIgnore]
         public Guid UsuarioId { get; set; }
-        public Guid QuestionarioId { get; set; }
+        public Guid Id { get; set; }
         public string Nome { get; set; } = default!;
         public ICollection<Guid> Perguntas { get; set; } = default!;
     }
@@ -16,7 +16,7 @@ namespace interview.generator.application.Dto
     {
         public AlterarQuestionarioDtoValidator()
         {
-            RuleFor(x => x.QuestionarioId)
+            RuleFor(x => x.Id)
                 .NotNull().NotEmpty().WithMessage("Id do questionário é obrigatório");
 
             RuleFor(x => x.Nome)

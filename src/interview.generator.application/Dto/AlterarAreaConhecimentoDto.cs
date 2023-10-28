@@ -7,9 +7,8 @@ namespace interview.generator.application.Dto
     {
         [JsonIgnore]
         public Guid UsuarioId { get; set; }
-        public string Descricao { get; set; } = default!;
-
         public Guid Id { get; set; }
+        public string Descricao { get; set; } = default!;
     }
 
     public class AlterarAreaConhecimentoDtoValidator : AbstractValidator<AlterarAreaConhecimentoDto>

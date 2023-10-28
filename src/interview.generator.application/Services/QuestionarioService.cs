@@ -24,7 +24,7 @@ namespace interview.generator.application.Services
             var response = new ResponseBase();
 
 
-            var questionario = await _questionarioRepositorio.ObterPorIdComAvaliacoesEPerguntas(questionarioDto.UsuarioId, questionarioDto.QuestionarioId);
+            var questionario = await _questionarioRepositorio.ObterPorIdComAvaliacoesEPerguntas(questionarioDto.UsuarioId, questionarioDto.Id);
             if (questionario == null)
             {
                 response.AddErro("Questionario não encontrado");
@@ -40,7 +40,7 @@ namespace interview.generator.application.Services
             if (questionarioDto.Nome != questionario.Nome)
             {
                 var questionarioPorNome = await _questionarioRepositorio.ObterPorNome(questionarioDto.UsuarioId, questionarioDto.Nome);
-                if (questionarioPorNome != null && questionarioPorNome.Id != questionarioDto.QuestionarioId)
+                if (questionarioPorNome != null && questionarioPorNome.Id != questionarioDto.Id)
                 {
                     response.AddErro("Já existe um questionário com este nome");
                     return response;
