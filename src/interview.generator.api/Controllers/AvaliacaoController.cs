@@ -20,7 +20,7 @@ namespace interview.generator.api.Controllers
         public AvaliacaoController(IAvaliacaoService service) { _avaliacaoService = service; }
 
         /// <summary>
-        /// Obtém avaliações cadastradas (Avaliador)
+        /// Obtém Avaliações cadastradas (Avaliador)
         /// </summary>
         /// <param name="QuestionarioId">Id do questionário (opcional)</param>
         /// <param name="nomeQuestionario">Nome do questionário (opcional)</param>
@@ -44,7 +44,7 @@ namespace interview.generator.api.Controllers
         }
 
         /// <summary>
-        /// Adiciona a avaliação do candidato (Candidato)
+        /// Adiciona a Avaliação do candidato (Candidato)
         /// </summary>
         [HttpPost("Adicionar")]
         [Authorize(Roles = $"{Perfis.Candidato}")]
@@ -66,7 +66,7 @@ namespace interview.generator.api.Controllers
         }
 
         /// <summary>
-        /// Adiciona uma observação na avaliação do candidato (Avaliador)
+        /// Adiciona uma observação na Avaliação do candidato (Avaliador)
         /// </summary>
         [HttpPut("AdicionarObservacao")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
