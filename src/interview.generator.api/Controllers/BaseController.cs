@@ -12,18 +12,13 @@ namespace interview.generator.api.Controllers
             if (result.HasError)
                 return ResponseErro((int)HttpStatusCode.BadRequest, result.GetErrors());
 
-            switch (HttpContext.Request.Method)
+            return HttpContext.Request.Method switch
             {
-                case "GET":
-                    return ResponseGet(result);
-                case "POST":
-                    return ResponsePost(result);
-                case "PUT":
-                case "DELETE":
-                    return ResponsePutAndDelete(result);
-                default:
-                    return StatusCode(result.StatusCode, result.Data);
-            }
+                "GET" => ResponseGet(result),
+                "POST" => ResponsePost(result),
+                "PUT" or "DELETE" => ResponsePutAndDelete(result),
+                _ => StatusCode(result.StatusCode, result.Data),
+            };
         }
 
         protected IActionResult ResponseErro(string exception, string mensagem)

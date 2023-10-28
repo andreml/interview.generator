@@ -19,4 +19,8 @@
     <ProjectReference Include="..\interview.generator.infraestructure\interview.generator.infraestructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Config\" />
+  </ItemGroup>
+
 </Project>

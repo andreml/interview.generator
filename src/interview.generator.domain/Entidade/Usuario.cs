@@ -6,11 +6,11 @@ namespace interview.generator.domain.Entidade
 {
     public class Usuario : EntidadeBase
     {
-        public string Cpf { get; set; }
-        public string Nome { get; set; }
+        public string Cpf { get; set; } = default!;
+        public string Nome { get; set; } = default!;
         public Perfil Perfil { get; set; }
-        public string Login { get; set; }
-        public string Senha { get; set; }
+        public string Login { get; set; } = default!;
+        public string Senha { get; set; } = default!;
 
         public Usuario()
         {
@@ -27,15 +27,12 @@ namespace interview.generator.domain.Entidade
 
         public DateTime VerificaValidadeTokenUsuario()
         {
-            switch (this.Perfil)
+            return Perfil switch
             {
-                case Perfil.Avaliador:
-                    return DateTime.Now.AddYears(1);
-                case Perfil.Candidato:
-                    return DateTime.Now.AddDays(1);
-                default:
-                    return DateTime.Now;
-            }
+                Perfil.Avaliador => DateTime.Now.AddYears(1),
+                Perfil.Candidato => DateTime.Now.AddDays(1),
+                _ => DateTime.Now,
+            };
         }
 
         public void Atualizar(string cpf, string nome, string login, string senha)

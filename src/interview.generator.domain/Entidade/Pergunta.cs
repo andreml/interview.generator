@@ -4,9 +4,9 @@ namespace interview.generator.domain.Entidade
 {
     public class Pergunta : EntidadeBase
     {
-        public string Descricao { get; set; }
+        public string Descricao { get; set; } = default!;
         public Guid UsuarioCriacaoId { get; set; }
-        public AreaConhecimento AreaConhecimento { get; set; }
+        public AreaConhecimento AreaConhecimento { get; set; } = default!;
         public List<Alternativa> Alternativas { get; set; } = new();
 
         public ICollection<Questionario>? Questionarios { get; set; }
