@@ -25,7 +25,7 @@ namespace interview.generator.api.Controllers
         /// <param name="QuestionarioId">Id do questionário (opcional)</param>
         /// <param name="nomeQuestionario">Nome do questionário (opcional)</param>
         /// <param name="nomeCandidato">Nome do candidato (opcional)</param>
-        [HttpGet("ObterAvaliacoesPorFiltro")]
+        [HttpGet("Obter")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
         [ProducesResponseType(typeof(IEnumerable<AvaliacaoViewModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]

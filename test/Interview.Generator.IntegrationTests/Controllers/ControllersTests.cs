@@ -33,7 +33,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
             var novoUsuario = new AdicionarUsuarioDto("89660569467", "João da Silva", Perfil.Avaliador, _loginAvaliador, _senha);
 
             //Act
-            var responseNovoUsuario = await _client.PostAsync("/Usuario/AdicionarUsuario", JsonContent.Create(novoUsuario));
+            var responseNovoUsuario = await _client.PostAsync("/Usuario/Adicionar", JsonContent.Create(novoUsuario));
 
             //Assert
             Assert.Equal(HttpStatusCode.Created, responseNovoUsuario.StatusCode);
@@ -46,7 +46,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
             var novoUsuario = new AdicionarUsuarioDto("13971371426", "Maria Lima", Perfil.Candidato, _loginCandidato, _senha);
 
             //Act
-            var responseNovoUsuario = await _client.PostAsync("/Usuario/AdicionarUsuario", JsonContent.Create(novoUsuario));
+            var responseNovoUsuario = await _client.PostAsync("/Usuario/Adicionar", JsonContent.Create(novoUsuario));
 
             //Assert
             Assert.Equal(HttpStatusCode.Created, responseNovoUsuario.StatusCode);
@@ -67,11 +67,11 @@ namespace Interview.Generator.IntegrationTests.Controllers
             };
 
             //Act
-            var putUsuario = await _client.PutAsync("/Usuario/AlterarUsuario", JsonContent.Create(alterarUsuarioDto));
+            var putUsuario = await _client.PutAsync("/Usuario/Alterar", JsonContent.Create(alterarUsuarioDto));
             putUsuario.EnsureSuccessStatusCode();
 
             //Assert
-            var getUsuario = await _client.GetAsync("/Usuario/ObterUsuario");
+            var getUsuario = await _client.GetAsync("/Usuario/Obter");
             getUsuario.EnsureSuccessStatusCode();
             var getUsuarioResponse = await LerDoJson<UsuarioViewModel>(getUsuario.Content);
 
@@ -90,7 +90,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
             var areaConhecimento = new AdicionarAreaConhecimentoDto() { Descricao = "SqlServer" };
 
             //Act
-            var postAreaConhecimento = await _client.PostAsync("/AreaConhecimento/AdicionarAreaConhecimento", JsonContent.Create(areaConhecimento));
+            var postAreaConhecimento = await _client.PostAsync("/AreaConhecimento/Adicionar", JsonContent.Create(areaConhecimento));
 
             //Assert
             Assert.Equal(HttpStatusCode.Created, postAreaConhecimento.StatusCode);
@@ -110,7 +110,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
             };
 
             //Act
-            var putAreaConhecimento = await _client.PutAsync("/AreaConhecimento/AlterarAreaConhecimento", JsonContent.Create(alterarAreaConhecimento));
+            var putAreaConhecimento = await _client.PutAsync("/AreaConhecimento/Alterar", JsonContent.Create(alterarAreaConhecimento));
 
             //Assert
             getAreaConhecimento = await ObterAreaConhecimento("Matematica");
@@ -131,13 +131,13 @@ namespace Interview.Generator.IntegrationTests.Controllers
             var getAreaConhecimento = await ObterAreaConhecimento(areaConhecimentoDescricao);
 
             //Act
-            var deleteAreaConhecimento = await _client.DeleteAsync($"/AreaConhecimento/ExcluirAreaConhecimento/{getAreaConhecimento.FirstOrDefault()!.Id}");
+            var deleteAreaConhecimento = await _client.DeleteAsync($"/AreaConhecimento/Excluir/{getAreaConhecimento.FirstOrDefault()!.Id}");
 
             //Assert
             var getAreaConhecimentoDepoisDelete = await ObterAreaConhecimento(areaConhecimentoDescricao);
 
             Assert.Equal(HttpStatusCode.OK, deleteAreaConhecimento.StatusCode);
-            Assert.Empty(getAreaConhecimentoDepoisDelete);
+            Assert.Null(getAreaConhecimentoDepoisDelete);
         }
 
         [Fact, TestPriority(7)]
@@ -159,7 +159,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
             };
 
             //Act
-            var postPergunta = await _client.PostAsync("/Pergunta/AdicionarPergunta", JsonContent.Create(perguntaDto));
+            var postPergunta = await _client.PostAsync("/Pergunta/Adicionar", JsonContent.Create(perguntaDto));
 
             //Assert
             Assert.Equal(HttpStatusCode.Created, postPergunta.StatusCode);
@@ -188,7 +188,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
             };
 
             //Act
-            var putPergunta = await _client.PutAsync("/Pergunta/AlterarPergunta", JsonContent.Create(alterarPerguntaDto));
+            var putPergunta = await _client.PutAsync("/Pergunta/Alterar", JsonContent.Create(alterarPerguntaDto));
             putPergunta.EnsureSuccessStatusCode();
 
             pergunta = (await ObterPerguntas(alterarPerguntaDto.Descricao)).FirstOrDefault();
@@ -211,7 +211,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
             var pergunta = (await ObterPerguntas(perguntaDescricao)).FirstOrDefault();
 
             //Act
-            var deletePergunta = await _client.DeleteAsync($"/Pergunta/ExcluirPergunta/{pergunta!.Id}");
+            var deletePergunta = await _client.DeleteAsync($"/Pergunta/Excluir/{pergunta!.Id}");
             deletePergunta.EnsureSuccessStatusCode();
 
             //Assert
@@ -239,7 +239,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
                 }
             };
 
-            var postPergunta = await _client.PostAsync("/Pergunta/AdicionarPergunta", JsonContent.Create(perguntaDto));
+            var postPergunta = await _client.PostAsync("/Pergunta/Adicionar", JsonContent.Create(perguntaDto));
             postPergunta.EnsureSuccessStatusCode();
 
             var getAreaConhecimento = await ObterAreaConhecimento("BancoDeDados");
@@ -251,7 +251,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
             };
 
             //Act
-            var putAreaConhecimento = await _client.PutAsync("/AreaConhecimento/AlterarAreaConhecimento", JsonContent.Create(alterarAreaConhecimento));
+            var putAreaConhecimento = await _client.PutAsync("/AreaConhecimento/Alterar", JsonContent.Create(alterarAreaConhecimento));
 
             //Assert
             getAreaConhecimento = await ObterAreaConhecimento("JavaScript");
@@ -306,9 +306,9 @@ namespace Interview.Generator.IntegrationTests.Controllers
                 }
             };
 
-            await _client.PostAsync("/Pergunta/AdicionarPergunta", JsonContent.Create(perguntaDto1));
-            await _client.PostAsync("/Pergunta/AdicionarPergunta", JsonContent.Create(perguntaDto2));
-            await _client.PostAsync("/Pergunta/AdicionarPergunta", JsonContent.Create(perguntaDto3));
+            await _client.PostAsync("/Pergunta/Adicionar", JsonContent.Create(perguntaDto1));
+            await _client.PostAsync("/Pergunta/Adicionar", JsonContent.Create(perguntaDto2));
+            await _client.PostAsync("/Pergunta/Adicionar", JsonContent.Create(perguntaDto3));
 
             var perguntas = await ObterPerguntas("TesteQuestionario");
 
@@ -319,7 +319,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
             };
 
             //Act
-            var postQuestionario = await _client.PostAsync("/Questionario/AdicionarQuestionario", JsonContent.Create(addQuestionarioDto));
+            var postQuestionario = await _client.PostAsync("/Questionario/Adicionar", JsonContent.Create(addQuestionarioDto));
             postQuestionario.EnsureSuccessStatusCode();
 
             //Assert
@@ -379,9 +379,9 @@ namespace Interview.Generator.IntegrationTests.Controllers
                 }
             };
 
-            await _client.PostAsync("/Pergunta/AdicionarPergunta", JsonContent.Create(perguntaDto1));
-            await _client.PostAsync("/Pergunta/AdicionarPergunta", JsonContent.Create(perguntaDto2));
-            await _client.PostAsync("/Pergunta/AdicionarPergunta", JsonContent.Create(perguntaDto3));
+            await _client.PostAsync("/Pergunta/Adicionar", JsonContent.Create(perguntaDto1));
+            await _client.PostAsync("/Pergunta/Adicionar", JsonContent.Create(perguntaDto2));
+            await _client.PostAsync("/Pergunta/Adicionar", JsonContent.Create(perguntaDto3));
 
             var perguntas = await ObterPerguntas("TesteQuestionario: Nova Pergunta");
 
@@ -395,7 +395,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
             };
 
             //Act
-            var putQuestionario = await _client.PutAsync("/Questionario/AlterarQuestionario", JsonContent.Create(alterarQuestionarioDto));
+            var putQuestionario = await _client.PutAsync("/Questionario/Alterar", JsonContent.Create(alterarQuestionarioDto));
             putQuestionario.EnsureSuccessStatusCode();
 
             //Assert
@@ -423,7 +423,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
             var getQuestionario = await ObterQuestionarios("Questionario Teste 1 Alterado");
 
             //Act
-            var deleteQuestionario = await _client.DeleteAsync($"/Questionario/ExcluirQuestionario/{getQuestionario.FirstOrDefault()!.Id}");
+            var deleteQuestionario = await _client.DeleteAsync($"/Questionario/Excluir/{getQuestionario.FirstOrDefault()!.Id}");
             deleteQuestionario.EnsureSuccessStatusCode();
 
             //Assert
@@ -432,7 +432,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
             getQuestionario = await ObterQuestionarios("Questionario Teste 1");
 
             Assert.Equal(7, perguntas.Count());
-            Assert.Empty(getQuestionario);
+            Assert.Null(getQuestionario);
         }
 
         [Fact, TestPriority(14)]
@@ -494,10 +494,10 @@ namespace Interview.Generator.IntegrationTests.Controllers
                 }
             };
 
-            await _client.PostAsync("/Pergunta/AdicionarPergunta", JsonContent.Create(perguntaDto1));
-            await _client.PostAsync("/Pergunta/AdicionarPergunta", JsonContent.Create(perguntaDto2));
-            await _client.PostAsync("/Pergunta/AdicionarPergunta", JsonContent.Create(perguntaDto3));
-            await _client.PostAsync("/Pergunta/AdicionarPergunta", JsonContent.Create(perguntaDto4));
+            await _client.PostAsync("/Pergunta/Adicionar", JsonContent.Create(perguntaDto1));
+            await _client.PostAsync("/Pergunta/Adicionar", JsonContent.Create(perguntaDto2));
+            await _client.PostAsync("/Pergunta/Adicionar", JsonContent.Create(perguntaDto3));
+            await _client.PostAsync("/Pergunta/Adicionar", JsonContent.Create(perguntaDto4));
 
             var perguntas = await ObterPerguntas("Calcule o resultado de");
 ;
@@ -507,7 +507,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
                 Perguntas = perguntas.Select(x => x.Id).ToList()
             };
 
-            var postQuestionario = await _client.PostAsync("/Questionario/AdicionarQuestionario", JsonContent.Create(addQuestionarioDto));
+            var postQuestionario = await _client.PostAsync("/Questionario/Adicionar", JsonContent.Create(addQuestionarioDto));
             postQuestionario.EnsureSuccessStatusCode();
 
             var questionarioId = (await ObterQuestionarios("Questionario matemática teste")).FirstOrDefault()!.Id;
@@ -516,7 +516,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
             await Autenticar(_loginCandidato, _senha);
 
 
-            var getQuestionario = await _client.GetAsync($"/Questionario/ObterQuestionarioParaPreenchimento/{questionarioId}");
+            var getQuestionario = await _client.GetAsync($"/Questionario/ObterParaPreenchimento/{questionarioId}");
             var questionario = await LerDoJson<QuestionarioViewModelCandidato>(getQuestionario.Content);
 
             var auxSkip = 0;
@@ -538,7 +538,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
             //Assert
             await Autenticar(_loginAvaliador, _senha);
 
-            var getAvaliacoes = await _client.GetAsync("Avaliacao/ObterAvaliacoesPorFiltro?nomeQuestionario=Questionario matemática teste");
+            var getAvaliacoes = await _client.GetAsync("Avaliacao/Obter?nomeQuestionario=Questionario matemática teste");
             var getAvaliacoesResponse = await LerDoJson<ICollection<AvaliacaoViewModel>>(getAvaliacoes.Content);
 
             Assert.NotEmpty(getAvaliacoesResponse);
@@ -552,7 +552,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
             //Arrange
             await Autenticar(_loginAvaliador, _senha);
 
-            var getAvaliacoes = await _client.GetAsync("Avaliacao/ObterAvaliacoesPorFiltro?nomeQuestionario=Questionario matemática teste");
+            var getAvaliacoes = await _client.GetAsync("Avaliacao/Obter?nomeQuestionario=Questionario matemática teste");
             var getAvaliacoesResponse = await LerDoJson<ICollection<AvaliacaoViewModel>>(getAvaliacoes.Content);
 
             var putObservacaoAvaliacao = new AdicionarObservacaoAvaliadorDto()
@@ -566,7 +566,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
             putObservacao.EnsureSuccessStatusCode();
 
             //Assert
-            getAvaliacoes = await _client.GetAsync("Avaliacao/ObterAvaliacoesPorFiltro?nomeQuestionario=Questionario matemática teste");
+            getAvaliacoes = await _client.GetAsync("Avaliacao/Obter?nomeQuestionario=Questionario matemática teste");
             getAvaliacoesResponse = await LerDoJson<ICollection<AvaliacaoViewModel>>(getAvaliacoes.Content);
 
             Assert.Equal(HttpStatusCode.OK, putObservacao.StatusCode);
@@ -593,7 +593,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
 
         private async Task<IEnumerable<AreaConhecimentoViewModel>> ObterAreaConhecimento(string? descricao = null)
         {
-            var url = "/AreaConhecimento/ObterAreasConhecimento";
+            var url = "/AreaConhecimento/Obter";
 
             if (descricao != null)
                 url = $"{url}?descricao={descricao}";
@@ -606,7 +606,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
 
         private async Task<IEnumerable<PerguntaViewModel>> ObterPerguntas(string? descricao = null)
         {
-            var url = "/Pergunta/ObterPerguntas";
+            var url = "/Pergunta/Obter";
 
             if (descricao != null)
                 url = $"{url}?descricao={descricao}";
@@ -619,7 +619,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
 
         private async Task<IEnumerable<QuestionarioViewModelAvaliador>> ObterQuestionarios(string? nome = null)
         {
-            var url = "/Questionario/ObterQuestionarios";
+            var url = "/Questionario/Obter";
 
             if (nome != null)
                 url = $"{url}?nome={nome}";

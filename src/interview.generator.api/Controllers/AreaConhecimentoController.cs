@@ -25,7 +25,7 @@ namespace interview.generator.api.Controllers
         /// <summary>
         /// Adiciona uma Area de Conhecimento (Avaliador)
         /// </summary>
-        [HttpPost("AdicionarAreaConhecimento")]
+        [HttpPost("Adicionar")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ResponseErro), StatusCodes.Status400BadRequest)]
@@ -50,7 +50,7 @@ namespace interview.generator.api.Controllers
         /// </summary>
         /// <param name="areaConhecimentoId">Id da Area de Conhecimento (opcional)</param>
         /// <param name="descricao">Descrição da Area de Conhecimento (opcional)</param>
-        [HttpGet("ObterAreasConhecimento")]
+        [HttpGet("Obter")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
         [ProducesResponseType(typeof(IEnumerable<AreaConhecimentoViewModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -71,7 +71,7 @@ namespace interview.generator.api.Controllers
         /// <summary>
         /// Altera uma Area de Conhecimento (Avaliador)
         /// </summary>
-        [HttpPut("AlterarAreaConhecimento")]
+        [HttpPut("Alterar")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ResponseErro), StatusCodes.Status400BadRequest)]
@@ -95,7 +95,7 @@ namespace interview.generator.api.Controllers
         /// Exclui uma area de conhecimento (Avaliador)
         /// </summary>
         /// <param name="id">Id da Area de Conhecimento</param>
-        [HttpDelete("ExcluirAreaConhecimento/{id}")]
+        [HttpDelete("Excluir/{id}")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ResponseErro), StatusCodes.Status400BadRequest)]

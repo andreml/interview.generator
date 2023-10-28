@@ -25,7 +25,7 @@ namespace interview.generator.api.Controllers
         /// <summary>
         /// Adiciona um Questionário (Avaliador)
         /// </summary>
-        [HttpPost("AdicionarQuestionario")]
+        [HttpPost("Adicionar")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ResponseErro), StatusCodes.Status400BadRequest)]
@@ -48,7 +48,7 @@ namespace interview.generator.api.Controllers
         /// <summary>
         /// Altera um Questionário (Avaliador)
         /// </summary>
-        [HttpPut("AlterarQuestionario")]
+        [HttpPut("Alterar")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ResponseErro), StatusCodes.Status400BadRequest)]
@@ -70,7 +70,7 @@ namespace interview.generator.api.Controllers
         /// <summary>
         /// Exclui um Questionário (Avaliador)
         /// </summary>
-        [HttpDelete("ExcluirQuestionario/{id}")]
+        [HttpDelete("Excluir/{id}")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ResponseErro), StatusCodes.Status400BadRequest)]
@@ -93,7 +93,7 @@ namespace interview.generator.api.Controllers
         /// </summary>
         /// <param name="questionarioId">Id do questionário (opcional)</param>
         /// <param name="nome">Nome do questionário (opcional)</param>
-        [HttpGet("ObterQuestionarios")]
+        [HttpGet("Obter")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
         [ProducesResponseType(typeof(ICollection<QuestionarioViewModelAvaliador>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -114,7 +114,7 @@ namespace interview.generator.api.Controllers
         /// <summary>
         /// Obém Questionário para realizar avaliação (Candidato)
         /// </summary>
-        [HttpGet("ObterQuestionarioParaPreenchimento/{id}")]
+        [HttpGet("ObterParaPreenchimento/{id}")]
         [Authorize(Roles = $"{Perfis.Candidato}")]
         [ProducesResponseType(typeof(QuestionarioViewModelCandidato), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -136,7 +136,7 @@ namespace interview.generator.api.Controllers
         /// Obém estatísticas de um Questionário (Avaliador)
         /// </summary>
         /// <param name="id">Id do questionário (opcional)</param>
-        [HttpGet("ObterEstatisticasQuestionario/{id}")]
+        [HttpGet("ObterEstatisticas/{id}")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
         [ProducesResponseType(typeof(QuestionarioEstatisticasViewModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
