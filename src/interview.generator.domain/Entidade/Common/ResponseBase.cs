@@ -7,7 +7,7 @@ namespace interview.generator.domain.Entidade.Common
     {
         private HttpStatusCode _statusCode;
         private T? _data;
-        private readonly List<string> _erros = new List<string>();
+        private readonly List<string> _erros = new();
 
         [JsonIgnore]
         public int StatusCode => (int)_statusCode;
@@ -16,7 +16,7 @@ namespace interview.generator.domain.Entidade.Common
         public T? Data => _data;
 
         [JsonPropertyName("erros")]
-        public IEnumerable<string> erros => _erros;
+        public IEnumerable<string> Erros => _erros;
 
         [JsonIgnore]
         public bool HasError => _erros.Any();

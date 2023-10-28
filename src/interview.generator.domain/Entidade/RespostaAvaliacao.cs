@@ -4,8 +4,8 @@ namespace interview.generator.domain.Entidade
 {
     public class RespostaAvaliacao : EntidadeBase
     {
-        public Pergunta Pergunta { get; set; }
-        public Alternativa AlternativaEscolhida { get; set; }
+        public Pergunta Pergunta { get; set; } = default!;
+        public Alternativa AlternativaEscolhida { get; set; } = default!;
 
         public RespostaAvaliacao()
         {

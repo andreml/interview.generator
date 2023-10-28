@@ -8,7 +8,7 @@ namespace interview.generator.application.Dto
         [JsonIgnore]
         public Guid CandidatoId { get; set; }
         public Guid QuestionarioId { get; set; }
-        public ICollection<RespostaAvaliacaoDto> Respostas { get; set; }
+        public ICollection<RespostaAvaliacaoDto> Respostas { get; set; } = default!;
     }
 
     public class RespostaAvaliacaoDto

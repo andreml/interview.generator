@@ -4,12 +4,12 @@ namespace interview.generator.domain.Entidade
 {
     public class Avaliacao : EntidadeBase
     {
-        public Usuario Candidato { get; set; }
-        public Questionario Questionario { get; set; }
+        public Usuario Candidato { get; set; } = default!;
+        public Questionario Questionario { get; set; } = default!;
         public DateTime DataAplicacao { get; set; }
-        public string ObservacaoAplicador { get; set; }
+        public string ObservacaoAplicador { get; set; } = default!;
         public decimal Nota { get; set; }
-        public ICollection<RespostaAvaliacao> Respostas { get; set; }
+        public ICollection<RespostaAvaliacao> Respostas { get; set; } = default!;
 
         public Avaliacao()
         {

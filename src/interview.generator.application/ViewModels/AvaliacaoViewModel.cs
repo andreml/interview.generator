@@ -10,7 +10,7 @@
         public string ObservacaoAvaliador { get; set; } = default!;
         public decimal Nota { get; set; }
 
-        public ICollection<RespostaAvaliacaoViewModel> Respostas { get; set; }
+        public ICollection<RespostaAvaliacaoViewModel> Respostas { get; set; } = default!;
     }
 
     public class RespostaAvaliacaoViewModel
