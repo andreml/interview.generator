@@ -23,7 +23,7 @@ namespace interview.generator.api.Controllers
         }
 
         /// <summary>
-        /// Adiciona um novo questionário (Avaliador)
+        /// Adiciona um Questionário (Avaliador)
         /// </summary>
         [HttpPost("AdicionarQuestionario")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
@@ -46,9 +46,8 @@ namespace interview.generator.api.Controllers
 
 
         /// <summary>
-        /// Altera um questionário existente (Avaliador)
+        /// Altera um Questionário (Avaliador)
         /// </summary>
-        /// <param name="questionario"></param>
         [HttpPut("AlterarQuestionario")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -69,7 +68,7 @@ namespace interview.generator.api.Controllers
         }
 
         /// <summary>
-        /// Exclui um  um questionário existente (Avaliador)
+        /// Exclui um Questionário (Avaliador)
         /// </summary>
         [HttpDelete("ExcluirQuestionario/{id}")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
@@ -90,14 +89,14 @@ namespace interview.generator.api.Controllers
         }
 
         /// <summary>
-        /// Obém questionários cadastrados (Avaliador)
+        /// Obém Questionários (Avaliador)
         /// </summary>
         /// <param name="questionarioId">Id do questionário (opcional)</param>
         /// <param name="nome">Nome do questionário (opcional)</param>
         [HttpGet("ObterQuestionarios")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
         [ProducesResponseType(typeof(ICollection<QuestionarioViewModelAvaliador>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ResponseErro), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> ObterQuestionariosPorFiltro([FromQuery] Guid questionarioId, [FromQuery] string? nome)
         {
             try
@@ -113,12 +112,12 @@ namespace interview.generator.api.Controllers
         }
 
         /// <summary>
-        /// Obém questionário para realizar avaliação (Candidato)
+        /// Obém Questionário para realizar avaliação (Candidato)
         /// </summary>
         [HttpGet("ObterQuestionarioParaPreenchimento/{id}")]
         [Authorize(Roles = $"{Perfis.Candidato}")]
         [ProducesResponseType(typeof(QuestionarioViewModelCandidato), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ResponseErro), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> ObterQuestionarioParaPreenchimento([FromRoute] Guid id)
         {
             try
@@ -134,13 +133,13 @@ namespace interview.generator.api.Controllers
         }
 
         /// <summary>
-        /// Obém estatísticas de um questionário (Avaliador)
+        /// Obém estatísticas de um Questionário (Avaliador)
         /// </summary>
         /// <param name="id">Id do questionário (opcional)</param>
         [HttpGet("ObterEstatisticasQuestionario/{id}")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
         [ProducesResponseType(typeof(QuestionarioEstatisticasViewModel), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ResponseErro), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> ObterEstatisticasQuestionario([FromRoute] Guid id)
         {
             try

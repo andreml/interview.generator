@@ -23,7 +23,7 @@ namespace interview.generator.api.Controllers
         }
 
         /// <summary>
-        /// Adiciona uma Area de Conhecimento
+        /// Adiciona uma Area de Conhecimento (Avaliador)
         /// </summary>
         [HttpPost("AdicionarAreaConhecimento")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
@@ -46,7 +46,7 @@ namespace interview.generator.api.Controllers
         }
 
         /// <summary>
-        /// Obtém Areas de Conhecimento
+        /// Obtém Areas de Conhecimento (Avaliador)
         /// </summary>
         /// <param name="areaConhecimentoId">Id da Area de Conhecimento (opcional)</param>
         /// <param name="descricao">Descrição da Area de Conhecimento (opcional)</param>
@@ -70,7 +70,7 @@ namespace interview.generator.api.Controllers
         }
 
         /// <summary>
-        /// Altera uma Area de Conhecimento
+        /// Altera uma Area de Conhecimento (Avaliador)
         /// </summary>
         [HttpPut("AlterarAreaConhecimento")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
@@ -93,7 +93,7 @@ namespace interview.generator.api.Controllers
         }
 
         /// <summary>
-        /// Exclui uma area de conhecimento
+        /// Exclui uma area de conhecimento (Avaliador)
         /// </summary>
         /// <param name="id">Id da Area de Conhecimento</param>
         [HttpDelete("ExcluirAreaConhecimento/{id}")]
