@@ -167,7 +167,7 @@ namespace interview.generator.application.Services
             if (questionario == null)
                 return response;
 
-            if(questionario.Avaliacoes.Where(a => a.Candidato.Id == candidatoId).Any())
+            if (questionario.Avaliacoes.Where(a => a.Candidato.Id == candidatoId).Any())
             {
                 response.AddErro("Candidato já enviou uma avaliação referente a este questionário");
                 return response;
@@ -211,7 +211,7 @@ namespace interview.generator.application.Services
 
             if (estatisticas.AvaliacoesRespondidas > 0)
             {
-                estatisticas.MediaNota = questionario.Avaliacoes.Select(a => a.Nota).Average();
+                estatisticas.MediaNota = decimal.Round(questionario.Avaliacoes.Select(a => a.Nota).Average(), 2);
 
                 var maiorNota = questionario.Avaliacoes.Select(a => a.Nota).Max();
 
