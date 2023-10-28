@@ -96,17 +96,17 @@ namespace interview.generator.api.Controllers
         /// <summary>
         /// Exclui uma pergunta existente (Avaliador)
         /// </summary>
-        [HttpDelete("ExcluirPergunta/{perguntaId}")]
+        [HttpDelete("ExcluirPergunta/{id}")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> ExcluirPergunta(Guid perguntaId)
+        public async Task<IActionResult> ExcluirPergunta(Guid id)
         {
             try
             {
                 var usuarioId = ObterUsuarioIdLogado();
 
-                var result = await _perguntaService.ExcluirPergunta(usuarioId, perguntaId);
+                var result = await _perguntaService.ExcluirPergunta(usuarioId, id);
 
                 return Response(result);
             }
