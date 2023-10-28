@@ -20,7 +20,7 @@ namespace interview.generator.domain.Entidade
 
         public void CalcularNota()
         {
-            var totalPerguntas = Questionario.PerguntasQuestionario.Count;
+            var totalPerguntas = Questionario.Perguntas.Count;
             var acertos = Respostas.Where(r => r.AlternativaEscolhida.Correta).Count();
 
             Nota = ((decimal)acertos / totalPerguntas) * 100;

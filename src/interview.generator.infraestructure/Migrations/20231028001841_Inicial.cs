@@ -83,7 +83,7 @@ namespace interview.generator.infraestructure.Migrations
                     QuestionarioId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     DataAplicacao = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ObservacaoAplicador = table.Column<string>(type: "VARCHAR(500)", nullable: false),
-                    Nota = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    Nota = table.Column<decimal>(type: "decimal(3,3)", precision: 3, scale: 3, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -123,25 +123,23 @@ namespace interview.generator.infraestructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PerguntaQuestionario",
+                name: "QuestionarioPergunta",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PerguntaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    OrdemApresentacao = table.Column<int>(type: "int", nullable: false),
                     QuestionarioId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PerguntaQuestionario", x => x.Id);
+                    table.PrimaryKey("PK_QuestionarioPergunta", x => new { x.PerguntaId, x.QuestionarioId });
                     table.ForeignKey(
-                        name: "FK_PerguntaQuestionario_Pergunta_PerguntaId",
+                        name: "FK_QuestionarioPergunta_Pergunta_PerguntaId",
                         column: x => x.PerguntaId,
                         principalTable: "Pergunta",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_PerguntaQuestionario_Questionario_QuestionarioId",
+                        name: "FK_QuestionarioPergunta_Questionario_QuestionarioId",
                         column: x => x.QuestionarioId,
                         principalTable: "Questionario",
                         principalColumn: "Id",
@@ -164,8 +162,7 @@ namespace interview.generator.infraestructure.Migrations
                         name: "FK_RespostaAvaliacao_Alternativa_AlternativaEscolhidaId",
                         column: x => x.AlternativaEscolhidaId,
                         principalTable: "Alternativa",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_RespostaAvaliacao_Avaliacao_AvaliacaoId",
                         column: x => x.AvaliacaoId,
@@ -175,8 +172,7 @@ namespace interview.generator.infraestructure.Migrations
                         name: "FK_RespostaAvaliacao_Pergunta_PerguntaId",
                         column: x => x.PerguntaId,
                         principalTable: "Pergunta",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -200,13 +196,8 @@ namespace interview.generator.infraestructure.Migrations
                 column: "AreaConhecimentoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PerguntaQuestionario_PerguntaId",
-                table: "PerguntaQuestionario",
-                column: "PerguntaId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PerguntaQuestionario_QuestionarioId",
-                table: "PerguntaQuestionario",
+                name: "IX_QuestionarioPergunta_QuestionarioId",
+                table: "QuestionarioPergunta",
                 column: "QuestionarioId");
 
             migrationBuilder.CreateIndex(
@@ -229,7 +220,7 @@ namespace interview.generator.infraestructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "PerguntaQuestionario");
+                name: "QuestionarioPergunta");
 
             migrationBuilder.DropTable(
                 name: "RespostaAvaliacao");

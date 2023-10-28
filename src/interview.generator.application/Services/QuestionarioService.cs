@@ -51,18 +51,14 @@ namespace interview.generator.application.Services
 
             foreach (var pergunta in questionarioDto.Perguntas)
             {
-                var perguntaExistente = await _perguntaRepositorio.ObterPerguntaPorId(questionarioDto.UsuarioId, pergunta.PerguntaId);
+                var perguntaExistente = await _perguntaRepositorio.ObterPerguntaPorId(questionarioDto.UsuarioId, pergunta);
                 if (perguntaExistente == null)
                 {
-                    response.AddErro($"Pergunta {pergunta.PerguntaId} não encontrada");
+                    response.AddErro($"Pergunta {pergunta} não encontrada");
                     return response;
                 }
 
-                questionario.AdicionarPergunta(new PerguntaQuestionario
-                {
-                    OrdemApresentacao = pergunta.OrdemApresentacao,
-                    Pergunta = perguntaExistente
-                });
+                questionario.AdicionarPergunta(perguntaExistente);
             }
 
             await _questionarioRepositorio.Alterar(questionario);
@@ -90,18 +86,14 @@ namespace interview.generator.application.Services
 
             foreach (var pergunta in questionario.Perguntas)
             {
-                var perguntaExistente = await _perguntaRepositorio.ObterPerguntaPorId(questionario.UsuarioId, pergunta.PerguntaId);
+                var perguntaExistente = await _perguntaRepositorio.ObterPerguntaPorId(questionario.UsuarioId, pergunta);
                 if (perguntaExistente == null)
                 {
-                    response.AddErro($"Pergunta {pergunta.PerguntaId} não encontrada");
+                    response.AddErro($"Pergunta {pergunta} não encontrada");
                     return response;
                 }
 
-                novoQuestionario.AdicionarPergunta(new PerguntaQuestionario
-                {
-                    OrdemApresentacao = pergunta.OrdemApresentacao,
-                    Pergunta = perguntaExistente
-                });
+                novoQuestionario.AdicionarPergunta(perguntaExistente);
             }
 
             await _questionarioRepositorio.Adicionar(novoQuestionario);
@@ -147,10 +139,10 @@ namespace interview.generator.application.Services
                 DataCriacao = x.DataCriacao,
                 Nome = x.Nome,
                 AvaliacoesRespondidas = x.Avaliacoes.Count,
-                Perguntas = x.PerguntasQuestionario.Select(y => new PerguntaQuestionarioViewModel(
-                                                                                        y.Pergunta.Id,
-                                                                                        y.OrdemApresentacao,
-                                                                                        y.Pergunta.Descricao))
+                Perguntas = x.Perguntas.Select(y => new PerguntaQuestionarioViewModel(
+                                                                                        y.Id,
+                                                                                        1,
+                                                                                        y.Descricao))
                                                                                         .OrderBy(z => z.OrdemApresentacao)
                                                                                         .ToList()
             }).ToList();

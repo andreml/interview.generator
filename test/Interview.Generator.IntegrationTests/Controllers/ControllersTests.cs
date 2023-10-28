@@ -312,11 +312,10 @@ namespace Interview.Generator.IntegrationTests.Controllers
 
             var perguntas = await ObterPerguntas("TesteQuestionario");
 
-            int ordem = 1;
             var addQuestionarioDto = new AdicionarQuestionarioDto()
             {
                 Nome = "Questionario Teste 1",
-                Perguntas = perguntas.Select(x => new PerguntaQuestionarioDto(x.Id, ordem++)).ToList()
+                Perguntas = perguntas.Select(x => x.Id).ToList()
             };
 
             //Act
@@ -388,12 +387,11 @@ namespace Interview.Generator.IntegrationTests.Controllers
 
             var questionario = await ObterQuestionarios("Questionario Teste 1");
 
-            int ordem = 1;
             var alterarQuestionarioDto = new AlterarQuestionarioDto()
             {
                 QuestionarioId = questionario.FirstOrDefault()!.Id,
                 Nome = "Questionario Teste 1 Alterado",
-                Perguntas = perguntas.Select(x => new PerguntaQuestionarioDto(x.Id, ordem++)).ToList()
+                Perguntas = perguntas.Select(x => x.Id).ToList()
             };
 
             //Act
@@ -502,12 +500,11 @@ namespace Interview.Generator.IntegrationTests.Controllers
             await _client.PostAsync("/Pergunta/AdicionarPergunta", JsonContent.Create(perguntaDto4));
 
             var perguntas = await ObterPerguntas("Calcule o resultado de");
-
-            int ordem = 1;
+;
             var addQuestionarioDto = new AdicionarQuestionarioDto()
             {
                 Nome = "Questionario matemática teste",
-                Perguntas = perguntas.Select(x => new PerguntaQuestionarioDto(x.Id, ordem++)).ToList()
+                Perguntas = perguntas.Select(x => x.Id).ToList()
             };
 
             var postQuestionario = await _client.PostAsync("/Questionario/AdicionarQuestionario", JsonContent.Create(addQuestionarioDto));

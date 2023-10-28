@@ -20,7 +20,8 @@ namespace interview.generator.infraestructure.Mapping
 
             builder
                 .Property(x => x.Nota)
-                .IsRequired();
+                .IsRequired()
+                .HasPrecision(3, 3);
 
             builder
                 .HasOne(x => x.Candidato);

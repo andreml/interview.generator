@@ -31,7 +31,7 @@ namespace interview.generator.application.Services
                 return response;
             }
 
-            if(pergunta.PerguntasQuestionario!.Count > 0)
+            if(pergunta.Questionarios!.Count > 0)
             {
                 response.AddErro("Já existem questionários cadastrados com esta pergunta");
                 return response;
@@ -112,7 +112,7 @@ namespace interview.generator.application.Services
                 return response;
             }
 
-            if (pergunta.PerguntasQuestionario!.Count > 0)
+            if (pergunta.Questionarios!.Count > 0)
             {
                 response.AddErro("Já existem questionários cadastrados com esta pergunta");
                 return response;

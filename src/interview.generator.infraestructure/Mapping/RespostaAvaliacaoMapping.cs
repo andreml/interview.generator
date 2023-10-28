@@ -9,12 +9,6 @@ namespace interview.generator.infraestructure.Mapping
         public void Configure(EntityTypeBuilder<RespostaAvaliacao> builder)
         {
             builder.HasKey(x => x.Id);
-
-            builder
-                .HasOne(x => x.Pergunta);
-
-            builder
-                .HasOne(x => x.AlternativaEscolhida);
         }
     }
 }

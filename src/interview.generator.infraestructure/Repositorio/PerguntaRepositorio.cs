@@ -29,7 +29,7 @@ namespace interview.generator.infraestructure.Repositorio
         public async Task<Pergunta?> ObterPerguntaPorId(Guid usuarioCriacaoId, Guid perguntaId)
         {
             return await _dbSet
-                            .Include(x => x.PerguntasQuestionario)
+                            .Include(x => x.Questionarios)
                             .FirstOrDefaultAsync(x => x.UsuarioCriacaoId == usuarioCriacaoId
                                                  && x.Id == perguntaId);
         }

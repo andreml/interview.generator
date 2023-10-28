@@ -22,6 +22,21 @@ namespace interview.generator.infraestructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("QuestionarioPergunta", b =>
+                {
+                    b.Property<Guid>("PerguntaId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("QuestionarioId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("PerguntaId", "QuestionarioId");
+
+                    b.HasIndex("QuestionarioId");
+
+                    b.ToTable("QuestionarioPergunta");
+                });
+
             modelBuilder.Entity("interview.generator.domain.Entidade.Alternativa", b =>
                 {
                     b.Property<Guid>("Id")
@@ -79,7 +94,8 @@ namespace interview.generator.infraestructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("Nota")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(3, 3)
+                        .HasColumnType("decimal(3,3)");
 
                     b.Property<string>("ObservacaoAplicador")
                         .IsRequired()
@@ -119,31 +135,6 @@ namespace interview.generator.infraestructure.Migrations
                     b.HasIndex("AreaConhecimentoId");
 
                     b.ToTable("Pergunta");
-                });
-
-            modelBuilder.Entity("interview.generator.domain.Entidade.PerguntaQuestionario", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasAnnotation("Relational:JsonPropertyName", "Id");
-
-                    b.Property<int>("OrdemApresentacao")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("PerguntaId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("QuestionarioId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PerguntaId");
-
-                    b.HasIndex("QuestionarioId");
-
-                    b.ToTable("PerguntaQuestionario");
                 });
 
             modelBuilder.Entity("interview.generator.domain.Entidade.Questionario", b =>
@@ -226,6 +217,21 @@ namespace interview.generator.infraestructure.Migrations
                     b.ToTable("Usuario");
                 });
 
+            modelBuilder.Entity("QuestionarioPergunta", b =>
+                {
+                    b.HasOne("interview.generator.domain.Entidade.Pergunta", null)
+                        .WithMany()
+                        .HasForeignKey("PerguntaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("interview.generator.domain.Entidade.Questionario", null)
+                        .WithMany()
+                        .HasForeignKey("QuestionarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("interview.generator.domain.Entidade.Alternativa", b =>
                 {
                     b.HasOne("interview.generator.domain.Entidade.Pergunta", null)
@@ -265,46 +271,28 @@ namespace interview.generator.infraestructure.Migrations
                     b.Navigation("AreaConhecimento");
                 });
 
-            modelBuilder.Entity("interview.generator.domain.Entidade.PerguntaQuestionario", b =>
-                {
-                    b.HasOne("interview.generator.domain.Entidade.Pergunta", "Pergunta")
-                        .WithMany("PerguntasQuestionario")
-                        .HasForeignKey("PerguntaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("interview.generator.domain.Entidade.Questionario", "Questionario")
-                        .WithMany("PerguntasQuestionario")
-                        .HasForeignKey("QuestionarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Pergunta");
-
-                    b.Navigation("Questionario");
-                });
-
             modelBuilder.Entity("interview.generator.domain.Entidade.RespostaAvaliacao", b =>
                 {
                     b.HasOne("interview.generator.domain.Entidade.Alternativa", "AlternativaEscolhida")
-                        .WithMany()
-                        .HasForeignKey("AlternativaEscolhidaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("RespostasAvaliacao")
+                        .HasForeignKey("AlternativaEscolhidaId");
 
                     b.HasOne("interview.generator.domain.Entidade.Avaliacao", null)
                         .WithMany("Respostas")
                         .HasForeignKey("AvaliacaoId");
 
                     b.HasOne("interview.generator.domain.Entidade.Pergunta", "Pergunta")
-                        .WithMany()
-                        .HasForeignKey("PerguntaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("RespostasAvaliacao")
+                        .HasForeignKey("PerguntaId");
 
                     b.Navigation("AlternativaEscolhida");
 
                     b.Navigation("Pergunta");
+                });
+
+            modelBuilder.Entity("interview.generator.domain.Entidade.Alternativa", b =>
+                {
+                    b.Navigation("RespostasAvaliacao");
                 });
 
             modelBuilder.Entity("interview.generator.domain.Entidade.AreaConhecimento", b =>
@@ -321,14 +309,12 @@ namespace interview.generator.infraestructure.Migrations
                 {
                     b.Navigation("Alternativas");
 
-                    b.Navigation("PerguntasQuestionario");
+                    b.Navigation("RespostasAvaliacao");
                 });
 
             modelBuilder.Entity("interview.generator.domain.Entidade.Questionario", b =>
                 {
                     b.Navigation("Avaliacoes");
-
-                    b.Navigation("PerguntasQuestionario");
                 });
 #pragma warning restore 612, 618
         }

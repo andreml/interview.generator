@@ -35,7 +35,7 @@ namespace interview.generator.infraestructure.Repositorio
         public async Task<Questionario?> ObterPorNome(Guid usuarioCriacaoId, string nome)
         {
             return await _dbSet
-                            .Include(x => x.PerguntasQuestionario)
+                            .Include(x => x.Perguntas)
                             .Where(x => x.UsuarioCriacaoId == usuarioCriacaoId
                                         && x.Nome == nome)
                             .FirstOrDefaultAsync();
@@ -45,9 +45,8 @@ namespace interview.generator.infraestructure.Repositorio
         {
             return await _dbSet
                             .Include(x => x.Avaliacoes)
-                            .Include(x => x.PerguntasQuestionario)
-                                .ThenInclude(x => x.Pergunta)
-                                    .ThenInclude(x => x.Alternativas)
+                            .Include(x => x.Perguntas)
+                                .ThenInclude(x => x.Alternativas)
                             .Where(x => x.Id == questionarioId)
                             .FirstOrDefaultAsync();
         }
@@ -55,7 +54,7 @@ namespace interview.generator.infraestructure.Repositorio
         public async Task<Questionario?> ObterPorIdComAvaliacoesEPerguntas(Guid usuarioCriacaoId, Guid id)
         {
             return await _dbSet
-                            .Include(x => x.PerguntasQuestionario)
+                            .Include(x => x.Perguntas)
                             .Include(x => x.Avaliacoes)
                                 .ThenInclude(x => x.Candidato)    
                             .Where(x => x.UsuarioCriacaoId == usuarioCriacaoId
@@ -68,8 +67,7 @@ namespace interview.generator.infraestructure.Repositorio
         {
             return await _dbSet
                             .Include(x => x.Avaliacoes)
-                            .Include(x => x.PerguntasQuestionario)
-                                .ThenInclude(x => x.Pergunta)
+                            .Include(x => x.Perguntas)
                             .Where(x => x.UsuarioCriacaoId == usuarioCriacaoId
                                         && (questionarioId == Guid.Empty || x.Id == questionarioId)
                                         && (string.IsNullOrEmpty(nome) || x.Nome.Contains(nome))

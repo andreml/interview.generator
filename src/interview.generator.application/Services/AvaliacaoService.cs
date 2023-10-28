@@ -49,7 +49,7 @@ namespace interview.generator.application.Services
 
             var respostas = new List<RespostaAvaliacao>();
 
-            foreach(var perguntaQuestionario in questionario.PerguntasQuestionario.Select(x => x.Pergunta))
+            foreach(var perguntaQuestionario in questionario.Perguntas)
             {
                 var respostaAvaliaco = entity.Respostas.FirstOrDefault(r => r.PerguntaId == perguntaQuestionario.Id);
 
