@@ -4,6 +4,7 @@ using interview.generator.application.ViewModels;
 using interview.generator.domain.Entidade;
 using interview.generator.domain.Entidade.Common;
 using interview.generator.domain.Repositorio;
+using interview.generator.domain.Utils;
 
 namespace interview.generator.application.Services
 {
@@ -184,8 +185,8 @@ namespace interview.generator.application.Services
                     {
                         Id = a.Id,
                         Descricao = a.Descricao
-                    }).ToList()
-                }).ToList()
+                    }).ToList().Randomizar()
+                }).ToList().Randomizar()
             };
 
             response.AddData(questionarioViewModel);
