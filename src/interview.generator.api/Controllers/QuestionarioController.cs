@@ -96,7 +96,7 @@ namespace interview.generator.api.Controllers
         /// <param name="nome">Nome do questionário (opcional)</param>
         [HttpGet("ObterQuestionarios")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
-        [ProducesResponseType(typeof(ICollection<QuestionarioViewModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ICollection<QuestionarioViewModelAvaliador>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ResponseErro), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> ObterQuestionariosPorFiltro([FromQuery] Guid questionarioId, [FromQuery] string? nome)
         {
@@ -113,7 +113,28 @@ namespace interview.generator.api.Controllers
         }
 
         /// <summary>
-        /// Obém estaísticas de um questionário (Avaliador)
+        /// Obém questionário para realizar avaliação (Candidato)
+        /// </summary>
+        [HttpGet("ObterQuestionarioParaPreenchimento/{id}")]
+        [Authorize(Roles = $"{Perfis.Candidato}")]
+        [ProducesResponseType(typeof(QuestionarioViewModelCandidato), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ResponseErro), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ObterQuestionarioParaPreenchimento([FromRoute] Guid id)
+        {
+            try
+            {
+                var result = await _questionarioService.ObterQuestionarioParaPreenchimento(ObterUsuarioIdLogado(), id);
+
+                return Response(result);
+            }
+            catch (Exception e)
+            {
+                return ResponseErro(e.Message, "Erro ao obter questionário");
+            }
+        }
+
+        /// <summary>
+        /// Obém estatísticas de um questionário (Avaliador)
         /// </summary>
         /// <param name="id">Id do questionário (opcional)</param>
         [HttpGet("ObterEstatisticasQuestionario/{id}")]
@@ -133,6 +154,5 @@ namespace interview.generator.api.Controllers
                 return ResponseErro(e.Message, "Erro ao obter estatísticas do questionário");
             }
         }
-
     }
 }

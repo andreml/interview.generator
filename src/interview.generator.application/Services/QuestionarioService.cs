@@ -125,29 +125,70 @@ namespace interview.generator.application.Services
             return response;
         }
 
-        public async Task<ResponseBase<ICollection<QuestionarioViewModel>>> ObterQuestionarios(Guid usuarioCriacaoId, Guid questionarioId, string? nome)
+        public async Task<ResponseBase<ICollection<QuestionarioViewModelAvaliador>>> ObterQuestionarios(Guid usuarioCriacaoId, Guid questionarioId, string? nome)
         {
-            var response = new ResponseBase<ICollection<QuestionarioViewModel>>();
+            var response = new ResponseBase<ICollection<QuestionarioViewModelAvaliador>>();
 
             var questionarios = await _questionarioRepositorio.ObterQuestionarios(usuarioCriacaoId, questionarioId, nome);
             if (questionarios == null)
                 return response;
 
-            var questionariosViewModel = questionarios.Select(x => new QuestionarioViewModel()
+            var questionariosViewModel = questionarios.Select(x => new QuestionarioViewModelAvaliador()
             {
                 Id = x.Id,
                 DataCriacao = x.DataCriacao,
                 Nome = x.Nome,
                 AvaliacoesRespondidas = x.Avaliacoes.Count,
-                Perguntas = x.Perguntas.Select(y => new PerguntaQuestionarioViewModel(
-                                                                                        y.Id,
-                                                                                        1,
-                                                                                        y.Descricao))
-                                                                                        .OrderBy(z => z.OrdemApresentacao)
-                                                                                        .ToList()
+                Perguntas = x.Perguntas.Select(p => new PerguntaQuestionarioViewModelAvaliador()
+                {
+                    Id = p.Id,
+                    Descricao = p.Descricao,
+                    Alternativas = p.Alternativas.Select(a => new AlternativaPerguntaQuestionarioViewModelAvaliador()
+                    {
+                        Id = a.Id,
+                        Descricao = a.Descricao,
+                        Correta = a.Correta
+                    }).ToList()
+                }).ToList()
             }).ToList();
 
             response.AddData(questionariosViewModel);
+
+            return response;
+        }
+
+        public async Task<ResponseBase<QuestionarioViewModelCandidato>> ObterQuestionarioParaPreenchimento(Guid candidatoId, Guid questionarioId)
+        {
+            var response = new ResponseBase<QuestionarioViewModelCandidato>();
+
+            var questionario = await _questionarioRepositorio.ObterPorId(questionarioId);
+
+            if (questionario == null)
+                return response;
+
+            if(questionario.Avaliacoes.Where(a => a.Candidato.Id == candidatoId).Any())
+            {
+                response.AddErro("Candidato já enviou uma avaliação referente a este questionário");
+                return response;
+            }
+
+            var questionarioViewModel = new QuestionarioViewModelCandidato()
+            {
+                Id = questionario.Id,
+                Nome = questionario.Nome,
+                Perguntas = questionario.Perguntas.Select(p => new PerguntaQuestionarioViewModelCandidato()
+                {
+                    Id = p.Id,
+                    Descricao = p.Descricao,
+                    Alternativas = p.Alternativas.Select(a => new AlternativaPerguntaQuestionarioViewModelCandidato()
+                    {
+                        Id = a.Id,
+                        Descricao = a.Descricao
+                    }).ToList()
+                }).ToList()
+            };
+
+            response.AddData(questionarioViewModel);
 
             return response;
         }
@@ -167,7 +208,7 @@ namespace interview.generator.application.Services
                 AvaliacoesRespondidas = questionario.Avaliacoes.Count
             };
 
-            if(estatisticas.AvaliacoesRespondidas > 0)
+            if (estatisticas.AvaliacoesRespondidas > 0)
             {
                 estatisticas.MediaNota = questionario.Avaliacoes.Select(a => a.Nota).Average();
 

@@ -45,6 +45,7 @@ namespace interview.generator.infraestructure.Repositorio
         {
             return await _dbSet
                             .Include(x => x.Avaliacoes)
+                                .ThenInclude(x => x.Candidato)
                             .Include(x => x.Perguntas)
                                 .ThenInclude(x => x.Alternativas)
                             .Where(x => x.Id == questionarioId)

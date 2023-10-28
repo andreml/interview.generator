@@ -510,12 +510,19 @@ namespace Interview.Generator.IntegrationTests.Controllers
             var postQuestionario = await _client.PostAsync("/Questionario/AdicionarQuestionario", JsonContent.Create(addQuestionarioDto));
             postQuestionario.EnsureSuccessStatusCode();
 
-            var questionario = await ObterQuestionarios("Questionario matemática teste");
+            var questionarioId = (await ObterQuestionarios("Questionario matemática teste")).FirstOrDefault()!.Id;
+
+
+            await Autenticar(_loginCandidato, _senha);
+
+
+            var getQuestionario = await _client.GetAsync($"/Questionario/ObterQuestionarioParaPreenchimento/{questionarioId}");
+            var questionario = await LerDoJson<QuestionarioViewModelCandidato>(getQuestionario.Content);
 
             var auxSkip = 0;
             var adicionarAvaliacaoDto = new AdicionarAvaliacaoDto()
             {
-                QuestionarioId = questionario.FirstOrDefault()!.Id,
+                QuestionarioId = questionario.Id,
                 Respostas = perguntas.Select(p => new RespostaAvaliacaoDto(
                                                         p.Id,
                                                         p.Alternativas.Skip(auxSkip++).FirstOrDefault()!.Id)
@@ -535,8 +542,8 @@ namespace Interview.Generator.IntegrationTests.Controllers
             var getAvaliacoesResponse = await LerDoJson<ICollection<AvaliacaoViewModel>>(getAvaliacoes.Content);
 
             Assert.NotEmpty(getAvaliacoesResponse);
-            Assert.Equal(questionario.FirstOrDefault()!.Nome, getAvaliacoesResponse.FirstOrDefault()!.NomeQuestionario);
-            Assert.Equal(questionario.FirstOrDefault()!.Perguntas.Count, getAvaliacoesResponse.FirstOrDefault()!.Respostas.Count());
+            Assert.Equal(questionario.Nome, getAvaliacoesResponse.FirstOrDefault()!.NomeQuestionario);
+            Assert.Equal(questionario.Perguntas.Count, getAvaliacoesResponse.FirstOrDefault()!.Respostas.Count());
         }
 
         [Fact, TestPriority(15)]
@@ -610,7 +617,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
             return await LerDoJson<IEnumerable<PerguntaViewModel>>(getAreaConhecimento.Content);
         }
 
-        private async Task<IEnumerable<QuestionarioViewModel>> ObterQuestionarios(string? nome = null)
+        private async Task<IEnumerable<QuestionarioViewModelAvaliador>> ObterQuestionarios(string? nome = null)
         {
             var url = "/Questionario/ObterQuestionarios";
 
@@ -620,7 +627,7 @@ namespace Interview.Generator.IntegrationTests.Controllers
             var getQuestionario = await _client.GetAsync(url);
             getQuestionario.EnsureSuccessStatusCode();
 
-            return await LerDoJson<IEnumerable<QuestionarioViewModel>>(getQuestionario.Content);
+            return await LerDoJson<IEnumerable<QuestionarioViewModelAvaliador>>(getQuestionario.Content);
         }
     }
 }
