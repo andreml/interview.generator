@@ -1,5 +1,7 @@
 ﻿using interview.generator.application.Dto;
 using interview.generator.application.Interfaces;
+using interview.generator.application.ViewModels;
+using interview.generator.domain.Entidade.Common;
 using interview.generator.domain.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,8 +22,13 @@ namespace interview.generator.api.Controllers
             _areaConhecimentoService = areaConhecimentoService;
         }
 
+        /// <summary>
+        /// Adiciona uma Area de Conhecimento
+        /// </summary>
         [HttpPost("AdicionarAreaConhecimento")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ResponseErro), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AdicionarAreaConhecimento(AdicionarAreaConhecimentoDto areaConhecimento)
         {
             try
@@ -39,13 +46,15 @@ namespace interview.generator.api.Controllers
         }
 
         /// <summary>
-        /// Obtém areas de conhecimento cadastradas
+        /// Obtém Areas de Conhecimento
         /// </summary>
         /// <param name="areaConhecimentoId">Id da Area de Conhecimento (opcional)</param>
         /// <param name="descricao">Descrição da Area de Conhecimento (opcional)</param>
-        /// <returns></returns>
         [HttpGet("ObterAreasConhecimento")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
+        [ProducesResponseType(typeof(IEnumerable<AreaConhecimentoViewModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ResponseErro), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> ObterAreasConhecimentoAsync([FromQuery] Guid areaConhecimentoId, [FromQuery] string? descricao)
         {
             try
@@ -58,11 +67,15 @@ namespace interview.generator.api.Controllers
             {
                 return ResponseErro(e.Message, "Erro ao obter áreas de conhecimento");
             }
-        }  
+        }
 
-        [Authorize]
+        /// <summary>
+        /// Altera uma Area de Conhecimento
+        /// </summary>
         [HttpPut("AlterarAreaConhecimento")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ResponseErro), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AlterarAreaConhecimento(AlterarAreaConhecimentoDto areaConhecimento)
         {
             try
@@ -79,9 +92,14 @@ namespace interview.generator.api.Controllers
             }
         }
 
-        [Authorize]
+        /// <summary>
+        /// Exclui uma area de conhecimento
+        /// </summary>
+        /// <param name="id">Id da Area de Conhecimento</param>
         [HttpDelete("ExcluirAreaConhecimento/{id}")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ResponseErro), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> ExcluirAreaConhecimento(Guid id)
         {
             try
