@@ -6,7 +6,7 @@
 
 Sistema de focado em empresas de recrutamento que desejam aplicar testes em candidatos durante as entrevistas para uma vaga de emprego.
 
-O Sistema permite cadastrar por áreas de conhecimento, realizar testes com perguntas aleatórias para candidatos.
+O Sistema permite cadastrar perguntas categorizadas em áreas de conhecimento, criar questionários com as perguntas cadastradas e realizar avaliações com os questionários cadastrados para o candidatos.
 
 
 ## Autores
@@ -25,16 +25,15 @@ O Sistema permite cadastrar por áreas de conhecimento, realizar testes com perg
 
 ## Funcionalidades
 
-#### Área de conhecimento
- - Adicionar área de conhecimento (Perfil Avaliador)
+#### Área de conhecimento (Categorias de perguntas)
+ - Adicionar áreas de conhecimento (Perfil Avaliador)
  - Obter áreas de conhecimento cadastradas (Perfil Avaliador)
  - Alterar área de conhecimento (Perfil Avaliador)
 
-#### Avaliação	
-- Adicionar avaliação de um(a) candidato (Perfil Candidato)
-- Adicionar observaçõe em uma avaliação (Perfil Avaliador)
+#### Avaliação	(Aplicação de um Questionário)
+- Adicionar avaliação de um candidato (Perfil Candidato)
+- Adicionar observações em uma avaliação (Perfil Avaliador)
 - Obter avaliações cadastradas (Perfil Avaliador)
-- Obter estatísticas de uma avaliação
 
 #### Login
  - Gerar token de acesso (Perfil Avaliador | Candidato)
@@ -44,6 +43,14 @@ O Sistema permite cadastrar por áreas de conhecimento, realizar testes com perg
 - Alterar uma pergunta cadastrada (Perfil Avaliador)
 - Obter perguntas cadastradas (Perfil Avaliador)
 - Excluir uma pergunta cadastrada (Perfil Avaliador)
+
+#### Questionário (Conjunto de perguntas)
+- Adicionar um novo Questionário (Perfil Avaliador)
+- Alterar um questionário existente (Perfil Avaliador)
+- Excluir um questionário existente (Perfil Avaliador)
+- Obter questionários cadastrados (Perfil Avaliador)
+- Obter um questionário espeífico para preenchimento (Perfil Candidato)
+- Obter estatísticas de um questionário (Perfil Avaliador)
 
 #### Usuário	
 - Adicionar um usuário no sistema (Perfil Avaliador | Candidato)
