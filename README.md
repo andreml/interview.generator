@@ -6,8 +6,7 @@
 
 Sistema de focado em empresas de recrutamento que desejam aplicar testes em candidatos durante as entrevistas para uma vaga de emprego.
 
-O Sistema permite cadastrar perguntas categorizadas em áreas de conhecimento, criar questionários com as perguntas cadastradas e realizar avaliações com os questionários cadastrados para o candidatos.
-
+O Sistema permite cadastrar perguntas categorizadas em áreas de conhecimento, criar questionários com as perguntas cadastradas, aplicar avaliações com os questionários cadastrados para os candidatos e visualizar os resultados e estaísticas dos questionários aplicados.
 
 ## Autores
 
@@ -20,7 +19,7 @@ O Sistema permite cadastrar perguntas categorizadas em áreas de conhecimento, c
 
 ## Stack utilizada
 
-**Back-end:** .Net 7 
+**Back-end:** .Net 7, MSSQL, EF Core, FluentValidation e XUnit
 
 
 ## Funcionalidades
@@ -68,7 +67,21 @@ Para fazer o build desse projeto rode
   dotnet build
 ```
 
-## Rodando localmente
+## Executando Localmente - Banco de dados
+
+Utilizamos o arquivo 'docker-compose.yml' da raiz do projeto para criar o banco de dados localmente utilizando docker:
+
+- Baixar o docker no Windows em https://docker.com/products/docker-desktop/ e instale em sua máquina
+- Abra o PowerShell do Windows como Administrador
+- Acessar pasta da Solução interview.generator
+- Digite o comando abaixo 
+
+```bash
+docker-compose -f .\docker-compose.yml up
+```
+<a href='https://postimages.org/' target='_blank'><img src='https://i.postimg.cc/MZvtJFyB/powershell.png' border='0' alt='powershell'/></a><br />
+
+## Executando Localmente - API
 
 Clone o projeto
 
@@ -87,15 +100,7 @@ Instale as dependências
 ```bash
   dotnet restore
 ```
-- Baixar o docker no Windows em https://docker.com/products/docker-desktop/ e instale em sua máquina
-- Abra o PowerShell do Windows como Administrador
-- Acessar pasta da Solução interview.generator
-- Digite o comando abaixo 
 
-```bash
-docker-compose -f .\docker-compose.yml up
-```
-<a href='https://postimages.org/' target='_blank'><img src='https://i.postimg.cc/MZvtJFyB/powershell.png' border='0' alt='powershell'/></a><br />
 
 Abra o Visual Studio e no Package Manager Console digite o comando abaixo
 ```bash
@@ -147,9 +152,9 @@ Request de exemplo 2
 }
 ```
 
-## Rodando os testes
+## Executando os testes
 
-Para rodar os testes, rode o seguinte comando
+Para executar os testes, rode o seguinte comando
 
 ```bash
   cd .\test\InterviewGenerator.IntegrationTests\
@@ -167,7 +172,8 @@ O teste result ficará salvo na pasta abaixo
  
  ## Usando SQL Server para conectar com o Banco
 
-Dados de conexão local
+Caso deseje se conectar ao banco local para visualizar os dados, o endereço de conexão é o mesmo que está configurado no appsettings do projeto e no arquivo 'docker-compose.yml':
+
 ```bash
 Nome do servidor: 127.0.0.1
 Login: sa
