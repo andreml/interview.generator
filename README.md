@@ -32,8 +32,9 @@ O Sistema permite cadastrar por áreas de conhecimento, realizar testes com perg
 
 #### Avaliação	
 - Adicionar avaliação de um(a) candidato (Perfil Candidato)
-- Adicionar observações de uma avaliação (Perfil Avaliador)
+- Adicionar observaçõe em uma avaliação (Perfil Avaliador)
 - Obter avaliações cadastradas (Perfil Avaliador)
+- Obter estatísticas de uma avaliação
 
 #### Login
  - Gerar token de acesso (Perfil Avaliador | Candidato)
@@ -71,7 +72,7 @@ Clone o projeto
 Entre no diretório do projeto
 
 ```bash
-   cd .\src\interview.generator.api\
+   cd .\src\InterviewGenerator.Api\
 ```
 
 Instale as dependências
@@ -94,8 +95,8 @@ Abra o Visual Studio e no Package Manager Console digite o comando abaixo
 dotnet add package Microsoft.EntityFrameworkCore.Tools --version 7.0.13
 ```
 
-Altere o Default project para src\interview.generator.infraestructure conforme abaixo
-<a href='https://postimg.cc/3yyJ4CCg' target='_blank'><img src='https://i.postimg.cc/R0d3YgWb/migrations-update-database.png' border='0' alt='migrations-update-database'/></a>
+Altere o Default project no Package Manager Console para src\InterviewGenerator.Infra conforme abaixo
+![image](https://github.com/andreml/interview.generator/assets/18474627/1a235e4d-2ffb-445b-b46e-28173933d6dd)
 
 Execute o comando abaixo
 
@@ -106,7 +107,7 @@ Execute o comando abaixo
 Inicie o servidor
 
 ```bash
-  dotnet run --project interview.generator.api.csproj --property:Configuration=Release
+  dotnet run --project InterviewGenerator.Api.csproj --property:Configuration=Release
 ```
 
 Abra o navegador
@@ -144,17 +145,17 @@ Request de exemplo 2
 Para rodar os testes, rode o seguinte comando
 
 ```bash
-  cd .\test\Interview.Generator.IntegrationTests\
+  cd .\test\InterviewGenerator.IntegrationTests\
 ```
 
 ```bash
-  dotnet test Interview.Generator.IntegrationTests.csproj --logger "html;logfilename=testResults.html"
+  dotnet test InterviewGenerator.IntegrationTests.csproj --logger "html;logfilename=testResults.html"
 ```
 
 O teste result ficará salvo na pasta abaixo
 
 ```bash
-  cd .\test\Interview.Generator.IntegrationTests\TestResults\
+  cd .\test\InterviewGenerator.IntegrationTests\TestResults\
 ```
  
  ## Usando SQL Server para conectar com o Banco
