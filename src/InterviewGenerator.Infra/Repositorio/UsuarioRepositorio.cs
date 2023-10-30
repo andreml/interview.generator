@@ -16,18 +16,16 @@ namespace InterviewGenerator.Infra.Repositorio
             _dbSet = _context.Set<Usuario>();
         }
 
-        public Task Adicionar(Usuario entity)
+        public async Task Adicionar(Usuario entity)
         {
-            _dbSet.Add(entity);
-            _context.SaveChanges();
-            return Task.CompletedTask;
+            await _dbSet.AddAsync(entity);
+            await _context.SaveChangesAsync();
         }
 
-        public Task Alterar(Usuario entity)
+        public async Task Alterar(Usuario entity)
         {
             _dbSet.Update(entity);
-            _context.SaveChanges();
-            return Task.CompletedTask;
+            await _context.SaveChangesAsync();
         }
 
         public async Task<Usuario?> ObterPorId(Guid id)

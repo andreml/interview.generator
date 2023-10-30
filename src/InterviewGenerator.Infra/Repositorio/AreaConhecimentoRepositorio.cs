@@ -15,25 +15,22 @@ namespace InterviewGenerator.Infra.Repositorio
             _dbSet = _context.Set<AreaConhecimento>();
         }
 
-        public Task Adicionar(AreaConhecimento entity)
+        public async Task Adicionar(AreaConhecimento entity)
         {
-            _dbSet.Add(entity);
-            _context.SaveChanges();
-            return Task.CompletedTask;
+            await _dbSet.AddAsync(entity);
+            await _context.SaveChangesAsync();
         }
 
-        public Task Alterar(AreaConhecimento entity)
+        public async Task Alterar(AreaConhecimento entity)
         {
             _dbSet.Update(entity);
-            _context.SaveChanges();
-            return Task.CompletedTask;
+            await _context.SaveChangesAsync();
         }
 
-        public Task Excluir(AreaConhecimento entity)
+        public async Task Excluir(AreaConhecimento entity)
         {
             _context.Remove(entity);
-            _context.SaveChanges();
-            return Task.CompletedTask;
+            await _context.SaveChangesAsync();
         }
 
         public async Task<AreaConhecimento?> ObterPorIdComPerguntas(Guid usuarioCriacaoId, Guid id)
