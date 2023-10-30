@@ -27,5 +27,11 @@ namespace InterviewGenerator.Domain.Entidade
         {
             Perguntas.Clear();
         }
+
+        public decimal MaiorNota() =>
+            Avaliacoes.Select(x => x.Nota).Max();
+
+        public decimal MediaNota() =>
+            decimal.Round(Avaliacoes.Select(a => a.Nota).Average(), 2);
     }
 }

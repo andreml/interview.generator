@@ -211,9 +211,9 @@ namespace InterviewGenerator.Application.Services
 
             if (estatisticas.AvaliacoesRespondidas > 0)
             {
-                estatisticas.MediaNota = decimal.Round(questionario.Avaliacoes.Select(a => a.Nota).Average(), 2);
+                estatisticas.MediaNota = questionario.MediaNota();
 
-                var maiorNota = questionario.Avaliacoes.Select(a => a.Nota).Max();
+                var maiorNota = questionario.MaiorNota();
 
                 estatisticas.MaiorNota = new MaiorNotaViewModel()
                 {
@@ -226,6 +226,25 @@ namespace InterviewGenerator.Application.Services
             }
 
             response.AddData(estatisticas);
+            return response;
+        }
+
+        public async Task<ResponseBase<NotasQuestionariosViewModel>> ObterNotasQuestionario(Guid usuarioCriacaoId, Guid questionarioId)
+        {
+            var response = new ResponseBase<NotasQuestionariosViewModel>();
+
+            var questionario = await _questionarioRepositorio.ObterPorIdComAvaliacoesEPerguntas(usuarioCriacaoId, questionarioId);
+            if (questionario == null)
+                return response;
+
+            var notas = new NotasQuestionariosViewModel()
+            {
+                Id = questionario.Id,
+                Notas = questionario.Avaliacoes.Select(a => 
+                            new AvaliacaoQuestionarioViewModel(a.Id, a.Candidato.Nome, a.Nota)).ToList()
+            };
+
+            response.AddData(notas);
             return response;
         }
     }
