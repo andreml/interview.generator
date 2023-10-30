@@ -6,8 +6,7 @@
 
 Sistema de focado em empresas de recrutamento que desejam aplicar testes em candidatos durante as entrevistas para uma vaga de emprego.
 
-O Sistema permite cadastrar por áreas de conhecimento, realizar testes com perguntas aleatórias para candidatos.
-
+O Sistema permite cadastrar perguntas categorizadas em áreas de conhecimento, criar questionários com as perguntas cadastradas, aplicar avaliações com os questionários cadastrados para os candidatos e visualizar os resultados e estaísticas dos questionários aplicados.
 
 ## Autores
 
@@ -20,19 +19,19 @@ O Sistema permite cadastrar por áreas de conhecimento, realizar testes com perg
 
 ## Stack utilizada
 
-**Back-end:** .Net 7 
+**Back-end:** .Net 7, MSSQL, EF Core, FluentValidation e XUnit
 
 
 ## Funcionalidades
 
-#### Área de conhecimento
- - Adicionar área de conhecimento (Perfil Avaliador)
+#### Área de conhecimento (Categorias de perguntas)
+ - Adicionar áreas de conhecimento (Perfil Avaliador)
  - Obter áreas de conhecimento cadastradas (Perfil Avaliador)
  - Alterar área de conhecimento (Perfil Avaliador)
 
-#### Avaliação	
-- Adicionar avaliação de um(a) candidato (Perfil Candidato)
-- Adicionar observações de uma avaliação (Perfil Avaliador)
+#### Avaliação	(Aplicação de um Questionário)
+- Adicionar avaliação de um candidato (Perfil Candidato)
+- Adicionar observações em uma avaliação (Perfil Avaliador)
 - Obter avaliações cadastradas (Perfil Avaliador)
 
 #### Login
@@ -43,6 +42,14 @@ O Sistema permite cadastrar por áreas de conhecimento, realizar testes com perg
 - Alterar uma pergunta cadastrada (Perfil Avaliador)
 - Obter perguntas cadastradas (Perfil Avaliador)
 - Excluir uma pergunta cadastrada (Perfil Avaliador)
+
+#### Questionário (Conjunto de perguntas)
+- Adicionar um novo Questionário (Perfil Avaliador)
+- Alterar um questionário existente (Perfil Avaliador)
+- Excluir um questionário existente (Perfil Avaliador)
+- Obter questionários cadastrados (Perfil Avaliador)
+- Obter um questionário espeífico para preenchimento (Perfil Candidato)
+- Obter estatísticas de um questionário (Perfil Avaliador)
 
 #### Usuário	
 - Adicionar um usuário no sistema (Perfil Avaliador | Candidato)
@@ -60,25 +67,10 @@ Para fazer o build desse projeto rode
   dotnet build
 ```
 
-## Rodando localmente
+## Executando Localmente - Banco de dados
 
-Clone o projeto
+Utilizamos o arquivo 'docker-compose.yml' da raiz do projeto para criar o banco de dados localmente utilizando docker:
 
-```bash
-  git clone https://github.com/andreml/interview.generator
-```
-
-Entre no diretório do projeto
-
-```bash
-   cd .\src\interview.generator.api\
-```
-
-Instale as dependências
-
-```bash
-  dotnet restore
-```
 - Baixar o docker no Windows em https://docker.com/products/docker-desktop/ e instale em sua máquina
 - Abra o PowerShell do Windows como Administrador
 - Acessar pasta da Solução interview.generator
@@ -89,13 +81,34 @@ docker-compose -f .\docker-compose.yml up
 ```
 <a href='https://postimages.org/' target='_blank'><img src='https://i.postimg.cc/MZvtJFyB/powershell.png' border='0' alt='powershell'/></a><br />
 
+## Executando Localmente - API
+
+Clone o projeto
+
+```bash
+  git clone https://github.com/andreml/interview.generator
+```
+
+Entre no diretório do projeto
+
+```bash
+   cd .\src\InterviewGenerator.Api\
+```
+
+Instale as dependências
+
+```bash
+  dotnet restore
+```
+
+
 Abra o Visual Studio e no Package Manager Console digite o comando abaixo
 ```bash
 dotnet add package Microsoft.EntityFrameworkCore.Tools --version 7.0.13
 ```
 
-Altere o Default project para src\interview.generator.infraestructure conforme abaixo
-<a href='https://postimg.cc/3yyJ4CCg' target='_blank'><img src='https://i.postimg.cc/R0d3YgWb/migrations-update-database.png' border='0' alt='migrations-update-database'/></a>
+Altere o Default project no Package Manager Console para src\InterviewGenerator.Infra conforme abaixo
+![image](https://github.com/andreml/interview.generator/assets/18474627/1a235e4d-2ffb-445b-b46e-28173933d6dd)
 
 Execute o comando abaixo
 
@@ -106,7 +119,7 @@ Execute o comando abaixo
 Inicie o servidor
 
 ```bash
-  dotnet run --project interview.generator.api.csproj --property:Configuration=Release
+  dotnet run --project InterviewGenerator.Api.csproj --property:Configuration=Release
 ```
 
 Abra o navegador
@@ -139,27 +152,28 @@ Request de exemplo 2
 }
 ```
 
-## Rodando os testes
+## Executando os testes
 
-Para rodar os testes, rode o seguinte comando
+Para executar os testes, rode o seguinte comando
 
 ```bash
-  cd .\test\Interview.Generator.IntegrationTests\
+  cd .\test\InterviewGenerator.IntegrationTests\
 ```
 
 ```bash
-  dotnet test Interview.Generator.IntegrationTests.csproj --logger "html;logfilename=testResults.html"
+  dotnet test InterviewGenerator.IntegrationTests.csproj --logger "html;logfilename=testResults.html"
 ```
 
 O teste result ficará salvo na pasta abaixo
 
 ```bash
-  cd .\test\Interview.Generator.IntegrationTests\TestResults\
+  cd .\test\InterviewGenerator.IntegrationTests\TestResults\
 ```
  
  ## Usando SQL Server para conectar com o Banco
 
-Dados de conexão local
+Caso deseje se conectar ao banco local para visualizar os dados, o endereço de conexão é o mesmo que está configurado no appsettings do projeto e no arquivo 'docker-compose.yml':
+
 ```bash
 Nome do servidor: 127.0.0.1
 Login: sa
