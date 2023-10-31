@@ -1,8 +1,8 @@
 
-<a href='https://postimages.org/' target='_blank'><img src='https://i.postimg.cc/4d4n1BPd/job-wave.jpg' border='0' alt='job-wave'/></a>
+<a href='https://postimages.org/' target='_blank'><img src='https://i.postimg.cc/gJfV2KJk/logo.jpg' border='0' alt='logo'/></a>
 
 
-# Job Wave
+# Skill Check
 
 Sistema de focado em empresas de recrutamento que desejam aplicar testes em candidatos durante as entrevistas para uma vaga de emprego.
 
@@ -23,7 +23,6 @@ O Sistema permite cadastrar perguntas categorizadas em áreas de conhecimento, c
 ## Stack utilizada
 
 **Back-end:** .Net 7, MSSQL, EF Core, FluentValidation e XUnit
-
 
 ## Funcionalidades
 
@@ -129,30 +128,6 @@ Abra o navegador
 
 ```bash
    E digite o endereço http://localhost:5133/swagger/index.html
-```
-
-Adicione novos usuários no método /Usuario/AdicionarUsuario (POST)
-
-Request de exemplo 1
-```bash
-{
-  "cpf": "84942793009",
-  "nome": "Candidato da Silva",
-  "perfil": "Candidato",
-  "login": "candidato.silva",
-  "senha": "Silva@2023"
-}
-```
-Request de exemplo 2
-```bash
-
-{
-  "cpf": "31762831058",
-  "nome": "Avaliador Ferreira",
-  "perfil": "Avaliador",
-  "login": "avaliador.ferreira",
-  "senha": "Ferreira@2023"
-}
 ```
 
 ## Executando os testes
