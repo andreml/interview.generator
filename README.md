@@ -91,7 +91,7 @@ Clone o projeto
   git clone https://github.com/andreml/interview.generator
 ```
 
-Entre no diretório do projeto
+Abra o Visual Studio e no Package Manager Console entre no diretório do projeto
 
 ```bash
    cd .\src\InterviewGenerator.Api\
@@ -103,8 +103,6 @@ Instale as dependências
   dotnet restore
 ```
 
-
-Abra o Visual Studio e no Package Manager Console digite o comando abaixo
 ```bash
 dotnet add package Microsoft.EntityFrameworkCore.Tools --version 7.0.13
 ```
