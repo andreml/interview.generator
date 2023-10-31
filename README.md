@@ -6,7 +6,7 @@
 
 Sistema de focado em empresas de recrutamento que desejam aplicar testes em candidatos durante as entrevistas para uma vaga de emprego.
 
-O Sistema permite cadastrar perguntas categorizadas em áreas de conhecimento, criar questionários com as perguntas cadastradas, aplicar avaliações com os questionários cadastrados para os candidatos e visualizar os resultados e estaísticas dos questionários aplicados.
+O Sistema permite cadastrar perguntas categorizadas em áreas de conhecimento, criar questionários com as perguntas cadastradas, aplicar avaliações com os questionários cadastrados para os candidatos e visualizar os resultados e estatísticas dos questionários aplicados.
 
 ## Autores
 
@@ -16,6 +16,9 @@ O Sistema permite cadastrar perguntas categorizadas em áreas de conhecimento, c
 - [@Daniellyaraujo](https://github.com/Daniellyaraujo)
 - [@RobertoSRMJunior](https://github.com/RobertoSRMJunior)
 
+## DDD
+
+<a href='https://miro.com/app/board/uXjVNdPoMRc=/?share_link_id=903496239789' target='_blank'>Link do Miro</a>
 
 ## Stack utilizada
 
