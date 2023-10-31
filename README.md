@@ -121,7 +121,7 @@ Execute o comando abaixo
 Inicie o servidor
 
 ```bash
-  dotnet run --project InterviewGenerator.Api.csproj --property:Configuration=Release
+  dotnet run --project InterviewGenerator.Api.csproj --property:Configuration=Release --port 5133
 ```
 
 Abra o navegador
