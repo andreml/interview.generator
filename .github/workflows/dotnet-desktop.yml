@@ -1,4 +1,4 @@
-name: .NET Core Desktop
+name: Workflow Skill Check
 
 on:
   push:
