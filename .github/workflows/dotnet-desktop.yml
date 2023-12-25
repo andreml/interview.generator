@@ -34,10 +34,16 @@ jobs:
     - name: Docker Login
       uses: docker/login-action@v3.0.0
       with:
-        registry: https://hub.docker.com/repository/docker/andreml/skillcheck/general
-        username: andreml
+        username: 'andreml'
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
-        
+    
+    - name: Build and push Docker images
+      uses: docker/build-push-action@v5.1.0
+      with:
+        context: .
+        tags: 'latest'
+        push: true
+              
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v1.0.2
 
