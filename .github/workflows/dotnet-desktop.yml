@@ -13,7 +13,7 @@ jobs:
       matrix:
         configuration: [Release]
 
-    runs-on: self-hosted
+    runs-on: windows-latest
 
     env:
       Solution_Name: InterviewGenerator.sln
