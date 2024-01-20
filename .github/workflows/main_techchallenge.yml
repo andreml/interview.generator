@@ -22,10 +22,10 @@ jobs:
       - name: Compilando aplicação
         run: dotnet build --configuration Release
 
-      - name: dotnet publish
+      - name: Executando o publish da aplicação
         run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
-      - name: Upload do artefato para o Job de Deploy
+      - name: Upload dos pacotes para o Job de Deploy
         uses: actions/upload-artifact@v3
         with:
           name: .net-app
