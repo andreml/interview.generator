@@ -26,7 +26,7 @@ var app = builder.Build();
     app.UseSwagger();
     app.UseSwaggerUI(options =>
     {
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1.0.0.0");
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1.0.0.1");
         options.RoutePrefix = "swagger";
     });
 
