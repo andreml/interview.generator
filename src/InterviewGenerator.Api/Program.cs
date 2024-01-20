@@ -22,15 +22,14 @@ builder.Services.Configure<ApiBehaviorOptions>(options => { options.SuppressMode
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
+
     app.UseSwagger();
     app.UseSwaggerUI(options =>
     {
         options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1.0.0.0");
         options.RoutePrefix = "swagger";
     });
-}
+
 
 app.UseHttpsRedirection();
 
