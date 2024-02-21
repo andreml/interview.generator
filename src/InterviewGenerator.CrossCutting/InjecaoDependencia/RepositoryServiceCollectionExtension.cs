@@ -15,19 +15,14 @@ namespace InterviewGenerator.CrossCutting.InjecaoDependencia
             service.AddScoped<IAreaConhecimentoRepositorio, AreaConhecimentoRepositorio>();
             service.AddScoped<IAvaliacaoRepositorio, AvaliacaoRepositorio>();
             service.AddScoped<IQuestionarioRepositorio, QuestionarioRepositorio>();
+            service.AddScoped<IControleImportacaoPerguntasRepositorio, ControleImportacaoRepositorio>();
 
-            service.AddScoped<ILoginService, LoginService>();
-            service.AddScoped<IUsuarioService, UsuarioService>();
-            service.AddScoped<IPerguntaService, PerguntaService>();
-            service.AddScoped<IAreaConhecimentoService, AreaConhecimentoService>();
-            service.AddScoped<IQuestionarioService, QuestionarioService>();
-          
+            service.AddScoped<IQuestionarioService, QuestionarioService>();         
             service.AddScoped<IAvaliacaoService, AvaliacaoService>();
-            service.AddScoped<ILoginService, LoginService>();
             service.AddScoped<IUsuarioService, UsuarioService>();
             service.AddScoped<IPerguntaService, PerguntaService>();
             service.AddScoped<IAreaConhecimentoService, AreaConhecimentoService>();
-
+            service.AddScoped<IImportacaoPerguntasService, ImportacaoPerguntaService>();
 
             return service;
         }
