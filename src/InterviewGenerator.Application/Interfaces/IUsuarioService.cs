@@ -9,5 +9,6 @@ namespace InterviewGenerator.Application.Interfaces
         Task<ResponseBase<UsuarioViewModel>> ObterUsuario(Guid id);
         Task<ResponseBase> CadastrarUsuario(AdicionarUsuarioDto usuario);
         Task<ResponseBase> AlterarUsuario(AlterarUsuarioDto usuario);
+        Task<ResponseBase<LoginViewModel>> BuscarTokenUsuario(GerarTokenUsuarioDto usuario);
     }
 }

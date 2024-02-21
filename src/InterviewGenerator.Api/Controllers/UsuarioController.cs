@@ -1,6 +1,7 @@
 ﻿using InterviewGenerator.Application.Dto;
 using InterviewGenerator.Application.Interfaces;
 using InterviewGenerator.Application.ViewModels;
+using InterviewGenerator.Domain.Entidade.Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -82,6 +83,26 @@ namespace InterviewGenerator.Api.Controllers
             catch (Exception e)
             {
                 return ResponseErro(e.Message, "Erro ao excluir o usuário");
+            }
+        }
+
+        /// <summary>
+        /// Gera token do usuário (Avaliador | Candidato)
+        /// </summary>
+        [HttpPost("Autenticar")]
+        [ProducesResponseType(typeof(LoginViewModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ResponseErro), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Autenticar(GerarTokenUsuarioDto usuario)
+        {
+            try
+            {
+                var result = await _usuarioService.BuscarTokenUsuario(usuario);
+
+                return Response(result!);
+            }
+            catch (Exception e)
+            {
+                return ResponseErro(e.Message, "Erro ao autenticar usuário");
             }
         }
     }
