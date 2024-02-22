@@ -20,6 +20,7 @@ namespace InterviewGenerator.Infra.Context
         public DbSet<Questionario> Questionario { get; set; }
         public DbSet<RespostaAvaliacao> RespostaAvaliacao { get; set; }
         public DbSet<Usuario> Usuario { get; set; }
+        public DbSet<ControleImportacaoPerguntas> ControleImportacao { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

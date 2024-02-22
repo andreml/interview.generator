@@ -4,16 +4,21 @@ using InterviewGenerator.Application.ViewModels;
 using InterviewGenerator.Domain.Entidade;
 using InterviewGenerator.Domain.Entidade.Common;
 using InterviewGenerator.Domain.Repositorio;
+using InterviewGenerator.Domain.Utils;
+using Microsoft.Extensions.Configuration;
+using System.Net;
 
 namespace InterviewGenerator.Application.Services
 {
     public class UsuarioService : IUsuarioService
     {
         private readonly IUsuarioRepositorio _repositorio;
-        
-        public UsuarioService(IUsuarioRepositorio repositorio)
+        private readonly IConfiguration _configuration;
+
+        public UsuarioService(IUsuarioRepositorio repositorio, IConfiguration configuration)
         {
             _repositorio = repositorio;
+            _configuration = configuration;
         }
 
         public async Task<ResponseBase> AlterarUsuario(AlterarUsuarioDto usuarioDto)
@@ -21,7 +26,7 @@ namespace InterviewGenerator.Application.Services
             var response = new ResponseBase();
 
             var usuario = await _repositorio.ObterPorId(usuarioDto.Id);
-            if(usuario == null)
+            if (usuario == null)
             {
                 response.AddErro("Usuário não encontrado");
                 return response;
@@ -92,6 +97,25 @@ namespace InterviewGenerator.Application.Services
                 return response;
 
             response.AddData(new UsuarioViewModel(usuario.Id, usuario.Nome, usuario.Cpf, usuario.Login, usuario.Perfil));
+
+            return response;
+        }
+
+        public async Task<ResponseBase<LoginViewModel>> BuscarTokenUsuario(GerarTokenUsuarioDto usuario)
+        {
+            var response = new ResponseBase<LoginViewModel>();
+
+            var user = await _repositorio.ObterUsuarioPorLoginESenha(usuario.Login, usuario.Senha);
+
+            if (user != null)
+            {
+                var login = new LoginViewModel(user.Nome, user.Perfil, Jwt.GeraToken(user, user.VerificaValidadeTokenUsuario(), _configuration));
+                response.AddData(login, HttpStatusCode.OK);
+            }
+            else
+            {
+                response.AddErro("Não foi possível gerar token para acesso do usuário");
+            }
 
             return response;
         }
