@@ -1,4 +1,5 @@
 using FluentValidation.AspNetCore;
+using InterviewGenerator.Api.Configuration;
 using InterviewGenerator.CrossCutting.InjecaoDependencia;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,6 +14,7 @@ builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddContextConfig();
 builder.Configuration.AddJsonFile("appsettings.json").Build();
 builder.Services.AddJwtConfiguration(builder.Configuration);
+builder.Services.AddMassTransitConfigSender(builder.Configuration);
 
 builder.Services.AddMvc(options =>
 {
