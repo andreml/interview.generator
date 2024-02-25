@@ -24,6 +24,10 @@ namespace InterviewGenerator.Infra.Mapping
 
             builder.Property(x => x.ErrosImportacao)
                 .HasColumnType("VARCHAR(500)");
+
+            builder.Property(x => x.NomeArquivo)
+                .HasColumnType("VARCHAR(250)")
+                .IsRequired();
         }
     }
 }
