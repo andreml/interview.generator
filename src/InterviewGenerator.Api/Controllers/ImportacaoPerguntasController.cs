@@ -13,7 +13,7 @@ namespace InterviewGenerator.Api.Controllers
     [ApiController]
     public class ImportacaoPerguntasController : BaseController
     {
-        IImportacaoPerguntasService _importacaoService;
+        private readonly IImportacaoPerguntasService _importacaoService;
 
         public ImportacaoPerguntasController(IImportacaoPerguntasService importacaoService)
         {
@@ -38,6 +38,28 @@ namespace InterviewGenerator.Api.Controllers
             catch (Exception e)
             {
                 return ResponseErro(e.Message, "Erro ao obter controles de importação");
+            }
+        }
+
+        /// <summary>
+        /// Obtém o arquivo modelo de importação de perguntas (Avaliador)
+        /// </summary>
+        [HttpGet("arquivoModelo")]
+        [Authorize(Roles = $"{Perfis.Avaliador}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> ObterArquivoModeloImportacaoAsync()
+        {
+            try
+            {
+                var nomeArquivo = "modelo_importacao_perguntas.csv";
+
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Arquivos", nomeArquivo);
+                var fileBytes = await System.IO.File.ReadAllBytesAsync(filePath);
+                return File(fileBytes, "application/octet-stream", nomeArquivo);
+            }
+            catch (Exception e)
+            {
+                return ResponseErro(e.Message, "Erro ao obter arquivo modelo de importação");
             }
         }
     }
