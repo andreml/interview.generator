@@ -25,4 +25,14 @@
     <ProjectReference Include="..\InterviewGenerator.CrossCutting\InterviewGenerator.CrossCutting.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Arquivos\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Arquivos\modelo_importacao_perguntas.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

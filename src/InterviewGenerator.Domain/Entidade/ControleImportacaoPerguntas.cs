@@ -10,5 +10,6 @@ namespace InterviewGenerator.Domain.Entidade
         public DateTime DataFimImportacao { get; set; }
         public StatusImportacao StatusImportacao { get; set; }
         public string? ErrosImportacao { get; set; }
+        public string NomeArquivo { get; set; } = default!;
     }
 }

@@ -28,6 +28,7 @@ namespace InterviewGenerator.Application.Services
                 DataUpload = c.DataUpload,
                 DataFimImportacao = c.DataFimImportacao,
                 StatusImportacao = c.StatusImportacao,
+                NomeArquivo = c.NomeArquivo,
                 ErrosImportacao = (string.IsNullOrEmpty(c.ErrosImportacao)) ? null : c.ErrosImportacao.Split("; "),
             });
 
