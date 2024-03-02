@@ -21,22 +21,22 @@ namespace InterviewGenerator.Application.Dto
                 perguntas.AreaConhecimento = values[0];
                 perguntas.Descricao = values[1];
                 perguntas.Alternativas = new List<AlternativaDto>
-            {
-                new(values[2], true),
-                new(values[3], false),
-                new(values[4], false),
-                new(values[5], false),
-                new(values[6], false)
-            };
+                {
+                    new(values[2], true),
+                    new(values[3], false),
+                    new(values[4], false),
+                    new(values[5], false),
+                    new(values[6], false)
+                };
+
                 return perguntas;
             }
             catch (Exception ex)
             {
                 throw ex;
             }
-            
-        }
 
+        }
     }
 
     public class AlternativaDto

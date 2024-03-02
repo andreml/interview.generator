@@ -6,5 +6,6 @@ namespace InterviewGenerator.Application.Interfaces
     public interface IImportacaoPerguntasService
     {
         Task<ResponseBase<IEnumerable<ControleImportacaoPerguntasViewModel>>> ListarControlesImportacao(Guid usuarioId);
+        Task<ResponseBase> ImportarArquivoPerguntas(string filePath, Guid usuarioId);
     }
 }

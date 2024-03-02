@@ -1,4 +1,5 @@
 ﻿using InterviewGenerator.Application.Interfaces;
+using InterviewGenerator.Application.Services;
 using InterviewGenerator.Application.ViewModels;
 using InterviewGenerator.Domain.Enum;
 using Microsoft.AspNetCore.Authorization;
@@ -60,6 +61,26 @@ namespace InterviewGenerator.Api.Controllers
             catch (Exception e)
             {
                 return ResponseErro(e.Message, "Erro ao obter arquivo modelo de importação");
+            }
+        }
+
+        [HttpPost("ImportarArquivoPerguntas")]
+        [Authorize(Roles = $"{Perfis.Avaliador}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ImportarArquivoPerguntas(string filePath)
+        {
+            try
+            {
+                var usuarioId = ObterUsuarioIdLogado();
+
+                var result = await _importacaoService.ImportarArquivoPerguntas(filePath, usuarioId);
+
+                return Response(result);
+            }
+            catch (Exception e)
+            {
+                return ResponseErro(e.Message, "Erro ao inserir perguntas via arquivo");
             }
         }
     }

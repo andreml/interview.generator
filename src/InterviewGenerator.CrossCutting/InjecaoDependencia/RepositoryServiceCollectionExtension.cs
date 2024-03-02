@@ -23,6 +23,7 @@ namespace InterviewGenerator.CrossCutting.InjecaoDependencia
             service.AddScoped<IPerguntaService, PerguntaService>();
             service.AddScoped<IAreaConhecimentoService, AreaConhecimentoService>();
             service.AddScoped<IImportacaoPerguntasService, ImportacaoPerguntaService>();
+            service.AddScoped<IMassTransitService, MassTransitService>();
 
             return service;
         }
