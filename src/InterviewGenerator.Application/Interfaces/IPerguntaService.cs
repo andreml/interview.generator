@@ -10,5 +10,7 @@ namespace InterviewGenerator.Application.Interfaces
         ResponseBase<IEnumerable<PerguntaViewModel>> ListarPerguntas(Guid usuarioCriacaoId, Guid perguntaId, string? areaConhecimento, string? descricao);
         Task<ResponseBase> AlterarPergunta(AlterarPerguntaDto pergunta);
         Task<ResponseBase> ExcluirPergunta(Guid usuarioCriacaoId, Guid perguntaId);
+        Task<ResponseBase> ImportarArquivoPerguntas(string filePath, Guid usuarioId);
+
     }
 }

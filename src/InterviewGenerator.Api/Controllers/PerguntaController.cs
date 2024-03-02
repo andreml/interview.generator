@@ -115,5 +115,26 @@ namespace InterviewGenerator.Api.Controllers
                 return ResponseErro(e.Message, "Erro ao excluir pergunta");
             }
         }
+
+        
+        [HttpPost("InsereLote")]
+        [Authorize(Roles = $"{Perfis.Avaliador}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> InsereLote(string filePath)
+        {
+            try
+            {
+                var usuarioId = ObterUsuarioIdLogado();
+
+                var result = await _perguntaService.ImportarArquivoPerguntas(filePath, usuarioId);
+
+                return Response(result);
+            }
+            catch (Exception e)
+            {
+                return ResponseErro(e.Message, "Erro ao excluir pergunta");
+            }
+        }
     }
 }

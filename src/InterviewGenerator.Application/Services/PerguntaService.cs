@@ -4,6 +4,8 @@ using InterviewGenerator.Application.ViewModels;
 using InterviewGenerator.Domain.Entidade;
 using InterviewGenerator.Domain.Entidade.Common;
 using InterviewGenerator.Domain.Repositorio;
+using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.IdentityModel.Tokens;
 
 namespace InterviewGenerator.Application.Services
 {
@@ -124,5 +126,47 @@ namespace InterviewGenerator.Application.Services
             return response;
         }
 
+        public async Task<ResponseBase> ImportarArquivoPerguntas(string filePath, Guid usuarioId)
+        {
+            var response = new ResponseBase();
+            List<AdicionarPerguntaDto> perguntas = new List<AdicionarPerguntaDto>();
+            try
+            {
+                perguntas = File.ReadAllLines(filePath, encoding: System.Text.Encoding.UTF8)
+                                           .Skip(1)
+                                           .Select(v => AdicionarPerguntaDto.FromCsv(v, usuarioId))
+                                           .ToList();
+            }
+            catch (Exception ex)
+            {
+                response.AddErro($"Não foi possível ler o arquivo csv: {ex.Message}");
+                return response;
+            }
+            
+            if (perguntas.Count == 0)
+            {
+                response.AddErro("Não há perguntas a serem incluídas");
+                return response;
+            }
+
+
+            foreach (var pergunta in perguntas)
+            {
+                var perguntaDuplicada = await _perguntaRepositorio.ExistePorDescricao(pergunta.UsuarioId, pergunta.Descricao);
+                if (perguntaDuplicada)
+                {
+                    response.AddErro("Pergunta já cadastrada");
+                    return response;
+                }
+
+                var areaConhecimento = await _areaConhecimentoService.ObterOuCriarAreaConhecimento(pergunta.UsuarioId, pergunta.AreaConhecimento);
+
+                var novaPergunta = new Pergunta(areaConhecimento, pergunta.Descricao, pergunta.UsuarioId);
+
+                
+            }
+
+            return response;
+        }
     }
 }
