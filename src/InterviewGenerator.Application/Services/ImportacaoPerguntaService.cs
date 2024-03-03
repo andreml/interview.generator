@@ -37,7 +37,7 @@ namespace InterviewGenerator.Application.Services
                 DataFimImportacao = c.DataFimImportacao,
                 StatusImportacao = c.StatusImportacao,
                 NomeArquivo = c.NomeArquivo,
-                ErrosImportacao = (string.IsNullOrEmpty(c.ErrosImportacao)) ? null : c.ErrosImportacao.Split("; "),
+                ErrosImportacao = c.ErrosImportacao,
             });
 
             response.AddData(viewModelResponse);
@@ -45,9 +45,9 @@ namespace InterviewGenerator.Application.Services
             return response;
         }
 
-        public async Task<ResponseBase> ImportarArquivoPerguntas(string filePath, Guid usuarioId)
+        public async Task<ResponseBase<ControleImportacaoPerguntasViewModel>> ImportarArquivoPerguntas(string filePath, Guid usuarioId)
         {
-            var response = new ResponseBase();
+            var response = new ResponseBase<ControleImportacaoPerguntasViewModel>();
             List<AdicionarPerguntaDto> perguntas = new();
             try
             {
@@ -77,6 +77,15 @@ namespace InterviewGenerator.Application.Services
                 UsuarioId = usuarioId,
                 QuantidadeLinhasImportadas = perguntas.Count
             };
+
+            response.AddData(new ControleImportacaoPerguntasViewModel
+            {
+                StatusImportacao = statusImportacao.StatusImportacao,
+                DataUpload = statusImportacao.DataUpload,
+                NomeArquivo = statusImportacao.NomeArquivo,
+                QuantidadeLinhasImportadas = statusImportacao.QuantidadeLinhasImportadas,
+                UsuarioId = statusImportacao.UsuarioId,
+            });
 
             await _controleImportacaoRepositorio.Adicionar(statusImportacao);
 

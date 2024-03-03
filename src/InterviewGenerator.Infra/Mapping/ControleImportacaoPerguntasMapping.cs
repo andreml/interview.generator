@@ -19,7 +19,11 @@ namespace InterviewGenerator.Infra.Mapping
             builder.Property(x => x.UsuarioId)
                 .IsRequired();
 
+            builder.Property(x => x.DataFimImportacao)
+                .HasColumnType("DATETIME");
+
             builder.Property(x => x.DataUpload)
+                .HasColumnType("DATETIME")
                 .IsRequired();
 
             builder.Property(x => x.ErrosImportacao)

@@ -7,7 +7,7 @@ namespace InterviewGenerator.Domain.Entidade
     {
         public Guid UsuarioId { get; set; }
         public DateTime DataUpload { get; set; }
-        public DateTime DataFimImportacao { get; set; }
+        public DateTime? DataFimImportacao { get; set; }
         public StatusImportacao StatusImportacao { get; set; }
         public string? ErrosImportacao { get; set; }
         public string NomeArquivo { get; set; } = default!;
