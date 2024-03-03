@@ -11,11 +11,15 @@ namespace InterviewGenerator.Application.Services
     {
         private readonly IControleImportacaoPerguntasRepositorio _controleImportacaoRepositorio;
         private readonly IMassTransitService _massTransitService;
+        private readonly ILinhasArquivoRepositorio _linhasArquivoRepositorio;
 
-        public ImportacaoPerguntaService(IControleImportacaoPerguntasRepositorio controleImportacaoRepositorio, IMassTransitService massTransitService)
+        public ImportacaoPerguntaService(IControleImportacaoPerguntasRepositorio controleImportacaoRepositorio,
+                                         IMassTransitService massTransitService,
+                                         ILinhasArquivoRepositorio linhasArquivoRepositorio)
         {
             _controleImportacaoRepositorio = controleImportacaoRepositorio;
             _massTransitService = massTransitService;
+            _linhasArquivoRepositorio = linhasArquivoRepositorio;
         }
 
         public async Task<ResponseBase<IEnumerable<ControleImportacaoPerguntasViewModel>>> ListarControlesImportacao(Guid usuarioId)
@@ -44,12 +48,12 @@ namespace InterviewGenerator.Application.Services
         public async Task<ResponseBase> ImportarArquivoPerguntas(string filePath, Guid usuarioId)
         {
             var response = new ResponseBase();
-            List<AdicionarPerguntaDto> perguntas = new List<AdicionarPerguntaDto>();
+            List<AdicionarPerguntaDto> perguntas = new();
             try
             {
                 perguntas = File.ReadAllLines(filePath)
                                            .Skip(1)
-                                           .Select(v => AdicionarPerguntaDto.FromCsv(v, usuarioId))
+                                           .Select(v => AdicionarPerguntaDto.FromCsv(v))
                                            .ToList();
             }
             catch (Exception ex)
@@ -64,10 +68,27 @@ namespace InterviewGenerator.Application.Services
                 return response;
             }
 
-
-            foreach (var pergunta in perguntas)
+            var statusImportacao = new Domain.Entidade.ControleImportacaoPerguntas
             {
-                await _massTransitService.InserirMensagem(pergunta, "teste");
+                StatusImportacao = Domain.Enum.StatusImportacao.Pendente,
+                DataUpload = DateTime.Now,
+                Id = Guid.NewGuid(),
+                NomeArquivo = filePath,
+                UsuarioId = usuarioId,
+                QuantidadeLinhasImportadas = perguntas.Count
+            };
+
+            await _controleImportacaoRepositorio.Adicionar(statusImportacao);
+
+            for (int i = 0; i < perguntas.Count; i++)
+            {
+                var mensagem = new ImportarArquivoDto { NumeroLinha = i+1, Pergunta = perguntas[i] };
+                await _massTransitService.InserirMensagem(mensagem, "teste");
+                await _linhasArquivoRepositorio.Adicionar(new Domain.Entidade.LinhasArquivo
+                {
+                    IdControleImportacao = statusImportacao.Id,
+                    NumeroLinha = mensagem.NumeroLinha
+                });
             }
 
             return response;

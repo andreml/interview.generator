@@ -28,6 +28,18 @@ namespace InterviewGenerator.Infra.Mapping
             builder.Property(x => x.NomeArquivo)
                 .HasColumnType("VARCHAR(250)")
                 .IsRequired();
+
+            builder.Property(x => x.QuantidadeLinhasImportadas)
+                .HasColumnType("INT")
+                .IsRequired();
+
+            builder
+                .HasMany(x => x.LinhasArquivo)
+                .WithOne()
+                .HasForeignKey(x => x.IdControleImportacao)
+                .IsRequired();
+
+
         }
     }
 }

@@ -11,8 +11,9 @@ namespace InterviewGenerator.Application.Dto
         public string Descricao { get; set; } = default!;
         public string AreaConhecimento { get; set; } = default!;
         public ICollection<AlternativaDto> Alternativas { get; set; } = default!;
+        private int NumeroLinha { get; set; }
 
-        public static AdicionarPerguntaDto FromCsv(string linhaCsv, Guid usuarioId)
+        public static AdicionarPerguntaDto FromCsv(string linhaCsv)
         {
             try
             {
@@ -37,6 +38,7 @@ namespace InterviewGenerator.Application.Dto
             }
 
         }
+
     }
 
     public class AlternativaDto
