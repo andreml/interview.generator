@@ -83,7 +83,7 @@ namespace InterviewGenerator.Application.Services
             for (int i = 0; i < perguntas.Count; i++)
             {
                 var mensagem = new ImportarArquivoDto { NumeroLinha = i+1, Pergunta = perguntas[i] };
-                await _massTransitService.InserirMensagem(mensagem, "teste");
+                await _massTransitService.InserirMensagem(mensagem, "importacao-perguntas-async");
                 await _linhasArquivoRepositorio.Adicionar(new Domain.Entidade.LinhasArquivo
                 {
                     IdControleImportacao = statusImportacao.Id,
