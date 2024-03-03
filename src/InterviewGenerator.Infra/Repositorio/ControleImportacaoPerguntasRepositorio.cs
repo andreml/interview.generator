@@ -32,6 +32,7 @@ namespace InterviewGenerator.Infra.Repositorio
         {
             return await _dbSet
                             .Where(x => x.UsuarioId == usuarioId)
+                            .Include(x => x.LinhasArquivo)
                             .ToListAsync();
         }
     }

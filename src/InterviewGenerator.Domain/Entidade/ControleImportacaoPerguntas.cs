@@ -11,5 +11,8 @@ namespace InterviewGenerator.Domain.Entidade
         public StatusImportacao StatusImportacao { get; set; }
         public string? ErrosImportacao { get; set; }
         public string NomeArquivo { get; set; } = default!;
+        public int QuantidadeLinhasImportadas { get; set; }
+
+        public ICollection<LinhasArquivo> LinhasArquivo { get; set; } = default!;
     }
 }

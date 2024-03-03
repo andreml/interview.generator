@@ -16,6 +16,7 @@ namespace InterviewGenerator.CrossCutting.InjecaoDependencia
             service.AddScoped<IAvaliacaoRepositorio, AvaliacaoRepositorio>();
             service.AddScoped<IQuestionarioRepositorio, QuestionarioRepositorio>();
             service.AddScoped<IControleImportacaoPerguntasRepositorio, ControleImportacaoRepositorio>();
+            service.AddScoped<ILinhasArquivoRepositorio, LinhasArquivoRepositorio>();
 
             service.AddScoped<IQuestionarioService, QuestionarioService>();         
             service.AddScoped<IAvaliacaoService, AvaliacaoService>();
@@ -23,6 +24,8 @@ namespace InterviewGenerator.CrossCutting.InjecaoDependencia
             service.AddScoped<IPerguntaService, PerguntaService>();
             service.AddScoped<IAreaConhecimentoService, AreaConhecimentoService>();
             service.AddScoped<IImportacaoPerguntasService, ImportacaoPerguntaService>();
+            service.AddScoped<IMassTransitService, MassTransitService>();
+            service.AddScoped<ILinhasArquivoService, LinhasArquivoService>();
 
             return service;
         }

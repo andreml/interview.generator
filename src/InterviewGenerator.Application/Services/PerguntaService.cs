@@ -4,6 +4,8 @@ using InterviewGenerator.Application.ViewModels;
 using InterviewGenerator.Domain.Entidade;
 using InterviewGenerator.Domain.Entidade.Common;
 using InterviewGenerator.Domain.Repositorio;
+using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.IdentityModel.Tokens;
 
 namespace InterviewGenerator.Application.Services
 {
@@ -13,7 +15,8 @@ namespace InterviewGenerator.Application.Services
 
         private readonly IAreaConhecimentoService _areaConhecimentoService;
 
-        public PerguntaService(IPerguntaRepositorio perguntaRepositorio, IAreaConhecimentoService areaConhecimentoService)
+        public PerguntaService(IPerguntaRepositorio perguntaRepositorio, 
+                               IAreaConhecimentoService areaConhecimentoService)
         {
             _perguntaRepositorio = perguntaRepositorio;
             _areaConhecimentoService = areaConhecimentoService;
@@ -124,5 +127,6 @@ namespace InterviewGenerator.Application.Services
             return response;
         }
 
+        
     }
 }

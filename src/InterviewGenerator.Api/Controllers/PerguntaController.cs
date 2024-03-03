@@ -115,5 +115,8 @@ namespace InterviewGenerator.Api.Controllers
                 return ResponseErro(e.Message, "Erro ao excluir pergunta");
             }
         }
+
+        
+       
     }
 }
