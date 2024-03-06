@@ -16,6 +16,7 @@ namespace InterviewGenerator.Application.ViewModels
         public int QuantidadeLinhasImportadas { get; set; }
         [JsonIgnore]
         public ICollection<LinhasArquivoViewModel>? LinhasArquivos { get; set; }
+        public Guid IdArquivo { get; set; }
     }
 
     public class LinhasArquivoViewModel

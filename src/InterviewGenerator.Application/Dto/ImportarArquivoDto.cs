@@ -10,5 +10,6 @@ namespace InterviewGenerator.Application.Dto
     {
         public AdicionarPerguntaDto? Pergunta { get; set; }
         public int NumeroLinha { get; set; }
+        public Guid IdArquivo { get; set; }
     }
 }

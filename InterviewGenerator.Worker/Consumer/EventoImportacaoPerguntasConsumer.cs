@@ -1,12 +1,14 @@
-﻿using InterviewGenerator.CrossCutting.Eventos;
+﻿using InterviewGenerator.Application.Dto;
+using InterviewGenerator.CrossCutting.Eventos;
 using MassTransit;
 
 namespace InterviewGenerator.Worker.Consumer
 {
-    public class EventoImportacaoPerguntasConsumer : IConsumer<EventoImportacaoPerguntas>
+    public class EventoImportacaoPerguntasConsumer : IConsumer<ImportarArquivoDto>
     {
-        public Task Consume(ConsumeContext<EventoImportacaoPerguntas> context)
+        public Task Consume(ConsumeContext<ImportarArquivoDto> context)
         {
+            Console.WriteLine(context.Message);
             return Task.CompletedTask;
         }
     }
