@@ -55,6 +55,12 @@ namespace InterviewGenerator.Application.Services
                                            .Skip(1)
                                            .Select(v => AdicionarPerguntaDto.FromCsv(v))
                                            .ToList();
+
+                for (int i = 0; i < perguntas.Count; i++)
+                { 
+                    perguntas[i].NumeroLinha = i + 1;
+                    perguntas[i].UsuarioId = usuarioId;
+                }
             }
             catch (Exception ex)
             {
@@ -92,13 +98,13 @@ namespace InterviewGenerator.Application.Services
                 
             for (int i = 0; i < perguntas.Count; i++)
             {
-                var mensagem = new ImportarArquivoDto { NumeroLinha = i+1, Pergunta = perguntas[i], IdArquivo = statusImportacao.Id };
+                var mensagem = new ImportarArquivoDto { Pergunta = perguntas[i], IdArquivo = statusImportacao.Id };
                 await _massTransitService.InserirMensagem(mensagem, "importacao-perguntas-async");
                 await _linhasArquivoRepositorio.Adicionar(new Domain.Entidade.LinhasArquivo
                 {
                     IdControleImportacao = statusImportacao.Id,
-                    NumeroLinha = mensagem.NumeroLinha
-                });
+                    NumeroLinha = perguntas[i].NumeroLinha.Value
+                }); ;
             }
 
             return response;
