@@ -9,6 +9,6 @@ namespace InterviewGenerator.Domain.Repositorio
 {
     public interface ILinhasArquivoRepositorio : ICommonRepository<LinhasArquivo>
     {
-
+        Task<LinhasArquivo> ObterLinhaArquivo(Guid idArquivo, int idLinha);
     }
 }

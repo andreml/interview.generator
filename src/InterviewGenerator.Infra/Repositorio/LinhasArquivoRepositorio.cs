@@ -27,9 +27,17 @@ namespace InterviewGenerator.Infra.Repositorio
 
         }
 
-        public Task Alterar(LinhasArquivo entity)
+        public async Task Alterar(LinhasArquivo entity)
         {
-            throw new NotImplementedException();
+            _dbSet.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<LinhasArquivo?> ObterLinhaArquivo(Guid idControleImportacao, int idLinha)
+        {
+
+            return await _dbSet
+                            .Where(x => x.IdControleImportacao == idControleImportacao && x.NumeroLinha == idLinha).FirstOrDefaultAsync();
         }
     }
 }

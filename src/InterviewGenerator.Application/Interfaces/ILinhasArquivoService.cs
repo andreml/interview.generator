@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InterviewGenerator.Domain.Entidade;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,6 @@ namespace InterviewGenerator.Application.Interfaces
 {
     public interface ILinhasArquivoService
     {
+        Task<LinhasArquivo> ObterLinhaArquivo(Guid idArquivo, int idLinha);
     }
 }
