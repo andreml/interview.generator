@@ -2,11 +2,6 @@
 using InterviewGenerator.Domain.Repositorio;
 using InterviewGenerator.Infra.Context;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InterviewGenerator.Infra.Repositorio
 {
@@ -24,7 +19,6 @@ namespace InterviewGenerator.Infra.Repositorio
         {
             await _dbSet.AddAsync(entity);
             await _context.SaveChangesAsync();
-
         }
 
         public async Task Alterar(LinhaArquivo entity)
@@ -35,9 +29,8 @@ namespace InterviewGenerator.Infra.Repositorio
 
         public async Task<LinhaArquivo?> ObterLinhaArquivo(Guid idControleImportacao, int idLinha)
         {
-
             return await _dbSet
-                            .Where(x => x.IdControleImportacao == idControleImportacao && x.NumeroLinha == idLinha).FirstOrDefaultAsync();
+                            .FirstOrDefaultAsync(x => x.IdControleImportacao == idControleImportacao && x.NumeroLinha == idLinha);
         }
     }
 }
