@@ -3,8 +3,10 @@ using InterviewGenerator.Application.Interfaces;
 using InterviewGenerator.Application.ViewModels;
 using InterviewGenerator.Domain.Entidade;
 using InterviewGenerator.Domain.Entidade.Common;
+using InterviewGenerator.Domain.Enum;
 using InterviewGenerator.Domain.Repositorio;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 
 namespace InterviewGenerator.Application.Services
 {
@@ -14,13 +16,18 @@ namespace InterviewGenerator.Application.Services
         private readonly IMassTransitService _massTransitService;
         private readonly ILinhasArquivoRepositorio _linhasArquivoRepositorio;
 
+        private readonly string _nomeFila;
+
         public ImportacaoPerguntaService(IControleImportacaoPerguntasRepositorio controleImportacaoRepositorio,
                                          IMassTransitService massTransitService,
-                                         ILinhasArquivoRepositorio linhasArquivoRepositorio)
+                                         ILinhasArquivoRepositorio linhasArquivoRepositorio,
+                                         IConfiguration configuration)
         {
             _controleImportacaoRepositorio = controleImportacaoRepositorio;
             _massTransitService = massTransitService;
             _linhasArquivoRepositorio = linhasArquivoRepositorio;
+
+            _nomeFila = configuration.GetSection("MassTransit")["NomeFila"]!;
         }
 
         public async Task<ResponseBase<IEnumerable<ControleImportacaoPerguntasViewModel>>> ListarControlesImportacao(Guid usuarioId)
@@ -32,23 +39,42 @@ namespace InterviewGenerator.Application.Services
             if (controlesImportacao.Count() == 0)
                 return response;
 
-            var viewModelResponse = controlesImportacao.Select(c => new ControleImportacaoPerguntasViewModel
+            List<ControleImportacaoPerguntasViewModel> viewModelResponse = new();
+
+            foreach (var controle in controlesImportacao)
             {
-                DataUpload = c.DataUpload,
-                DataFimImportacao = c.DataFimImportacao,
-                StatusImportacao = c.StatusImportacao,
-                NomeArquivo = c.NomeArquivo,
-                ErrosImportacao = c.ErrosImportacao,
-            });
+                var controleViewModel = new ControleImportacaoPerguntasViewModel
+                {
+                    IdArquivo = controle.Id,
+                    DataUpload = controle.DataUpload,
+                    NomeArquivo = controle.NomeArquivo,
+                    LinhasArquivo = controle.LinhasArquivo.Select(l => new LinhasArquivoViewModel
+                    {
+                        DataProcessamento = l.DataProcessamento,
+                        Erro = l.Erro,
+                        NumeroLinha = l.NumeroLinha,
+                        StatusImportacao = l.StatusImportacao
+                    }).ToList()
+                };
+
+                if (controle.LinhasArquivo.Any(l => l.StatusImportacao == StatusLinhaArquivo.Pendente))
+                    controleViewModel.StatusImportacao = StatusImportacao.Pendente;
+                else if(controle.LinhasArquivo.Any(l => l.StatusImportacao == StatusLinhaArquivo.Erro))
+                    controleViewModel.StatusImportacao = StatusImportacao.ConcluidaComErro;
+                else
+                    controleViewModel.StatusImportacao = StatusImportacao.Concluida;
+
+                viewModelResponse.Add(controleViewModel);
+            }
 
             response.AddData(viewModelResponse);
 
             return response;
         }
 
-        public async Task<ResponseBase<ControleImportacaoPerguntasViewModel>> ImportarArquivoPerguntas(IFormFile arquivo, Guid usuarioId)
+        public async Task<ResponseBase<ArquivoEmProcessamentoViewModel>> ImportarArquivoPerguntas(IFormFile arquivo, Guid usuarioId)
         {
-            var response = new ResponseBase<ControleImportacaoPerguntasViewModel>();
+            var response = new ResponseBase<ArquivoEmProcessamentoViewModel>();
 
             List<AdicionarPerguntaDto> perguntas = new();
 
@@ -58,16 +84,12 @@ namespace InterviewGenerator.Application.Services
             {
                 using var streamReader = new StreamReader(arquivo.OpenReadStream());
                 string cabecalho = streamReader.ReadLine()!;
+
+                int numeroLinha = 1;
                 while (!streamReader.EndOfStream)
                 {
                     string linha = streamReader.ReadLine()!;
-                    perguntas.Add(AdicionarPerguntaDto.FromCsv(linha));
-                }
-
-                for (int i = 0; i < perguntas.Count; i++)
-                {
-                    perguntas[i].NumeroLinha = i + 1;
-                    perguntas[i].UsuarioId = usuarioId;
+                    perguntas.Add(AdicionarPerguntaDto.FromCsv(linha, usuarioId, numeroLinha++));
                 }
             }
             catch (Exception ex)
@@ -85,34 +107,33 @@ namespace InterviewGenerator.Application.Services
 
             var controleImportacao = new ControleImportacaoPerguntas
             {
-                StatusImportacao = Domain.Enum.StatusImportacao.Pendente,
                 DataUpload = DateTime.Now,
                 Id = idImportacao,
                 NomeArquivo = arquivo.FileName,
                 UsuarioId = usuarioId,
                 QuantidadeLinhasImportadas = perguntas.Count,
                 LinhasArquivo = perguntas
-                                    .Select(p => new LinhasArquivo { IdControleImportacao = idImportacao, NumeroLinha = p.NumeroLinha})
+                                    .Select(p => new LinhaArquivo { 
+                                                        IdControleImportacao = idImportacao, 
+                                                        NumeroLinha = p.NumeroLinha, 
+                                                        StatusImportacao = StatusLinhaArquivo.Pendente })
                                     .ToList()
             };
 
             // Envia mensagens de cadastro
-            for (int i = 0; i < perguntas.Count; i++)
+            foreach(var pergunta in perguntas)
             {
-                var mensagem = new ImportarArquivoDto { Pergunta = perguntas[i], IdArquivo = controleImportacao.Id };
-                await _massTransitService.InserirMensagem(mensagem, "importacao-perguntas-async");
+                var mensagem = new ImportarArquivoDto { Pergunta = pergunta, IdArquivo = controleImportacao.Id };
+                await _massTransitService.InserirMensagem(mensagem, _nomeFila);
             }
 
             await _controleImportacaoRepositorio.Adicionar(controleImportacao);
 
-            response.AddData(new ControleImportacaoPerguntasViewModel
+            response.AddData(new ArquivoEmProcessamentoViewModel
             {
-                StatusImportacao = controleImportacao.StatusImportacao,
-                DataUpload = controleImportacao.DataUpload,
                 NomeArquivo = controleImportacao.NomeArquivo,
-                QuantidadeLinhasImportadas = controleImportacao.QuantidadeLinhasImportadas,
-                UsuarioId = controleImportacao.UsuarioId,
-                IdArquivo = controleImportacao.Id
+                IdArquivo = controleImportacao.Id,
+                Linhas = perguntas.Count
             });
 
             return response;
@@ -132,6 +153,7 @@ namespace InterviewGenerator.Application.Services
 
             linha.Erro = alterarLinhaArquivoDto.Erro;
             linha.DataProcessamento = alterarLinhaArquivoDto.DataProcessamento;
+            linha.StatusImportacao = alterarLinhaArquivoDto.StatusImportacao;
 
             await _linhasArquivoRepositorio.Alterar(linha);
 

@@ -12,22 +12,12 @@ namespace InterviewGenerator.Infra.Mapping
 
             builder.HasKey(x => x.Id);
 
-            builder.Property(x => x.StatusImportacao)
-                .HasConversion<int>()
-                .IsRequired();
-
             builder.Property(x => x.UsuarioId)
                 .IsRequired();
-
-            builder.Property(x => x.DataFimImportacao)
-                .HasColumnType("DATETIME");
 
             builder.Property(x => x.DataUpload)
                 .HasColumnType("DATETIME")
                 .IsRequired();
-
-            builder.Property(x => x.ErrosImportacao)
-                .HasColumnType("VARCHAR(500)");
 
             builder.Property(x => x.NomeArquivo)
                 .HasColumnType("VARCHAR(250)")
@@ -42,8 +32,6 @@ namespace InterviewGenerator.Infra.Mapping
                 .WithOne()
                 .HasForeignKey(x => x.IdControleImportacao)
                 .IsRequired();
-
-
         }
     }
 }

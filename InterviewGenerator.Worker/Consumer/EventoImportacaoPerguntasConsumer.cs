@@ -1,5 +1,6 @@
 ﻿using InterviewGenerator.Application.Dto;
 using InterviewGenerator.Application.Interfaces;
+using InterviewGenerator.Domain.Enum;
 using MassTransit;
 
 namespace InterviewGenerator.Worker.Consumer
@@ -17,26 +18,41 @@ namespace InterviewGenerator.Worker.Consumer
 
         public async Task Consume(ConsumeContext<ImportarArquivoDto> context)
         {
-            var validation = new ImportarArquivoDtoValidator().Validate(context.Message);
-
             var alterarLinhaDto = new AlterarLinhaArquivoDto
             {
                 DataProcessamento = DateTime.Now,
                 NumeroLinha = context.Message.Pergunta.NumeroLinha,
                 IdControleImportacao = context.Message.IdArquivo
-            };
+            };      
 
-            if (validation.IsValid)
+            try
             {
-                var result = await _perguntaService.CadastrarPergunta(context.Message.Pergunta);
+                var validation = new ImportarArquivoDtoValidator().Validate(context.Message);
 
-                if(result.HasError)
-                    alterarLinhaDto.Erro = string.Join("; ", result.Erros);
+                if (validation.IsValid)
+                {
+                    var result = await _perguntaService.CadastrarPergunta(context.Message.Pergunta);
 
+                    if (result.HasError)
+                    {
+                        alterarLinhaDto.Erro = string.Join("; ", result.Erros);
+                        alterarLinhaDto.StatusImportacao = StatusLinhaArquivo.Erro;
+                    }
+                    else
+                    {
+                        alterarLinhaDto.StatusImportacao = StatusLinhaArquivo.Concluida;
+                    }
+                }
+                else
+                {
+                    alterarLinhaDto.Erro = string.Join("; ", validation.Errors);
+                    alterarLinhaDto.StatusImportacao = StatusLinhaArquivo.Erro;
+                }
             }
-            else
+            catch (Exception)
             {
-                alterarLinhaDto.Erro = string.Join("; ", validation.Errors);
+                alterarLinhaDto.Erro = "Erro inesperado";
+                alterarLinhaDto.StatusImportacao = StatusLinhaArquivo.Erro;
             }
 
             await _importacaoPerguntaService.AtualizaLinhasArquivo(alterarLinhaDto);

@@ -10,7 +10,7 @@ namespace InterviewGenerator.Application.Services
 {
     public class LinhasArquivoService : ILinhasArquivoService
     {
-        public Task<LinhasArquivo> ObterLinhaArquivo(Guid idArquivo, int idLinha)
+        public Task<LinhaArquivo> ObterLinhaArquivo(Guid idArquivo, int idLinha)
         {
             throw new NotImplementedException();
         }

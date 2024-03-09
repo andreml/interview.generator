@@ -63,10 +63,13 @@ namespace InterviewGenerator.Api.Controllers
             }
         }
 
+        /// <summary>
+        /// Importa perguntas via arquivo csv (Avaliador)
+        /// </summary>
         [HttpPost("ImportarArquivoPerguntas")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
         [DisableRequestSizeLimit, RequestFormLimits(MultipartBodyLengthLimit = 200000000, ValueLengthLimit = 200000000)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<ArquivoEmProcessamentoViewModel>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> ImportarArquivoPerguntas(IFormFile arquivo)
         {

@@ -1,19 +1,17 @@
 ﻿using InterviewGenerator.Domain.Entidade;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InterviewGenerator.Infra.Mapping
 {
-    public class LinhasArquivoMapping : IEntityTypeConfiguration<LinhasArquivo>
+    public class LinhaArquivoMapping : IEntityTypeConfiguration<LinhaArquivo>
     {
-        public void Configure(EntityTypeBuilder<LinhasArquivo> builder)
+        public void Configure(EntityTypeBuilder<LinhaArquivo> builder)
         {
             builder.HasKey(x => x.Id);
+
+            builder.
+                ToTable("LinhaArquivo");
 
             builder
                 .Property(x => x.Erro)
@@ -28,10 +26,9 @@ namespace InterviewGenerator.Infra.Mapping
                 .IsRequired()
                 .HasColumnType("INT");
 
-           
-
-
-
+            builder.Property(x => x.StatusImportacao)
+                .HasConversion<int>()
+                .IsRequired();
         }
     }
 }

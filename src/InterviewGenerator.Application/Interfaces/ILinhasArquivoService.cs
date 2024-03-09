@@ -9,6 +9,6 @@ namespace InterviewGenerator.Application.Interfaces
 {
     public interface ILinhasArquivoService
     {
-        Task<LinhasArquivo> ObterLinhaArquivo(Guid idArquivo, int idLinha);
+        Task<LinhaArquivo> ObterLinhaArquivo(Guid idArquivo, int idLinha);
     }
 }

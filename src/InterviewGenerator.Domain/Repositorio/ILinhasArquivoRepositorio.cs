@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace InterviewGenerator.Domain.Repositorio
 {
-    public interface ILinhasArquivoRepositorio : ICommonRepository<LinhasArquivo>
+    public interface ILinhasArquivoRepositorio : ICommonRepository<LinhaArquivo>
     {
-        Task<LinhasArquivo> ObterLinhaArquivo(Guid idArquivo, int idLinha);
+        Task<LinhaArquivo> ObterLinhaArquivo(Guid idArquivo, int idLinha);
     }
 }

@@ -12,39 +12,32 @@ namespace InterviewGenerator.Application.Dto
         public ICollection<AlternativaDto> Alternativas { get; set; } = default!;
         public int NumeroLinha { get; set; }
 
-        public static AdicionarPerguntaDto FromCsv(string linhaCsv)
+        public static AdicionarPerguntaDto FromCsv(string linhaCsv, Guid usuarioId, int numeroLinha)
         {
-            try
-            {
-                string[] values = linhaCsv.Split(';');
+            string[] values = linhaCsv.Split(';');
 
-                AdicionarPerguntaDto pergunta = new()
+            AdicionarPerguntaDto pergunta = new()
+            {
+                AreaConhecimento = values[0],
+                Descricao = values[1],
+                UsuarioId = usuarioId,
+                NumeroLinha = numeroLinha,
+                Alternativas = new List<AlternativaDto>
                 {
-                    AreaConhecimento = values[0],
-                    Descricao = values[1],
-                    Alternativas = new List<AlternativaDto>
-                    {
-                        new(values[2], true),
-                        new(values[3], false),
-                        new(values[4], false)
-                    }
-                };
+                    new(values[2], true),
+                    new(values[3], false),
+                    new(values[4], false)
+                }
+            };
 
-                if (!string.IsNullOrEmpty(values[5]))
-                    pergunta.Alternativas.Add(new(values[5], false));
+            if (!string.IsNullOrEmpty(values[5]))
+                pergunta.Alternativas.Add(new(values[5], false));
 
-                if (!string.IsNullOrEmpty(values[6]))
-                    pergunta.Alternativas.Add(new(values[6], false));
+            if (!string.IsNullOrEmpty(values[6]))
+                pergunta.Alternativas.Add(new(values[6], false));
 
-                return pergunta;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
+            return pergunta;
         }
-
     }
 
     public class AlternativaDto

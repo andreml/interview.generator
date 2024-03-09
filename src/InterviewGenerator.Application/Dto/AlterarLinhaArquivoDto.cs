@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using InterviewGenerator.Domain.Enum;
 
 namespace InterviewGenerator.Application.Dto
 {
@@ -13,5 +9,6 @@ namespace InterviewGenerator.Application.Dto
         public string? Erro { get; set; }
         public int NumeroLinha { get; set; }
         public Guid Id { get; set; }
+        public StatusLinhaArquivo StatusImportacao { get; set; }
     }
 }
