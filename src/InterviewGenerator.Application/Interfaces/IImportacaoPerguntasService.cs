@@ -1,4 +1,5 @@
-﻿using InterviewGenerator.Application.ViewModels;
+﻿using InterviewGenerator.Application.Dto;
+using InterviewGenerator.Application.ViewModels;
 using InterviewGenerator.Domain.Entidade.Common;
 
 namespace InterviewGenerator.Application.Interfaces
@@ -7,5 +8,6 @@ namespace InterviewGenerator.Application.Interfaces
     {
         Task<ResponseBase<IEnumerable<ControleImportacaoPerguntasViewModel>>> ListarControlesImportacao(Guid usuarioId);
         Task<ResponseBase<ControleImportacaoPerguntasViewModel>> ImportarArquivoPerguntas(string filePath, Guid usuarioId);
+        Task<ResponseBase> AtualizaLinhasArquivo(AlterarLinhaArquivoDto linhasArquivoViewModel);
     }
 }

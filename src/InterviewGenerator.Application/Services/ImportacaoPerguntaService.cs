@@ -1,6 +1,7 @@
 ﻿using InterviewGenerator.Application.Dto;
 using InterviewGenerator.Application.Interfaces;
 using InterviewGenerator.Application.ViewModels;
+using InterviewGenerator.Domain.Entidade;
 using InterviewGenerator.Domain.Entidade.Common;
 using InterviewGenerator.Domain.Repositorio;
 using System.Text.Json;
@@ -57,7 +58,7 @@ namespace InterviewGenerator.Application.Services
                                            .ToList();
 
                 for (int i = 0; i < perguntas.Count; i++)
-                { 
+                {
                     perguntas[i].NumeroLinha = i + 1;
                     perguntas[i].UsuarioId = usuarioId;
                 }
@@ -95,7 +96,7 @@ namespace InterviewGenerator.Application.Services
             });
 
             await _controleImportacaoRepositorio.Adicionar(statusImportacao);
-                
+
             for (int i = 0; i < perguntas.Count; i++)
             {
                 var mensagem = new ImportarArquivoDto { Pergunta = perguntas[i], IdArquivo = statusImportacao.Id };
@@ -110,6 +111,25 @@ namespace InterviewGenerator.Application.Services
             return response;
         }
 
+        public async Task<ResponseBase> AtualizaLinhasArquivo(AlterarLinhaArquivoDto alterarLinhaArquivoDto)
+        {
+            var response = new ResponseBase();
 
+            var linha = await _linhasArquivoRepositorio.ObterLinhaArquivo(alterarLinhaArquivoDto.IdControleImportacao, alterarLinhaArquivoDto.NumeroLinha);
+
+            if (linha == null)
+            {
+                response.AddErro("Linha não encontrada");
+                return response;
+            }
+
+            linha.Erro = alterarLinhaArquivoDto.Erro;
+            linha.DataProcessamento = alterarLinhaArquivoDto.DataProcessamento;
+
+            await _linhasArquivoRepositorio.Alterar(linha);
+
+            response.AddData("Linha do arquivo alterada com sucesso!");
+            return response;
+        }
     }
 }

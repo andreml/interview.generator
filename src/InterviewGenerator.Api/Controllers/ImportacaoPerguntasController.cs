@@ -1,4 +1,5 @@
-﻿using InterviewGenerator.Application.Interfaces;
+﻿using InterviewGenerator.Application.Dto;
+using InterviewGenerator.Application.Interfaces;
 using InterviewGenerator.Application.Services;
 using InterviewGenerator.Application.ViewModels;
 using InterviewGenerator.Domain.Enum;
@@ -81,6 +82,26 @@ namespace InterviewGenerator.Api.Controllers
             catch (Exception e)
             {
                 return ResponseErro(e.Message, "Erro ao inserir perguntas via arquivo");
+            }
+        }
+
+        [HttpPost("AtualizarControleLinhaArquivo")]
+        [Authorize(Roles = $"{Perfis.Avaliador}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> AtualizarControleLinhaArquivo(AlterarLinhaArquivoDto alterarLinhaArquivoDto)
+        {
+            try
+            {
+                var usuarioId = ObterUsuarioIdLogado();
+
+                var result = await _importacaoService.AtualizaLinhasArquivo(alterarLinhaArquivoDto);
+
+                return Response(result);
+            }
+            catch (Exception e)
+            {
+                return ResponseErro(e.Message, "Erro ao atualizar status da linha do arquivo");
             }
         }
     }

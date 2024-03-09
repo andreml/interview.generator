@@ -1,6 +1,7 @@
 ﻿using InterviewGenerator.Application.Dto;
 using InterviewGenerator.Application.ViewModels;
 using InterviewGenerator.CrossCutting.Eventos;
+using InterviewGenerator.Domain.Repositorio;
 using MassTransit;
 using Newtonsoft.Json;
 using RestSharp;
@@ -10,6 +11,7 @@ namespace InterviewGenerator.Worker.Consumer
 {
     public class EventoImportacaoPerguntasConsumer : IConsumer<ImportarArquivoDto>
     {
+      
         public Task Consume(ConsumeContext<ImportarArquivoDto> context)
         {
             var responseToken = Token();
@@ -17,9 +19,17 @@ namespace InterviewGenerator.Worker.Consumer
             {
                 var token = JsonConvert.DeserializeObject<LoginViewModel>(responseToken.Content);
                 var responsePergunta = ImportarPergunta(token.Token, context.Message.Pergunta);
+                var atualizaStatusDto = new AlterarLinhaArquivoDto { 
+                    DataProcessamento = DateTime.Now,
+                    Erro = responsePergunta.Content,
+                    NumeroLinha = context.Message.Pergunta.NumeroLinha.Value,
+                    IdControleImportacao = context.Message.IdArquivo
+                };
+
+                var statusProcessamento = AtualizaStatus(token.Token, atualizaStatusDto);
+
             }
 
-            Console.WriteLine(context.Message);
             return Task.CompletedTask;
         }
 
@@ -46,6 +56,18 @@ namespace InterviewGenerator.Worker.Consumer
             RestResponse response = client.Execute(request);
             return response;
             
+        }
+
+        public RestResponse AtualizaStatus(string? accessToken, AlterarLinhaArquivoDto linha)
+        {
+            var client = new RestClient();
+            var request = new RestRequest("https://localhost:44357/ImportacaoPerguntas/AtualizarControleLinhaArquivo", Method.Post);
+            request.AddHeader("Authorization", $"Bearer {accessToken}");
+            request.AddHeader("Content-Type", "application/json");
+            var body = JsonConvert.SerializeObject(linha);
+            request.AddStringBody(body, DataFormat.Json);
+            RestResponse response = client.Execute(request);
+            return response;
         }
 
     }

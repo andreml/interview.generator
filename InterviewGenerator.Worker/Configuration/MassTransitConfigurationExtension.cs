@@ -25,6 +25,7 @@ namespace InterviewGenerator.Worker.Configuration
                     cfg.ReceiveEndpoint(fila!, e =>
                     {
                         e.Consumer<EventoImportacaoPerguntasConsumer>();
+                        
                     });
 
                     cfg.ConfigureEndpoints(context);
