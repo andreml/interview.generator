@@ -1,5 +1,3 @@
-using InterviewGenerator.Application.Interfaces;
-using InterviewGenerator.Application.Services;
 using InterviewGenerator.Domain.Repositorio;
 using InterviewGenerator.Infra.Repositorio;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,15 +15,6 @@ namespace InterviewGenerator.CrossCutting.InjecaoDependencia
             service.AddScoped<IQuestionarioRepositorio, QuestionarioRepositorio>();
             service.AddScoped<IControleImportacaoPerguntasRepositorio, ControleImportacaoRepositorio>();
             service.AddScoped<ILinhasArquivoRepositorio, LinhasArquivoRepositorio>();
-
-            service.AddScoped<IQuestionarioService, QuestionarioService>();         
-            service.AddScoped<IAvaliacaoService, AvaliacaoService>();
-            service.AddScoped<IUsuarioService, UsuarioService>();
-            service.AddScoped<IPerguntaService, PerguntaService>();
-            service.AddScoped<IAreaConhecimentoService, AreaConhecimentoService>();
-            service.AddScoped<IImportacaoPerguntasService, ImportacaoPerguntaService>();
-            service.AddScoped<IMassTransitService, MassTransitService>();
-            service.AddScoped<ILinhasArquivoService, LinhasArquivoService>();
 
             return service;
         }

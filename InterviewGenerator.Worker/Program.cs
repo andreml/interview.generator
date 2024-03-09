@@ -10,8 +10,11 @@ IHost host = Host.CreateDefaultBuilder(args)
         // MassTransit
         services.AddMassTransitConfig(hostContext.Configuration);
 
-        // Repository and services
+        // Repository
         services.AddRepository();
+
+        // Services
+        services.AddServices();
 
         //Context
         services.AddContextConfig();
