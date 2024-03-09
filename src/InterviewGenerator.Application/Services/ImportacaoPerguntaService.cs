@@ -4,6 +4,7 @@ using InterviewGenerator.Application.ViewModels;
 using InterviewGenerator.Domain.Entidade;
 using InterviewGenerator.Domain.Entidade.Common;
 using InterviewGenerator.Domain.Repositorio;
+using Microsoft.IdentityModel.Tokens;
 using System.Text.Json;
 
 namespace InterviewGenerator.Application.Services
@@ -127,6 +128,24 @@ namespace InterviewGenerator.Application.Services
             linha.DataProcessamento = alterarLinhaArquivoDto.DataProcessamento;
 
             await _linhasArquivoRepositorio.Alterar(linha);
+
+            var controleImportacaoArquivo = await _controleImportacaoRepositorio.ObterControleImportacaoPorIdArquivo(alterarLinhaArquivoDto.IdControleImportacao);
+
+            if (controleImportacaoArquivo == null)
+            {
+                return response;
+            }
+
+            /*Já atualizo o controle de importação do arquivo*/
+            if (!controleImportacaoArquivo.LinhasArquivo.Any(x => x.DataProcessamento == null))
+            {
+                if (controleImportacaoArquivo.LinhasArquivo.Any(x => x.Erro.IsNullOrEmpty()))
+                    controleImportacaoArquivo.StatusImportacao = Domain.Enum.StatusImportacao.Concluida;
+                else
+                    controleImportacaoArquivo.StatusImportacao = Domain.Enum.StatusImportacao.ConcluidaComErro;
+
+                await _controleImportacaoRepositorio.Alterar(controleImportacaoArquivo);
+            }
 
             response.AddData("Linha do arquivo alterada com sucesso!");
             return response;

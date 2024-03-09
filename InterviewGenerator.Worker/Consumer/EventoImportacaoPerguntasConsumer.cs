@@ -27,10 +27,12 @@ namespace InterviewGenerator.Worker.Consumer
                 };
 
                 var statusProcessamento = AtualizaStatus(token.Token, atualizaStatusDto);
-
+                return Task.CompletedTask;
             }
-
-            return Task.CompletedTask;
+            else
+            {
+                return Task.Delay(1000);
+            }
         }
 
         public RestResponse Token()

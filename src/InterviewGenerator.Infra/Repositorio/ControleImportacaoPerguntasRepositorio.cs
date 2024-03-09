@@ -28,6 +28,14 @@ namespace InterviewGenerator.Infra.Repositorio
             await _context.SaveChangesAsync();
         }
 
+        public async Task<ControleImportacaoPerguntas?> ObterControleImportacaoPorIdArquivo(Guid arquivoId)
+        {
+            return await _dbSet
+                            .Where(x => x.Id == arquivoId)
+                            .Include(x => x.LinhasArquivo)
+                            .FirstOrDefaultAsync();
+        }
+
         public async Task<IEnumerable<ControleImportacaoPerguntas>> ObterControlesImportacao(Guid usuarioId)
         {
             return await _dbSet
