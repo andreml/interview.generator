@@ -4,7 +4,7 @@ using InterviewGenerator.Application.ViewModels;
 using InterviewGenerator.Domain.Entidade;
 using InterviewGenerator.Domain.Entidade.Common;
 using InterviewGenerator.Domain.Repositorio;
-using System.Text.Json;
+using Microsoft.AspNetCore.Http;
 
 namespace InterviewGenerator.Application.Services
 {
@@ -46,16 +46,23 @@ namespace InterviewGenerator.Application.Services
             return response;
         }
 
-        public async Task<ResponseBase<ControleImportacaoPerguntasViewModel>> ImportarArquivoPerguntas(string filePath, Guid usuarioId)
+        public async Task<ResponseBase<ControleImportacaoPerguntasViewModel>> ImportarArquivoPerguntas(IFormFile arquivo, Guid usuarioId)
         {
             var response = new ResponseBase<ControleImportacaoPerguntasViewModel>();
+
             List<AdicionarPerguntaDto> perguntas = new();
+
+            var idImportacao = Guid.NewGuid();
+
             try
             {
-                perguntas = File.ReadAllLines(filePath)
-                                           .Skip(1)
-                                           .Select(v => AdicionarPerguntaDto.FromCsv(v))
-                                           .ToList();
+                using var streamReader = new StreamReader(arquivo.OpenReadStream());
+                string cabecalho = streamReader.ReadLine()!;
+                while (!streamReader.EndOfStream)
+                {
+                    string linha = streamReader.ReadLine()!;
+                    perguntas.Add(AdicionarPerguntaDto.FromCsv(linha));
+                }
 
                 for (int i = 0; i < perguntas.Count; i++)
                 {
@@ -75,38 +82,38 @@ namespace InterviewGenerator.Application.Services
                 return response;
             }
 
-            var statusImportacao = new Domain.Entidade.ControleImportacaoPerguntas
+
+            var controleImportacao = new ControleImportacaoPerguntas
             {
                 StatusImportacao = Domain.Enum.StatusImportacao.Pendente,
                 DataUpload = DateTime.Now,
-                Id = Guid.NewGuid(),
-                NomeArquivo = filePath,
+                Id = idImportacao,
+                NomeArquivo = arquivo.FileName,
                 UsuarioId = usuarioId,
-                QuantidadeLinhasImportadas = perguntas.Count
+                QuantidadeLinhasImportadas = perguntas.Count,
+                LinhasArquivo = perguntas
+                                    .Select(p => new LinhasArquivo { IdControleImportacao = idImportacao, NumeroLinha = p.NumeroLinha})
+                                    .ToList()
             };
+
+            // Envia mensagens de cadastro
+            for (int i = 0; i < perguntas.Count; i++)
+            {
+                var mensagem = new ImportarArquivoDto { Pergunta = perguntas[i], IdArquivo = controleImportacao.Id };
+                await _massTransitService.InserirMensagem(mensagem, "importacao-perguntas-async");
+            }
+
+            await _controleImportacaoRepositorio.Adicionar(controleImportacao);
 
             response.AddData(new ControleImportacaoPerguntasViewModel
             {
-                StatusImportacao = statusImportacao.StatusImportacao,
-                DataUpload = statusImportacao.DataUpload,
-                NomeArquivo = statusImportacao.NomeArquivo,
-                QuantidadeLinhasImportadas = statusImportacao.QuantidadeLinhasImportadas,
-                UsuarioId = statusImportacao.UsuarioId,
-                IdArquivo = statusImportacao.Id
+                StatusImportacao = controleImportacao.StatusImportacao,
+                DataUpload = controleImportacao.DataUpload,
+                NomeArquivo = controleImportacao.NomeArquivo,
+                QuantidadeLinhasImportadas = controleImportacao.QuantidadeLinhasImportadas,
+                UsuarioId = controleImportacao.UsuarioId,
+                IdArquivo = controleImportacao.Id
             });
-
-            await _controleImportacaoRepositorio.Adicionar(statusImportacao);
-
-            for (int i = 0; i < perguntas.Count; i++)
-            {
-                var mensagem = new ImportarArquivoDto { Pergunta = perguntas[i], IdArquivo = statusImportacao.Id };
-                await _massTransitService.InserirMensagem(mensagem, "importacao-perguntas-async");
-                await _linhasArquivoRepositorio.Adicionar(new Domain.Entidade.LinhasArquivo
-                {
-                    IdControleImportacao = statusImportacao.Id,
-                    NumeroLinha = perguntas[i].NumeroLinha.Value
-                }); ;
-            }
 
             return response;
         }

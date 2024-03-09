@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 
 namespace InterviewGenerator.Application.Dto
@@ -11,26 +10,33 @@ namespace InterviewGenerator.Application.Dto
         public string Descricao { get; set; } = default!;
         public string AreaConhecimento { get; set; } = default!;
         public ICollection<AlternativaDto> Alternativas { get; set; } = default!;
-        public int? NumeroLinha { get; set; }
+        public int NumeroLinha { get; set; }
 
         public static AdicionarPerguntaDto FromCsv(string linhaCsv)
         {
             try
             {
                 string[] values = linhaCsv.Split(';');
-                AdicionarPerguntaDto perguntas = new AdicionarPerguntaDto();
-                perguntas.AreaConhecimento = values[0];
-                perguntas.Descricao = values[1];
-                perguntas.Alternativas = new List<AlternativaDto>
+
+                AdicionarPerguntaDto pergunta = new()
                 {
-                    new(values[2], true),
-                    new(values[3], false),
-                    new(values[4], false),
-                    new(values[5], false),
-                    new(values[6], false)
+                    AreaConhecimento = values[0],
+                    Descricao = values[1],
+                    Alternativas = new List<AlternativaDto>
+                    {
+                        new(values[2], true),
+                        new(values[3], false),
+                        new(values[4], false)
+                    }
                 };
 
-                return perguntas;
+                if (!string.IsNullOrEmpty(values[5]))
+                    pergunta.Alternativas.Add(new(values[5], false));
+
+                if (!string.IsNullOrEmpty(values[6]))
+                    pergunta.Alternativas.Add(new(values[6], false));
+
+                return pergunta;
             }
             catch (Exception ex)
             {

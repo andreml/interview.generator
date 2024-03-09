@@ -1,6 +1,4 @@
-﻿using InterviewGenerator.Application.Dto;
-using InterviewGenerator.Application.Interfaces;
-using InterviewGenerator.Application.Services;
+﻿using InterviewGenerator.Application.Interfaces;
 using InterviewGenerator.Application.ViewModels;
 using InterviewGenerator.Domain.Enum;
 using Microsoft.AspNetCore.Authorization;
@@ -67,41 +65,22 @@ namespace InterviewGenerator.Api.Controllers
 
         [HttpPost("ImportarArquivoPerguntas")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
+        [DisableRequestSizeLimit, RequestFormLimits(MultipartBodyLengthLimit = 200000000, ValueLengthLimit = 200000000)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> ImportarArquivoPerguntas(string filePath)
+        public async Task<IActionResult> ImportarArquivoPerguntas(IFormFile arquivo)
         {
             try
             {
                 var usuarioId = ObterUsuarioIdLogado();
 
-                var result = await _importacaoService.ImportarArquivoPerguntas(filePath, usuarioId);
+                var result = await _importacaoService.ImportarArquivoPerguntas(arquivo, usuarioId);
 
                 return Response(result);
             }
             catch (Exception e)
             {
                 return ResponseErro(e.Message, "Erro ao inserir perguntas via arquivo");
-            }
-        }
-
-        [HttpPost("AtualizarControleLinhaArquivo")]
-        [Authorize(Roles = $"{Perfis.Avaliador}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> AtualizarControleLinhaArquivo(AlterarLinhaArquivoDto alterarLinhaArquivoDto)
-        {
-            try
-            {
-                var usuarioId = ObterUsuarioIdLogado();
-
-                var result = await _importacaoService.AtualizaLinhasArquivo(alterarLinhaArquivoDto);
-
-                return Response(result);
-            }
-            catch (Exception e)
-            {
-                return ResponseErro(e.Message, "Erro ao atualizar status da linha do arquivo");
             }
         }
     }
