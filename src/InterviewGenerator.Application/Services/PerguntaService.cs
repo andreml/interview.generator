@@ -4,8 +4,6 @@ using InterviewGenerator.Application.ViewModels;
 using InterviewGenerator.Domain.Entidade;
 using InterviewGenerator.Domain.Entidade.Common;
 using InterviewGenerator.Domain.Repositorio;
-using Microsoft.EntityFrameworkCore.Query;
-using Microsoft.IdentityModel.Tokens;
 
 namespace InterviewGenerator.Application.Services
 {

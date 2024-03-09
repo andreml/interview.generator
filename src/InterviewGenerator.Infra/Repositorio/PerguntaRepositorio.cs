@@ -30,6 +30,7 @@ namespace InterviewGenerator.Infra.Repositorio
         {
             return await _dbSet
                             .Include(x => x.Questionarios)
+                            .Include(x => x.Alternativas)
                             .FirstOrDefaultAsync(x => x.UsuarioCriacaoId == usuarioCriacaoId
                                                  && x.Id == perguntaId);
         }
