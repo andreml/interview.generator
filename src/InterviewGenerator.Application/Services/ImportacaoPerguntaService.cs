@@ -7,6 +7,7 @@ using InterviewGenerator.Domain.Enum;
 using InterviewGenerator.Domain.Repositorio;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using System.Text;
 
 namespace InterviewGenerator.Application.Services
 {
@@ -82,7 +83,7 @@ namespace InterviewGenerator.Application.Services
 
             try
             {
-                using var streamReader = new StreamReader(arquivo.OpenReadStream());
+                using var streamReader = new StreamReader(arquivo.OpenReadStream(),Encoding.UTF8);
                 string cabecalho = streamReader.ReadLine()!;
 
                 int numeroLinha = 1;

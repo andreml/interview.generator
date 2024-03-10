@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using System.Text;
 using System.Text.Json.Serialization;
 
 namespace InterviewGenerator.Application.Dto

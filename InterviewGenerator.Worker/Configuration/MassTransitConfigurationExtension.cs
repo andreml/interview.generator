@@ -28,10 +28,17 @@ namespace InterviewGenerator.Worker.Configuration
                         
                     });
 
+                    cfg.ReceiveEndpoint(fila!+"_error", e =>
+                    {
+                        e.Consumer<EventoImportacaoErro>(context);
+
+                    });
+
                     cfg.ConfigureEndpoints(context);
                 });
 
                 x.AddConsumer<EventoImportacaoPerguntasConsumer>();
+                x.AddConsumer<EventoImportacaoErro>();
             }));
         }
     }
