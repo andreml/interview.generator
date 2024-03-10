@@ -13,7 +13,7 @@ namespace InterviewGenerator.Application.Services
 
         private readonly IAreaConhecimentoService _areaConhecimentoService;
 
-        public PerguntaService(IPerguntaRepositorio perguntaRepositorio, 
+        public PerguntaService(IPerguntaRepositorio perguntaRepositorio,
                                IAreaConhecimentoService areaConhecimentoService)
         {
             _perguntaRepositorio = perguntaRepositorio;
@@ -26,13 +26,13 @@ namespace InterviewGenerator.Application.Services
 
             var pergunta = await _perguntaRepositorio.ObterPerguntaPorId(perguntaDto.UsuarioId, perguntaDto.Id);
 
-            if(pergunta == null)
+            if (pergunta == null)
             {
                 response.AddErro("Pergunta não encontrada");
                 return response;
             }
 
-            if(pergunta.Questionarios!.Count > 0)
+            if (pergunta.Questionarios!.Count > 0)
             {
                 response.AddErro("Já existem questionários cadastrados com esta pergunta");
                 return response;
@@ -54,20 +54,26 @@ namespace InterviewGenerator.Application.Services
             return response;
         }
 
-        public async Task<ResponseBase> CadastrarPergunta(AdicionarPerguntaDto pergunta)
+        public async Task<ResponseBase> CadastrarPergunta(Guid usuarioId, AdicionarPerguntaDto pergunta)
         {
             var response = new ResponseBase();
 
-            var perguntaDuplicada = await _perguntaRepositorio.ExistePorDescricao(pergunta.UsuarioId, pergunta.Descricao);
+            if (usuarioId == Guid.Empty)
+            {
+                response.AddErro("UsuarioId inválido");
+                return response;
+            }
+
+            var perguntaDuplicada = await _perguntaRepositorio.ExistePorDescricao(usuarioId, pergunta.Descricao);
             if (perguntaDuplicada)
             {
                 response.AddErro("Pergunta já cadastrada");
                 return response;
             }
 
-            var areaConhecimento = await _areaConhecimentoService.ObterOuCriarAreaConhecimento(pergunta.UsuarioId, pergunta.AreaConhecimento);
+            var areaConhecimento = await _areaConhecimentoService.ObterOuCriarAreaConhecimento(usuarioId, pergunta.AreaConhecimento);
 
-            var novaPergunta = new Pergunta(areaConhecimento, pergunta.Descricao, pergunta.UsuarioId);
+            var novaPergunta = new Pergunta(areaConhecimento, pergunta.Descricao, usuarioId);
 
             foreach (var alternativa in pergunta.Alternativas)
                 novaPergunta.AdicionarAlternativa(new Alternativa(alternativa.Descricao, alternativa.Correta));
@@ -84,7 +90,7 @@ namespace InterviewGenerator.Application.Services
 
             var perguntas = _perguntaRepositorio.ObterPerguntas(usuarioCriacaoId, perguntaId, areaConhecimento, descricao);
 
-            if(perguntas.Count() == 0)
+            if (perguntas.Count() == 0)
                 return response;
 
             var perguntasViewModel =
@@ -125,6 +131,6 @@ namespace InterviewGenerator.Application.Services
             return response;
         }
 
-        
+
     }
 }

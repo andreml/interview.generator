@@ -1,4 +1,5 @@
 ﻿using InterviewGenerator.Application.Dto;
+using InterviewGenerator.Application.Eventos;
 using InterviewGenerator.Application.Interfaces;
 using InterviewGenerator.Application.ViewModels;
 using InterviewGenerator.Domain.Entidade;
@@ -77,7 +78,7 @@ namespace InterviewGenerator.Application.Services
         {
             var response = new ResponseBase<ArquivoEmProcessamentoViewModel>();
 
-            List<AdicionarPerguntaDto> perguntas = new();
+            List<ImportarPerguntaAsyncEvent> eventosPergunta = new();
 
             var idImportacao = Guid.NewGuid();
 
@@ -90,7 +91,7 @@ namespace InterviewGenerator.Application.Services
                 while (!streamReader.EndOfStream)
                 {
                     string linha = streamReader.ReadLine()!;
-                    perguntas.Add(AdicionarPerguntaDto.FromCsv(linha, usuarioId, numeroLinha++));
+                    eventosPergunta.Add(ImportarPerguntaAsyncEvent.ConvertFromCsv(linha, usuarioId, idImportacao, numeroLinha++));
                 }
             }
             catch (Exception ex)
@@ -99,7 +100,7 @@ namespace InterviewGenerator.Application.Services
                 return response;
             }
 
-            if (perguntas.Count == 0)
+            if (eventosPergunta.Count == 0)
             {
                 response.AddErro("Não há perguntas a serem incluídas");
                 return response;
@@ -112,8 +113,8 @@ namespace InterviewGenerator.Application.Services
                 Id = idImportacao,
                 NomeArquivo = arquivo.FileName,
                 UsuarioId = usuarioId,
-                QuantidadeLinhasImportadas = perguntas.Count,
-                LinhasArquivo = perguntas
+                QuantidadeLinhasImportadas = eventosPergunta.Count,
+                LinhasArquivo = eventosPergunta
                                     .Select(p => new LinhaArquivo { 
                                                         IdControleImportacao = idImportacao, 
                                                         NumeroLinha = p.NumeroLinha, 
@@ -122,11 +123,8 @@ namespace InterviewGenerator.Application.Services
             };
 
             // Envia mensagens de cadastro
-            foreach(var pergunta in perguntas)
-            {
-                var mensagem = new ImportarArquivoDto { Pergunta = pergunta, IdArquivo = controleImportacao.Id };
-                await _massTransitService.InserirMensagem(mensagem, _nomeFila);
-            }
+            foreach(var pergunta in eventosPergunta)
+                await _massTransitService.InserirMensagem(pergunta, _nomeFila);
 
             await _controleImportacaoRepositorio.Adicionar(controleImportacao);
 
@@ -134,7 +132,7 @@ namespace InterviewGenerator.Application.Services
             {
                 NomeArquivo = controleImportacao.NomeArquivo,
                 IdArquivo = controleImportacao.Id,
-                Linhas = perguntas.Count
+                Linhas = eventosPergunta.Count
             });
 
             return response;

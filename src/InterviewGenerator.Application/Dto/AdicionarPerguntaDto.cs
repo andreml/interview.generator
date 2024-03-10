@@ -1,44 +1,12 @@
 ﻿using FluentValidation;
-using System.Text;
-using System.Text.Json.Serialization;
 
 namespace InterviewGenerator.Application.Dto
 {
     public class AdicionarPerguntaDto
     {
-        [JsonIgnore]
-        public Guid UsuarioId { get; set; }
         public string Descricao { get; set; } = default!;
         public string AreaConhecimento { get; set; } = default!;
         public ICollection<AlternativaDto> Alternativas { get; set; } = default!;
-        public int NumeroLinha { get; set; }
-
-        public static AdicionarPerguntaDto FromCsv(string linhaCsv, Guid usuarioId, int numeroLinha)
-        {
-            string[] values = linhaCsv.Split(';');
-
-            AdicionarPerguntaDto pergunta = new()
-            {
-                AreaConhecimento = values[0],
-                Descricao = values[1],
-                UsuarioId = usuarioId,
-                NumeroLinha = numeroLinha,
-                Alternativas = new List<AlternativaDto>
-                {
-                    new(values[2], true),
-                    new(values[3], false),
-                    new(values[4], false)
-                }
-            };
-
-            if (!string.IsNullOrEmpty(values[5]))
-                pergunta.Alternativas.Add(new(values[5], false));
-
-            if (!string.IsNullOrEmpty(values[6]))
-                pergunta.Alternativas.Add(new(values[6], false));
-
-            return pergunta;
-        }
     }
 
     public class AlternativaDto
@@ -65,7 +33,6 @@ namespace InterviewGenerator.Application.Dto
                 .NotNull().NotEmpty()
                 .WithMessage("AreaConhecimento é obrigatória")
                 .MaximumLength(100).WithMessage("AreaConhecimento deve tera até 100 caracteres");
-
 
             RuleFor(x => x.Alternativas)
                 .NotNull().NotEmpty()

@@ -58,9 +58,7 @@ namespace InterviewGenerator.Api.Controllers
         {
             try
             {
-                pergunta.UsuarioId = ObterUsuarioIdLogado();
-
-                var result = await _perguntaService.CadastrarPergunta(pergunta);
+                var result = await _perguntaService.CadastrarPergunta(ObterUsuarioIdLogado(), pergunta);
 
                 return Response(result!);
             }
