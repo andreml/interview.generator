@@ -31,8 +31,9 @@ namespace InterviewGenerator.Infra.Repositorio
         public async Task<IEnumerable<ControleImportacaoPerguntas>> ObterControlesImportacao(Guid usuarioId)
         {
             return await _dbSet
-                            .Where(x => x.UsuarioId == usuarioId)
                             .Include(x => x.LinhasArquivo)
+                            .Where(x => x.UsuarioId == usuarioId)
+                            .OrderByDescending(x => x.DataUpload)
                             .ToListAsync();
         }
     }

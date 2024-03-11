@@ -1,5 +1,4 @@
 ﻿using InterviewGenerator.Application.Interfaces;
-using InterviewGenerator.Application.Services;
 using InterviewGenerator.Application.ViewModels;
 using InterviewGenerator.Domain.Enum;
 using Microsoft.AspNetCore.Authorization;
@@ -64,17 +63,21 @@ namespace InterviewGenerator.Api.Controllers
             }
         }
 
+        /// <summary>
+        /// Importa perguntas via arquivo csv (Avaliador)
+        /// </summary>
         [HttpPost("ImportarArquivoPerguntas")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [DisableRequestSizeLimit, RequestFormLimits(MultipartBodyLengthLimit = 200000000, ValueLengthLimit = 200000000)]
+        [ProducesResponseType(typeof(IEnumerable<ArquivoEmProcessamentoViewModel>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> ImportarArquivoPerguntas(string filePath)
+        public async Task<IActionResult> ImportarArquivoPerguntas(IFormFile arquivo)
         {
             try
             {
                 var usuarioId = ObterUsuarioIdLogado();
 
-                var result = await _importacaoService.ImportarArquivoPerguntas(filePath, usuarioId);
+                var result = await _importacaoService.ImportarArquivoPerguntas(arquivo, usuarioId);
 
                 return Response(result);
             }

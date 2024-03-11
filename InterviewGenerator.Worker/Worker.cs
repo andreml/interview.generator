@@ -7,13 +7,13 @@ namespace InterviewGenerator.Worker
         public Worker(ILogger<Worker> logger)
         {
             _logger = logger;
+            _logger.LogInformation("Worker iniciado em: {time}", DateTimeOffset.Now);
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
                 await Task.Delay(1000, stoppingToken);
             }
         }

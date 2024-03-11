@@ -7,7 +7,7 @@ namespace InterviewGenerator.CrossCutting.InjecaoDependencia
     {
         public static IServiceCollection AddContextConfig(this IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(ServiceLifetime.Singleton);
+            services.AddDbContext<ApplicationDbContext>(ServiceLifetime.Scoped);
             return services;
         }
     }

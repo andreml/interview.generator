@@ -21,7 +21,7 @@ namespace InterviewGenerator.Infra.Context
         public DbSet<RespostaAvaliacao> RespostaAvaliacao { get; set; }
         public DbSet<Usuario> Usuario { get; set; }
         public DbSet<ControleImportacaoPerguntas> ControleImportacao { get; set; }
-        public DbSet<LinhasArquivo> LinhasArquivo { get; set; }
+        public DbSet<LinhaArquivo> LinhasArquivo { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

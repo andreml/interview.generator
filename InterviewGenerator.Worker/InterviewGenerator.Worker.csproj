@@ -10,9 +10,12 @@
   <ItemGroup>
     <PackageReference Include="MassTransit.RabbitMQ" Version="8.1.3" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="RestSharp" Version="110.2.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\src\InterviewGenerator.Application\InterviewGenerator.Application.csproj" />
     <ProjectReference Include="..\src\InterviewGenerator.CrossCutting\InterviewGenerator.CrossCutting.csproj" />
   </ItemGroup>
 </Project>

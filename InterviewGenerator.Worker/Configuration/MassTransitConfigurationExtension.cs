@@ -24,13 +24,23 @@ namespace InterviewGenerator.Worker.Configuration
 
                     cfg.ReceiveEndpoint(fila!, e =>
                     {
-                        e.Consumer<EventoImportacaoPerguntasConsumer>();
+                        e.Consumer<EventoImportacaoPerguntasConsumer>(context);
+                        e.ConcurrentMessageLimit = 1;
+                        
+                    });
+
+                    cfg.ReceiveEndpoint(fila!+"_error", e =>
+                    {
+                        e.Consumer<EventoImportacaoErro>(context);
+                        e.ConcurrentMessageLimit = 1;
+
                     });
 
                     cfg.ConfigureEndpoints(context);
                 });
 
                 x.AddConsumer<EventoImportacaoPerguntasConsumer>();
+                x.AddConsumer<EventoImportacaoErro>();
             }));
         }
     }

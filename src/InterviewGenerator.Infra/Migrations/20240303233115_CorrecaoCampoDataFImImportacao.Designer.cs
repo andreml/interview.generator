@@ -4,6 +4,7 @@ using InterviewGenerator.Infra.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InterviewGenerator.Infra.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240303233115_CorrecaoCampoDataFImImportacao")]
+    partial class CorrecaoCampoDataFImImportacao
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -105,8 +108,14 @@ namespace InterviewGenerator.Infra.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasAnnotation("Relational:JsonPropertyName", "Id");
 
+                    b.Property<DateTime?>("DataFimImportacao")
+                        .HasColumnType("DATETIME");
+
                     b.Property<DateTime>("DataUpload")
                         .HasColumnType("DATETIME");
+
+                    b.Property<string>("ErrosImportacao")
+                        .HasColumnType("VARCHAR(500)");
 
                     b.Property<string>("NomeArquivo")
                         .IsRequired()
@@ -114,6 +123,9 @@ namespace InterviewGenerator.Infra.Migrations
 
                     b.Property<int>("QuantidadeLinhasImportadas")
                         .HasColumnType("INT");
+
+                    b.Property<int>("StatusImportacao")
+                        .HasColumnType("int");
 
                     b.Property<Guid>("UsuarioId")
                         .HasColumnType("uniqueidentifier");
@@ -123,7 +135,7 @@ namespace InterviewGenerator.Infra.Migrations
                     b.ToTable("ControleImportacaoPerguntas", (string)null);
                 });
 
-            modelBuilder.Entity("InterviewGenerator.Domain.Entidade.LinhaArquivo", b =>
+            modelBuilder.Entity("InterviewGenerator.Domain.Entidade.LinhasArquivo", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -142,14 +154,11 @@ namespace InterviewGenerator.Infra.Migrations
                     b.Property<int>("NumeroLinha")
                         .HasColumnType("INT");
 
-                    b.Property<int>("StatusImportacao")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("IdControleImportacao");
 
-                    b.ToTable("LinhaArquivo", (string)null);
+                    b.ToTable("LinhasArquivo");
                 });
 
             modelBuilder.Entity("InterviewGenerator.Domain.Entidade.Pergunta", b =>
@@ -299,7 +308,7 @@ namespace InterviewGenerator.Infra.Migrations
                     b.Navigation("Questionario");
                 });
 
-            modelBuilder.Entity("InterviewGenerator.Domain.Entidade.LinhaArquivo", b =>
+            modelBuilder.Entity("InterviewGenerator.Domain.Entidade.LinhasArquivo", b =>
                 {
                     b.HasOne("InterviewGenerator.Domain.Entidade.ControleImportacaoPerguntas", null)
                         .WithMany("LinhasArquivo")

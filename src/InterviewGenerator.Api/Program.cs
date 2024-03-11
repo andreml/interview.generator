@@ -1,7 +1,6 @@
 using FluentValidation.AspNetCore;
 using InterviewGenerator.Api.Configuration;
 using InterviewGenerator.CrossCutting.InjecaoDependencia;
-using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddRepository();
+builder.Services.AddServices();
 builder.Services.AddValidators();
 builder.Services.AddSwaggerConfiguration();
 builder.Services.AddFluentValidationAutoValidation();
