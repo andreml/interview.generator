@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\InterviewGenerator.Application\InterviewGenerator.Application.csproj" />
-    <ProjectReference Include="..\src\InterviewGenerator.CrossCutting\InterviewGenerator.CrossCutting.csproj" />
+    <ProjectReference Include="..\InterviewGenerator.Application\InterviewGenerator.Application.csproj" />
+    <ProjectReference Include="..\InterviewGenerator.CrossCutting\InterviewGenerator.CrossCutting.csproj" />
   </ItemGroup>
 </Project>
