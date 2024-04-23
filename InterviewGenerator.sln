@@ -15,11 +15,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InterviewGenerator.Domain",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InterviewGenerator.Infra", "src\InterviewGenerator.Infra\InterviewGenerator.Infra.csproj", "{4688CCC8-E3A3-470A-BC54-34839471D923}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{A3991794-A2B4-4F70-A5A9-7541764B1CD7}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{A3991794-A2B4-4F70-A5A9-7541764B1CD7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InterviewGenerator.IntegrationTests", "test\InterviewGenerator.IntegrationTests\InterviewGenerator.IntegrationTests.csproj", "{DE242A8A-36E1-47E4-8751-D76348E9758D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InterviewGenerator.IntegrationTests", "tests\InterviewGenerator.IntegrationTests\InterviewGenerator.IntegrationTests.csproj", "{DE242A8A-36E1-47E4-8751-D76348E9758D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InterviewGenerator.Worker", "InterviewGenerator.Worker\InterviewGenerator.Worker.csproj", "{66FA76EB-9B97-4354-817E-9587E9809ED7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InterviewGenerator.Worker", "src\InterviewGenerator.Worker\InterviewGenerator.Worker.csproj", "{3380B167-C0C8-40FD-AE92-EA1D6413FE5F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InterviewGenerator.UnitTests", "tests\InterviewGenerator.UnitTests\InterviewGenerator.UnitTests.csproj", "{5D2440ED-5006-405D-A235-077C14AF8AE5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,10 +53,14 @@ Global
 		{DE242A8A-36E1-47E4-8751-D76348E9758D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE242A8A-36E1-47E4-8751-D76348E9758D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE242A8A-36E1-47E4-8751-D76348E9758D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{66FA76EB-9B97-4354-817E-9587E9809ED7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{66FA76EB-9B97-4354-817E-9587E9809ED7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{66FA76EB-9B97-4354-817E-9587E9809ED7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{66FA76EB-9B97-4354-817E-9587E9809ED7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3380B167-C0C8-40FD-AE92-EA1D6413FE5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3380B167-C0C8-40FD-AE92-EA1D6413FE5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3380B167-C0C8-40FD-AE92-EA1D6413FE5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3380B167-C0C8-40FD-AE92-EA1D6413FE5F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D2440ED-5006-405D-A235-077C14AF8AE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D2440ED-5006-405D-A235-077C14AF8AE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D2440ED-5006-405D-A235-077C14AF8AE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D2440ED-5006-405D-A235-077C14AF8AE5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -66,7 +72,8 @@ Global
 		{0A84EA2B-A18D-4C06-9EB9-E66333096C68} = {3D08E9CE-D223-4839-BCB1-3AF7F4B575D3}
 		{4688CCC8-E3A3-470A-BC54-34839471D923} = {3D08E9CE-D223-4839-BCB1-3AF7F4B575D3}
 		{DE242A8A-36E1-47E4-8751-D76348E9758D} = {A3991794-A2B4-4F70-A5A9-7541764B1CD7}
-		{66FA76EB-9B97-4354-817E-9587E9809ED7} = {3D08E9CE-D223-4839-BCB1-3AF7F4B575D3}
+		{3380B167-C0C8-40FD-AE92-EA1D6413FE5F} = {3D08E9CE-D223-4839-BCB1-3AF7F4B575D3}
+		{5D2440ED-5006-405D-A235-077C14AF8AE5} = {A3991794-A2B4-4F70-A5A9-7541764B1CD7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {29B5FD03-25E9-4CE8-B0F8-2E60368F3D6D}
