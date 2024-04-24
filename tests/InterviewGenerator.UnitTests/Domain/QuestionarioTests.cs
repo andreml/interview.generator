@@ -1,9 +1,4 @@
 ﻿using InterviewGenerator.Domain.Entidade;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace InterviewGenerator.UnitTests.Domain
@@ -12,7 +7,7 @@ namespace InterviewGenerator.UnitTests.Domain
     {
         [Theory]
         [MemberData(nameof(ObterQuestionarios))]
-        public void Avaliacao_NotaCalc(Questionario questionario, decimal notaMaximaEsperada, decimal notaMediaEsperada)
+        public void Questionario_NotaMaximaMedia(Questionario questionario, decimal notaMaximaEsperada, decimal notaMediaEsperada)
         {
             // Act & Assert
             Assert.Equal(notaMaximaEsperada, questionario.MaiorNota);
