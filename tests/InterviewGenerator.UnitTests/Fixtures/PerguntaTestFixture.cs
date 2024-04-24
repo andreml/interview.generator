@@ -1,5 +1,6 @@
 ﻿using Bogus;
 using InterviewGenerator.Application.Dto;
+using Xunit;
 
 namespace InterviewGenerator.UnitTests.Fixtures
 {
@@ -44,4 +45,8 @@ namespace InterviewGenerator.UnitTests.Fixtures
                 }
             };
     }
+
+    [CollectionDefinition("PerguntaTestFixtureCollection")]
+    public class PerguntaTestFixtureCollection : ICollectionFixture<PerguntaTestFixture>
+    { }
 }

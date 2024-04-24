@@ -1,6 +1,7 @@
 ﻿using Bogus;
 using InterviewGenerator.Application.Dto;
 using InterviewGenerator.Domain.Enum;
+using Xunit;
 
 namespace InterviewGenerator.UnitTests.Fixtures
 {
@@ -34,4 +35,8 @@ namespace InterviewGenerator.UnitTests.Fixtures
         public GerarTokenUsuarioDto GerarGerarTokenUsuarioDto() =>
             new(_faker.Random.String2(30), _faker.Random.String2(10));
     }
+
+    [CollectionDefinition("UsuarioTestFixtureCollection")]
+    public class UsuarioTestFixtureCollection : ICollectionFixture<UsuarioTestFixture>
+    { }
 }
