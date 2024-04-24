@@ -12,6 +12,12 @@ namespace InterviewGenerator.Domain.Entidade
 
         public List<Avaliacao> Avaliacoes { get; set; } = default!;
 
+        public decimal MaiorNota =>
+                Avaliacoes.Select(x => x.Nota).Max();
+  
+        public decimal MediaNota =>
+            decimal.Round(Avaliacoes.Select(a => a.Nota).Average(), 2);
+
 
         public Questionario()
         {
@@ -27,11 +33,5 @@ namespace InterviewGenerator.Domain.Entidade
         {
             Perguntas.Clear();
         }
-
-        public decimal MaiorNota() =>
-            Avaliacoes.Select(x => x.Nota).Max();
-
-        public decimal MediaNota() =>
-            decimal.Round(Avaliacoes.Select(a => a.Nota).Average(), 2);
     }
 }

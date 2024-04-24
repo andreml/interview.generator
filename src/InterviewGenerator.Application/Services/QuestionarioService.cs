@@ -211,9 +211,9 @@ namespace InterviewGenerator.Application.Services
 
             if (estatisticas.AvaliacoesRespondidas > 0)
             {
-                estatisticas.MediaNota = questionario.MediaNota();
+                estatisticas.MediaNota = questionario.MediaNota;
 
-                var maiorNota = questionario.MaiorNota();
+                var maiorNota = questionario.MaiorNota;
 
                 estatisticas.MaiorNota = new MaiorNotaViewModel()
                 {
