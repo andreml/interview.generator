@@ -164,7 +164,7 @@ namespace InterviewGenerator.UnitTests.Application.Services
 
         [Fact]
         [Trait("Categoria", "BuscarTokenUsuario")]
-        public async Task BuscarTokenUsuario_ShouldReturnError()
+        public async Task BuscarTokenUsuario_ShouldReturnErrorWhenInvalidUser()
         {
             // Arrange
             _repositorioMock.Setup(x => x.ObterUsuarioPorLoginESenha(It.IsAny<string>(), It.IsAny<string>()))
