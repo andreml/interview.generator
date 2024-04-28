@@ -23,7 +23,7 @@ namespace InterviewGenerator.Application.Services
             var areaConhecimento = await _areaConhecimentoRepositorio.ObterPorIdEUsuarioId(areaConhecimentoDto.UsuarioId, areaConhecimentoDto.Id);
             if (areaConhecimento == null)
             {
-                response.AddErro($"Area de conhecimento não encontrada");
+                response.AddErro("Area de conhecimento não encontrada");
                 return response;
             }
 

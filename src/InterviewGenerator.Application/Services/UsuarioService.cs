@@ -67,14 +67,14 @@ namespace InterviewGenerator.Application.Services
             var usuarioPorCpf = await _repositorio.ExisteUsuarioPorCpf(usuario.Cpf);
             if (usuarioPorCpf)
             {
-                response.AddErro("Já existe um usuário com este CPF.");
+                response.AddErro("Já existe um usuário com este CPF");
                 return response;
             }
 
             var usuarioPorLogin = await _repositorio.ExisteUsuarioPorLogin(usuario.Login);
             if (usuarioPorLogin)
             {
-                response.AddErro("Já existe um usuário com este Login.");
+                response.AddErro("Já existe um usuário com este Login");
                 return response;
             }
 
