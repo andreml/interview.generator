@@ -23,7 +23,7 @@ jobs:
         run: dotnet build --configuration Release
 
       - name: Executando o publish da aplicação
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish src/InterviewGenerator.Api/InterviewGenerator.Api.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Carregando os pacotes para o Job de Deploy
         uses: actions/upload-artifact@v3
