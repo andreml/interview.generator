@@ -25,7 +25,7 @@ namespace InterviewGenerator.Api.Controllers
         /// Obtém Usuário (Avaliador | Candidato)
         /// </summary>
         [Authorize]
-        [HttpGet("Obter")]
+        [HttpGet]
         [ProducesResponseType(typeof(UsuarioViewModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> ObterPorId()
@@ -46,7 +46,7 @@ namespace InterviewGenerator.Api.Controllers
         /// Adiciona Usuário (Avaliador | Candidato)
         /// </summary>
         /// <returns></returns>
-        [HttpPost("Adicionar")]
+        [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AdicionarUsuario(AdicionarUsuarioDto usuario)
@@ -68,7 +68,7 @@ namespace InterviewGenerator.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [Authorize]
-        [HttpPut("Alterar")]
+        [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AlterarUsuario(AlterarUsuarioDto usuario)
