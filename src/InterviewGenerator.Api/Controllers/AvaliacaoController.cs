@@ -25,7 +25,7 @@ namespace InterviewGenerator.Api.Controllers
         /// <param name="QuestionarioId">Id do questionário (opcional)</param>
         /// <param name="nomeQuestionario">Nome do questionário (opcional)</param>
         /// <param name="nomeCandidato">Nome do candidato (opcional)</param>
-        [HttpGet("Obter")]
+        [HttpGet]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
         [ProducesResponseType(typeof(IEnumerable<AvaliacaoViewModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -46,7 +46,7 @@ namespace InterviewGenerator.Api.Controllers
         /// <summary>
         /// Adiciona a Avaliação do candidato (Candidato)
         /// </summary>
-        [HttpPost("Adicionar")]
+        [HttpPost]
         [Authorize(Roles = $"{Perfis.Candidato}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ResponseErro), StatusCodes.Status400BadRequest)]

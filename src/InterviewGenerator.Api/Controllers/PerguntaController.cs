@@ -27,7 +27,7 @@ namespace InterviewGenerator.Api.Controllers
         /// <param name="perguntaId">Id da Pergunta (Opcional)</param>
         /// <param name="areaConhecimento">Area de conhecimento (Opcional)</param>
         /// <param name="descricao">Pergunta (Opcional)</param>
-        [HttpGet("Obter")]
+        [HttpGet]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
         [ProducesResponseType(typeof(IEnumerable<PerguntaViewModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -50,7 +50,7 @@ namespace InterviewGenerator.Api.Controllers
         /// <summary>
         /// Adiciona Pergunta (Avaliador)
         /// </summary>
-        [HttpPost("Adicionar")]
+        [HttpPost]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status400BadRequest)]
@@ -71,7 +71,7 @@ namespace InterviewGenerator.Api.Controllers
         /// <summary>
         /// Altera uma Pergunta (Avaliador)
         /// </summary>
-        [HttpPut("Alterar")]
+        [HttpPut]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status400BadRequest)]
@@ -94,7 +94,7 @@ namespace InterviewGenerator.Api.Controllers
         /// <summary>
         /// Exclui uma Pergunta (Avaliador)
         /// </summary>
-        [HttpDelete("Excluir/{id}")]
+        [HttpDelete("{id}")]
         [Authorize(Roles = $"{Perfis.Avaliador}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status400BadRequest)]
@@ -113,8 +113,5 @@ namespace InterviewGenerator.Api.Controllers
                 return ResponseErro(e.Message, "Erro ao excluir pergunta");
             }
         }
-
-        
-       
     }
 }
