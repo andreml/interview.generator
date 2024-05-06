@@ -6,174 +6,173 @@ using InterviewGenerator.Domain.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace InterviewGenerator.Api.Controllers
+namespace InterviewGenerator.Api.Controllers;
+
+/// <summary>
+/// Controller responsável pelo gerenciamento de Questionários (Conjunto de perguntas)
+/// </summary>
+[Route("[controller]")]
+[ApiController]
+public class QuestionarioController : BaseController
 {
-    /// <summary>
-    /// Controller responsável pelo gerenciamento de Questionários (Conjunto de perguntas)
-    /// </summary>
-    [Route("[controller]")]
-    [ApiController]
-    public class QuestionarioController : BaseController
+    readonly IQuestionarioService _questionarioService;
+
+    public QuestionarioController(IQuestionarioService questionarioService)
     {
-        readonly IQuestionarioService _questionarioService;
+        _questionarioService = questionarioService;
+    }
 
-        public QuestionarioController(IQuestionarioService questionarioService)
+    /// <summary>
+    /// Adiciona um Questionário (Avaliador)
+    /// </summary>
+    [HttpPost]
+    [Authorize(Roles = $"{Perfis.Avaliador}")]
+    [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ResponseErro), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> AdicionarQuestionario(AdicionarQuestionarioDto questionario)
+    {
+        try
         {
-            _questionarioService = questionarioService;
+            questionario.UsuarioId = ObterUsuarioIdLogado();
+            var result = await _questionarioService.CadastrarQuestionario(questionario);
+
+            return Response(result);
         }
-
-        /// <summary>
-        /// Adiciona um Questionário (Avaliador)
-        /// </summary>
-        [HttpPost]
-        [Authorize(Roles = $"{Perfis.Avaliador}")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(typeof(ResponseErro), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> AdicionarQuestionario(AdicionarQuestionarioDto questionario)
+        catch (Exception e)
         {
-            try
-            {
-                questionario.UsuarioId = ObterUsuarioIdLogado();
-                var result = await _questionarioService.CadastrarQuestionario(questionario);
-
-                return Response(result);
-            }
-            catch (Exception e)
-            {
-                return ResponseErro(e.Message, "Erro ao incluir questionário");
-            }
+            return ResponseErro(e.Message, "Erro ao incluir questionário");
         }
+    }
 
 
-        /// <summary>
-        /// Altera um Questionário (Avaliador)
-        /// </summary>
-        [HttpPut]
-        [Authorize(Roles = $"{Perfis.Avaliador}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ResponseErro), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> AlterarQuestionario(AlterarQuestionarioDto questionario)
+    /// <summary>
+    /// Altera um Questionário (Avaliador)
+    /// </summary>
+    [HttpPut]
+    [Authorize(Roles = $"{Perfis.Avaliador}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponseErro), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> AlterarQuestionario(AlterarQuestionarioDto questionario)
+    {
+        try
         {
-            try
-            {
-                questionario.UsuarioId = ObterUsuarioIdLogado();
-                var result = await _questionarioService.AlterarQuestionario(questionario);
+            questionario.UsuarioId = ObterUsuarioIdLogado();
+            var result = await _questionarioService.AlterarQuestionario(questionario);
 
-                return Response(result);
-            }
-            catch (Exception e)
-            {
-                return ResponseErro(e.Message, "Erro ao alterar questionário");
-            }
+            return Response(result);
         }
-
-        /// <summary>
-        /// Exclui um Questionário (Avaliador)
-        /// </summary>
-        [HttpDelete("{id}")]
-        [Authorize(Roles = $"{Perfis.Avaliador}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ResponseErro), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> ExcluirQuestionario(Guid id)
+        catch (Exception e)
         {
-            try
-            {
-                var result = await _questionarioService.ExcluirQuestionario(ObterUsuarioIdLogado(), id);
-
-                return Response(result);
-            }
-            catch (Exception e)
-            {
-                return ResponseErro(e.Message, "Erro ao excluir questionario");
-            }
+            return ResponseErro(e.Message, "Erro ao alterar questionário");
         }
+    }
 
-        /// <summary>
-        /// Obém Questionários (Avaliador)
-        /// </summary>
-        /// <param name="questionarioId">Id do questionário (opcional)</param>
-        /// <param name="nome">Nome do questionário (opcional)</param>
-        [HttpGet]
-        [Authorize(Roles = $"{Perfis.Avaliador}")]
-        [ProducesResponseType(typeof(ICollection<QuestionarioViewModelAvaliador>), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<IActionResult> ObterQuestionariosPorFiltro([FromQuery] Guid questionarioId, [FromQuery] string? nome)
+    /// <summary>
+    /// Exclui um Questionário (Avaliador)
+    /// </summary>
+    [HttpDelete("{id}")]
+    [Authorize(Roles = $"{Perfis.Avaliador}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponseErro), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> ExcluirQuestionario(Guid id)
+    {
+        try
         {
-            try
-            {
-                var result =  await _questionarioService.ObterQuestionarios(ObterUsuarioIdLogado(), questionarioId, nome);
+            var result = await _questionarioService.ExcluirQuestionario(ObterUsuarioIdLogado(), id);
 
-                return Response(result);
-            }
-            catch (Exception e)
-            {
-                return ResponseErro(e.Message, "Erro ao obter questionários");
-            }
+            return Response(result);
         }
-
-        /// <summary>
-        /// Obém Questionário para realizar avaliação (Candidato)
-        /// </summary>
-        [HttpGet("ObterParaPreenchimento/{id}")]
-        [Authorize(Roles = $"{Perfis.Candidato}")]
-        [ProducesResponseType(typeof(QuestionarioViewModelCandidato), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<IActionResult> ObterQuestionarioParaPreenchimento([FromRoute] Guid id)
+        catch (Exception e)
         {
-            try
-            {
-                var result = await _questionarioService.ObterQuestionarioParaPreenchimento(ObterUsuarioIdLogado(), id);
-
-                return Response(result);
-            }
-            catch (Exception e)
-            {
-                return ResponseErro(e.Message, "Erro ao obter questionário");
-            }
+            return ResponseErro(e.Message, "Erro ao excluir questionario");
         }
+    }
 
-        /// <summary>
-        /// Obém estatísticas de um Questionário (Avaliador)
-        /// </summary>
-        /// <param name="id">Id do Questionário</param>
-        [HttpGet("Estatisticas/{id}")]
-        [Authorize(Roles = $"{Perfis.Avaliador}")]
-        [ProducesResponseType(typeof(QuestionarioEstatisticasViewModel), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<IActionResult> ObterEstatisticasQuestionario([FromRoute] Guid id)
+    /// <summary>
+    /// Obém Questionários (Avaliador)
+    /// </summary>
+    /// <param name="questionarioId">Id do questionário (opcional)</param>
+    /// <param name="nome">Nome do questionário (opcional)</param>
+    [HttpGet]
+    [Authorize(Roles = $"{Perfis.Avaliador}")]
+    [ProducesResponseType(typeof(ICollection<QuestionarioViewModelAvaliador>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> ObterQuestionariosPorFiltro([FromQuery] Guid questionarioId, [FromQuery] string? nome)
+    {
+        try
         {
-            try
-            {
-                var result = await _questionarioService.ObterEstatisticasQuestionario(ObterUsuarioIdLogado(), id);
+            var result = await _questionarioService.ObterQuestionarios(ObterUsuarioIdLogado(), questionarioId, nome);
 
-                return Response(result);
-            }
-            catch (Exception e)
-            {
-                return ResponseErro(e.Message, "Erro ao obter estatísticas do questionário");
-            }
+            return Response(result);
         }
-
-        /// <summary>
-        /// Obém notas de candidatos de um Questionario (Avaliador)
-        /// </summary>
-        /// <param name="id">Id do Questionário</param>
-        [HttpGet("Notas/{id}")]
-        [Authorize(Roles = $"{Perfis.Avaliador}")]
-        [ProducesResponseType(typeof(NotasQuestionariosViewModel), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<IActionResult> ObterNotasQuestionario([FromRoute] Guid id)
+        catch (Exception e)
         {
-            try
-            {
-                var result = await _questionarioService.ObterNotasQuestionario(ObterUsuarioIdLogado(), id);
+            return ResponseErro(e.Message, "Erro ao obter questionários");
+        }
+    }
 
-                return Response(result);
-            }
-            catch (Exception e)
-            {
-                return ResponseErro(e.Message, "Erro ao obter notas do questionário");
-            }
+    /// <summary>
+    /// Obém Questionário para realizar avaliação (Candidato)
+    /// </summary>
+    [HttpGet("ObterParaPreenchimento/{id}")]
+    [Authorize(Roles = $"{Perfis.Candidato}")]
+    [ProducesResponseType(typeof(QuestionarioViewModelCandidato), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> ObterQuestionarioParaPreenchimento([FromRoute] Guid id)
+    {
+        try
+        {
+            var result = await _questionarioService.ObterQuestionarioParaPreenchimento(ObterUsuarioIdLogado(), id);
+
+            return Response(result);
+        }
+        catch (Exception e)
+        {
+            return ResponseErro(e.Message, "Erro ao obter questionário");
+        }
+    }
+
+    /// <summary>
+    /// Obém estatísticas de um Questionário (Avaliador)
+    /// </summary>
+    /// <param name="id">Id do Questionário</param>
+    [HttpGet("Estatisticas/{id}")]
+    [Authorize(Roles = $"{Perfis.Avaliador}")]
+    [ProducesResponseType(typeof(QuestionarioEstatisticasViewModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> ObterEstatisticasQuestionario([FromRoute] Guid id)
+    {
+        try
+        {
+            var result = await _questionarioService.ObterEstatisticasQuestionario(ObterUsuarioIdLogado(), id);
+
+            return Response(result);
+        }
+        catch (Exception e)
+        {
+            return ResponseErro(e.Message, "Erro ao obter estatísticas do questionário");
+        }
+    }
+
+    /// <summary>
+    /// Obém notas de candidatos de um Questionario (Avaliador)
+    /// </summary>
+    /// <param name="id">Id do Questionário</param>
+    [HttpGet("Notas/{id}")]
+    [Authorize(Roles = $"{Perfis.Avaliador}")]
+    [ProducesResponseType(typeof(NotasQuestionariosViewModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> ObterNotasQuestionario([FromRoute] Guid id)
+    {
+        try
+        {
+            var result = await _questionarioService.ObterNotasQuestionario(ObterUsuarioIdLogado(), id);
+
+            return Response(result);
+        }
+        catch (Exception e)
+        {
+            return ResponseErro(e.Message, "Erro ao obter notas do questionário");
         }
     }
 }

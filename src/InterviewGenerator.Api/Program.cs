@@ -12,7 +12,7 @@ builder.Services.AddServices();
 builder.Services.AddValidators();
 builder.Services.AddSwaggerConfiguration();
 builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddContextConfig();
+builder.Services.AddContextConfig(builder.Configuration);
 builder.Configuration.AddJsonFile("appsettings.json").Build();
 builder.Services.AddJwtConfiguration(builder.Configuration);
 builder.Services.AddMassTransitConfigSender(builder.Configuration);

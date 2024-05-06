@@ -17,7 +17,7 @@ IHost host = Host.CreateDefaultBuilder(args)
         services.AddServices();
 
         //Context
-        services.AddContextConfig();
+        services.AddContextConfig(hostContext.Configuration);
 
     })
     .Build();
