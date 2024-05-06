@@ -22,6 +22,12 @@ jobs:
       - name: Compilando aplicação
         run: dotnet build --configuration Release
 
+      - name: Start SQL Container
+        run: docker-compose -f "docker-compose.yml" up -d --build
+
+      - name: Executando testes
+        run: dotnet test
+
       - name: Executando o publish da aplicação
         run: dotnet publish src/InterviewGenerator.Api/InterviewGenerator.Api.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
