@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
@@ -22,7 +22,7 @@ jobs:
       - name: Compilando aplicação
         run: dotnet build --configuration Release
 
-      - name: Start SQL Container
+      - name: Iniciando container SQL para testes integrados
         run: docker-compose -f "docker-compose.yml" up -d --build
 
       - name: Executando testes
