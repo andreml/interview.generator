@@ -26,10 +26,10 @@ jobs:
         run: docker-compose -f "docker-compose.yml" up -d --build
 
       - name: Testes Unitários
-        run: dotnet test **/*.UnitTests.csproj
+        run: dotnet test src/tests/InterviewGenerator.UnitTests/InterviewGenerator.UnitTests.csproj
 
       - name: Testes Integrados
-        run: dotnet test **/*.IntegrationTests.csproj
+        run: dotnet test src/tests/InterviewGenerator.IntegrationTests/InterviewGenerator.IntegrationTests.csproj
 
       - name: Executando o publish da aplicação
         run: dotnet publish src/InterviewGenerator.Api/InterviewGenerator.Api.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
