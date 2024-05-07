@@ -4,70 +4,68 @@ using InterviewGenerator.Application.Interfaces;
 using InterviewGenerator.Domain.Enum;
 using MassTransit;
 
-namespace InterviewGenerator.Worker.Consumer
+namespace InterviewGenerator.Worker.Consumer;
+
+public class EventoImportacaoPerguntasConsumer : IConsumer<ImportarPerguntaAsyncEvent>
 {
-    public class EventoImportacaoPerguntasConsumer : IConsumer<ImportarPerguntaAsyncEvent>
+    private readonly IPerguntaService _perguntaService;
+    private readonly IImportacaoPerguntasService _importacaoPerguntaService;
+    private readonly ILogger<Worker> _logger;
+
+    public EventoImportacaoPerguntasConsumer(IPerguntaService perguntaService, 
+                                             IImportacaoPerguntasService importacaoPerguntaService,
+                                             ILogger<Worker> logger)
     {
-        private readonly IPerguntaService _perguntaService;
-        private readonly IImportacaoPerguntasService _importacaoPerguntaService;
-        private readonly ILogger<Worker> _logger;
+        _perguntaService = perguntaService;
+        _importacaoPerguntaService = importacaoPerguntaService;
+        _logger = logger;
+    }
 
-        public EventoImportacaoPerguntasConsumer(IPerguntaService perguntaService, 
-                                                 IImportacaoPerguntasService importacaoPerguntaService,
-                                                 ILogger<Worker> logger)
+    public async Task Consume(ConsumeContext<ImportarPerguntaAsyncEvent> context)
+    {
+        _logger.LogInformation($"Arquivo IdControleImportacao: {context.Message.IdArquivo}");
+        var alterarLinhaDto = new AlterarLinhaArquivoDto
         {
-            _perguntaService = perguntaService;
-            _importacaoPerguntaService = importacaoPerguntaService;
-            _logger = logger;
-        }
+            DataProcessamento = DateTime.Now,
+            NumeroLinha = context.Message.NumeroLinha,
+            IdControleImportacao = context.Message.IdArquivo
+        };      
 
-        public async Task Consume(ConsumeContext<ImportarPerguntaAsyncEvent> context)
+        try
         {
-            _logger.LogInformation($"Arquivo IdControleImportacao: {context.Message.IdArquivo}");
-            var alterarLinhaDto = new AlterarLinhaArquivoDto
-            {
-                DataProcessamento = DateTime.Now,
-                NumeroLinha = context.Message.NumeroLinha,
-                IdControleImportacao = context.Message.IdArquivo
-            };      
+            var validation = new ImportarPerguntaAsyncEventValidator().Validate(context.Message);
 
-            try
+            if (validation.IsValid)
             {
-                var validation = new ImportarPerguntaAsyncEventValidator().Validate(context.Message);
+                var result = await _perguntaService.CadastrarPergunta(context.Message.IdUsuario, context.Message.Pergunta);
 
-                if (validation.IsValid)
+                if (result.HasError)
                 {
-                    var result = await _perguntaService.CadastrarPergunta(context.Message.IdUsuario, context.Message.Pergunta);
-
-                    if (result.HasError)
-                    {
-                        _logger.LogInformation($"Erro ao importar a linha {context.Message.NumeroLinha}");
-                        alterarLinhaDto.Erro = string.Join("; ", result.Erros);
-                        alterarLinhaDto.StatusImportacao = StatusLinhaArquivo.Erro;
-                    }
-                    else
-                    {
-                        _logger.LogInformation($"Linha {context.Message.NumeroLinha} importada!");
-                        alterarLinhaDto.StatusImportacao = StatusLinhaArquivo.Concluida;
-                    }
+                    _logger.LogInformation($"Erro ao importar a linha {context.Message.NumeroLinha}");
+                    alterarLinhaDto.Erro = string.Join("; ", result.Erros);
+                    alterarLinhaDto.StatusImportacao = StatusLinhaArquivo.Erro;
                 }
                 else
                 {
-                    _logger.LogInformation($"Pergunta na linha {context.Message.NumeroLinha} não foi validada!");
-                    alterarLinhaDto.Erro = string.Join("; ", validation.Errors);
-                    alterarLinhaDto.StatusImportacao = StatusLinhaArquivo.Erro;
+                    _logger.LogInformation($"Linha {context.Message.NumeroLinha} importada!");
+                    alterarLinhaDto.StatusImportacao = StatusLinhaArquivo.Concluida;
                 }
             }
-            catch (Exception)
+            else
             {
-                _logger.LogInformation($"Erro inesperado no arquivo Id {context.Message.IdArquivo}");
-                alterarLinhaDto.Erro = "Erro inesperado";
+                _logger.LogInformation($"Pergunta na linha {context.Message.NumeroLinha} não foi validada!");
+                alterarLinhaDto.Erro = string.Join("; ", validation.Errors);
                 alterarLinhaDto.StatusImportacao = StatusLinhaArquivo.Erro;
             }
-
-            _logger.LogInformation($"Finalizando processo atualizando linha {context.Message.NumeroLinha}");
-            await _importacaoPerguntaService.AtualizaLinhasArquivo(alterarLinhaDto);
         }
+        catch (Exception)
+        {
+            _logger.LogInformation($"Erro inesperado no arquivo Id {context.Message.IdArquivo}");
+            alterarLinhaDto.Erro = "Erro inesperado";
+            alterarLinhaDto.StatusImportacao = StatusLinhaArquivo.Erro;
+        }
+
+        _logger.LogInformation($"Finalizando processo atualizando linha {context.Message.NumeroLinha}");
+        await _importacaoPerguntaService.AtualizaLinhasArquivo(alterarLinhaDto);
     }
 }
-    

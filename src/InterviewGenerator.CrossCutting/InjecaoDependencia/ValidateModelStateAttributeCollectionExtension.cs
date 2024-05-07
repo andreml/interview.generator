@@ -3,27 +3,26 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Net;
 
-namespace InterviewGenerator.CrossCutting.InjecaoDependencia
+namespace InterviewGenerator.CrossCutting.InjecaoDependencia;
+
+public class ValidateModelStateAttributeCollectionExtension : ActionFilterAttribute
 {
-    public class ValidateModelStateAttributeCollectionExtension : ActionFilterAttribute
+    public override void OnActionExecuting(ActionExecutingContext context)
     {
-        public override void OnActionExecuting(ActionExecutingContext context)
+        if (!context.ModelState.IsValid)
         {
-            if (!context.ModelState.IsValid)
+            var errors = context.ModelState.Values.Where(v => v.Errors.Count > 0)
+                    .SelectMany(v => v.Errors)
+                    .Select(v => v.ErrorMessage)
+                    .ToList();
+
+            var responseErro = new ResponseErro()
             {
-                var errors = context.ModelState.Values.Where(v => v.Errors.Count > 0)
-                        .SelectMany(v => v.Errors)
-                        .Select(v => v.ErrorMessage)
-                        .ToList();
+                Codigo = 400,
+                Mensagens = errors
+            };
 
-                var responseErro = new ResponseErro()
-                {
-                    Codigo = 400,
-                    Mensagens = errors
-                };
-
-                context.Result = new JsonResult(responseErro) { StatusCode = (int)HttpStatusCode.BadRequest };
-            }
+            context.Result = new JsonResult(responseErro) { StatusCode = (int)HttpStatusCode.BadRequest };
         }
     }
 }

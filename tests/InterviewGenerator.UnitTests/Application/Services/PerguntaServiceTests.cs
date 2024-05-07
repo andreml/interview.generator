@@ -6,187 +6,186 @@ using InterviewGenerator.UnitTests.Fixtures;
 using Moq;
 using Xunit;
 
-namespace InterviewGenerator.UnitTests.Application.Services
+namespace InterviewGenerator.UnitTests.Application.Services;
+
+[Collection(nameof(PerguntaTestFixtureCollection))]
+public class PerguntaServiceTests
 {
-    [Collection(nameof(PerguntaTestFixtureCollection))]
-    public class PerguntaServiceTests
+    private readonly PerguntaTestFixture _perguntaTestFixture;
+
+    private readonly Mock<IPerguntaRepositorio> _repositorioMock;
+    private readonly Mock<IAreaConhecimentoService> _areaConhecimentoServiceMock;
+
+    private readonly PerguntaService _service;
+
+    public PerguntaServiceTests(PerguntaTestFixture perguntaTestFixture)
     {
-        private readonly PerguntaTestFixture _perguntaTestFixture;
+        _perguntaTestFixture = perguntaTestFixture;
 
-        private readonly Mock<IPerguntaRepositorio> _repositorioMock;
-        private readonly Mock<IAreaConhecimentoService> _areaConhecimentoServiceMock;
+        _repositorioMock = new Mock<IPerguntaRepositorio>();
+        _areaConhecimentoServiceMock = new Mock<IAreaConhecimentoService>();
 
-        private readonly PerguntaService _service;
+        _service = new PerguntaService(_repositorioMock.Object, _areaConhecimentoServiceMock.Object);
+    }
 
-        public PerguntaServiceTests(PerguntaTestFixture perguntaTestFixture)
-        {
-            _perguntaTestFixture = perguntaTestFixture;
+    [Fact]
+    [Trait("Categoria", "AlterarPergunta")]
+    public async Task AlterarPergunta_ShouldReturnErrorWhenQuestionNotFound()
+    {
+        // Arrange
+        _repositorioMock.Setup(x => x.ObterPerguntaPorId(It.IsAny<Guid>(), It.IsAny<Guid>()))
+            .ReturnsAsync(value: null);
 
-            _repositorioMock = new Mock<IPerguntaRepositorio>();
-            _areaConhecimentoServiceMock = new Mock<IAreaConhecimentoService>();
+        // Act
+        var result = await _service.AlterarPergunta(_perguntaTestFixture.GerarAlterarPerguntaDto());
 
-            _service = new PerguntaService(_repositorioMock.Object, _areaConhecimentoServiceMock.Object);
-        }
+        // Assert
+        Assert.True(result.HasError);
+        Assert.Contains("Pergunta não encontrada", result.Erros);
+    }
 
-        [Fact]
-        [Trait("Categoria", "AlterarPergunta")]
-        public async Task AlterarPergunta_ShouldReturnErrorWhenQuestionNotFound()
-        {
-            // Arrange
-            _repositorioMock.Setup(x => x.ObterPerguntaPorId(It.IsAny<Guid>(), It.IsAny<Guid>()))
-                .ReturnsAsync(value: null);
+    [Fact]
+    [Trait("Categoria", "AlterarPergunta")]
+    public async Task AlterarPergunta_ShouldReturnErrorWhenQuestionBeingUsedInQuiz()
+    {
+        // Arrange
+        _repositorioMock.Setup(x => x.ObterPerguntaPorId(It.IsAny<Guid>(), It.IsAny<Guid>()))
+            .ReturnsAsync(new Pergunta
+            {
+                Questionarios = new List<Questionario> { new Questionario() }
+            });
 
-            // Act
-            var result = await _service.AlterarPergunta(_perguntaTestFixture.GerarAlterarPerguntaDto());
+        // Act
+        var result = await _service.AlterarPergunta(_perguntaTestFixture.GerarAlterarPerguntaDto());
 
-            // Assert
-            Assert.True(result.HasError);
-            Assert.Contains("Pergunta não encontrada", result.Erros);
-        }
+        // Assert
+        Assert.True(result.HasError);
+        Assert.Contains("Já existem questionários cadastrados com esta pergunta", result.Erros);
+    }
 
-        [Fact]
-        [Trait("Categoria", "AlterarPergunta")]
-        public async Task AlterarPergunta_ShouldReturnErrorWhenQuestionBeingUsedInQuiz()
-        {
-            // Arrange
-            _repositorioMock.Setup(x => x.ObterPerguntaPorId(It.IsAny<Guid>(), It.IsAny<Guid>()))
-                .ReturnsAsync(new Pergunta
-                {
-                    Questionarios = new List<Questionario> { new Questionario() }
-                });
+    [Fact]
+    [Trait("Categoria", "AlterarPergunta")]
+    public async Task AlterarPergunta_ShouldUpdateQuestion()
+    {
+        // Arrange
+        _repositorioMock.Setup(x => x.ObterPerguntaPorId(It.IsAny<Guid>(), It.IsAny<Guid>()))
+            .ReturnsAsync(new Pergunta
+            {
+                Questionarios = new List<Questionario>()
+            });
 
-            // Act
-            var result = await _service.AlterarPergunta(_perguntaTestFixture.GerarAlterarPerguntaDto());
+        _areaConhecimentoServiceMock.Setup(x => x.ObterOuCriarAreaConhecimento(It.IsAny<Guid>(), It.IsAny<string>()))
+            .ReturnsAsync(new AreaConhecimento());
 
-            // Assert
-            Assert.True(result.HasError);
-            Assert.Contains("Já existem questionários cadastrados com esta pergunta", result.Erros);
-        }
+        // Act
+        var result = await _service.AlterarPergunta(_perguntaTestFixture.GerarAlterarPerguntaDto());
 
-        [Fact]
-        [Trait("Categoria", "AlterarPergunta")]
-        public async Task AlterarPergunta_ShouldUpdateQuestion()
-        {
-            // Arrange
-            _repositorioMock.Setup(x => x.ObterPerguntaPorId(It.IsAny<Guid>(), It.IsAny<Guid>()))
-                .ReturnsAsync(new Pergunta
-                {
-                    Questionarios = new List<Questionario>()
-                });
+        // Assert
+        Assert.False(result.HasError);
+        Assert.Empty(result.Erros);
+    }
 
-            _areaConhecimentoServiceMock.Setup(x => x.ObterOuCriarAreaConhecimento(It.IsAny<Guid>(), It.IsAny<string>()))
-                .ReturnsAsync(new AreaConhecimento());
+    [Fact]
+    [Trait("Categoria", "CadastrarPergunta")]
+    public async Task CadastrarPergunta_ShouldReturnErrorWhenInvalidUserId()
+    {
+        // Arrange
+        var invalidId = Guid.Empty;
 
-            // Act
-            var result = await _service.AlterarPergunta(_perguntaTestFixture.GerarAlterarPerguntaDto());
+        // Act
+        var result = await _service.CadastrarPergunta(invalidId, _perguntaTestFixture.GerarAdicionarPerguntaDto());
 
-            // Assert
-            Assert.False(result.HasError);
-            Assert.Empty(result.Erros);
-        }
+        // Assert
+        Assert.True(result.HasError);
+        Assert.Contains("UsuarioId inválido", result.Erros);
+    }
 
-        [Fact]
-        [Trait("Categoria", "CadastrarPergunta")]
-        public async Task CadastrarPergunta_ShouldReturnErrorWhenInvalidUserId()
-        {
-            // Arrange
-            var invalidId = Guid.Empty;
+    [Fact]
+    [Trait("Categoria", "CadastrarPergunta")]
+    public async Task CadastrarPergunta_ShouldReturnErrorWhenExistingQuestion()
+    {
+        // Arrange
+        _repositorioMock.Setup(x => x.ExistePorDescricao(It.IsAny<Guid>(), It.IsAny<string>()))
+            .ReturnsAsync(true);
 
-            // Act
-            var result = await _service.CadastrarPergunta(invalidId, _perguntaTestFixture.GerarAdicionarPerguntaDto());
+        // Act
+        var result = await _service.CadastrarPergunta(Guid.NewGuid(), _perguntaTestFixture.GerarAdicionarPerguntaDto());
 
-            // Assert
-            Assert.True(result.HasError);
-            Assert.Contains("UsuarioId inválido", result.Erros);
-        }
+        // Assert
+        Assert.True(result.HasError);
+        Assert.Contains("Pergunta já cadastrada", result.Erros);
+    }
 
-        [Fact]
-        [Trait("Categoria", "CadastrarPergunta")]
-        public async Task CadastrarPergunta_ShouldReturnErrorWhenExistingQuestion()
-        {
-            // Arrange
-            _repositorioMock.Setup(x => x.ExistePorDescricao(It.IsAny<Guid>(), It.IsAny<string>()))
-                .ReturnsAsync(true);
+    [Fact]
+    [Trait("Categoria", "CadastrarPergunta")]
+    public async Task CadastrarPergunta_ShouldCreateQuestion()
+    {
+        // Arrange
+        _repositorioMock.Setup(x => x.ExistePorDescricao(It.IsAny<Guid>(), It.IsAny<string>()))
+            .ReturnsAsync(false);
 
-            // Act
-            var result = await _service.CadastrarPergunta(Guid.NewGuid(), _perguntaTestFixture.GerarAdicionarPerguntaDto());
+        _areaConhecimentoServiceMock.Setup(x => x.ObterOuCriarAreaConhecimento(It.IsAny<Guid>(), It.IsAny<string>()))
+            .ReturnsAsync(new AreaConhecimento());
 
-            // Assert
-            Assert.True(result.HasError);
-            Assert.Contains("Pergunta já cadastrada", result.Erros);
-        }
+        // Act
+        var result = await _service.CadastrarPergunta(Guid.NewGuid(), _perguntaTestFixture.GerarAdicionarPerguntaDto());
 
-        [Fact]
-        [Trait("Categoria", "CadastrarPergunta")]
-        public async Task CadastrarPergunta_ShouldCreateQuestion()
-        {
-            // Arrange
-            _repositorioMock.Setup(x => x.ExistePorDescricao(It.IsAny<Guid>(), It.IsAny<string>()))
-                .ReturnsAsync(false);
+        // Assert
+        Assert.False(result.HasError);
+        Assert.Empty(result.Erros);
+    }
 
-            _areaConhecimentoServiceMock.Setup(x => x.ObterOuCriarAreaConhecimento(It.IsAny<Guid>(), It.IsAny<string>()))
-                .ReturnsAsync(new AreaConhecimento());
+    [Fact]
+    [Trait("Categoria", "ExcluirPergunta")]
+    public async Task ExcluirPergunta_ShouldReturnErrorWhenQuestionNotFound()
+    {
+        // Arrange
+        _repositorioMock.Setup(x => x.ObterPerguntaPorId(It.IsAny<Guid>(), It.IsAny<Guid>()))
+            .ReturnsAsync(value: null);
 
-            // Act
-            var result = await _service.CadastrarPergunta(Guid.NewGuid(), _perguntaTestFixture.GerarAdicionarPerguntaDto());
+        // Act
+        var result = await _service.ExcluirPergunta(Guid.NewGuid(), Guid.NewGuid());
 
-            // Assert
-            Assert.False(result.HasError);
-            Assert.Empty(result.Erros);
-        }
+        // Assert
+        Assert.True(result.HasError);
+        Assert.Contains("Pergunta não encontrada", result.Erros);
+    }
 
-        [Fact]
-        [Trait("Categoria", "ExcluirPergunta")]
-        public async Task ExcluirPergunta_ShouldReturnErrorWhenQuestionNotFound()
-        {
-            // Arrange
-            _repositorioMock.Setup(x => x.ObterPerguntaPorId(It.IsAny<Guid>(), It.IsAny<Guid>()))
-                .ReturnsAsync(value: null);
+    [Fact]
+    [Trait("Categoria", "ExcluirPergunta")]
+    public async Task ExcluirPergunta_ShouldReturnErrorWhenQuestionUsedInQuiz()
+    {
+        // Arrange
+        _repositorioMock.Setup(x => x.ObterPerguntaPorId(It.IsAny<Guid>(), It.IsAny<Guid>()))
+            .ReturnsAsync(new Pergunta
+            {
+                Questionarios = new List<Questionario> { new Questionario() }
+            });
 
-            // Act
-            var result = await _service.ExcluirPergunta(Guid.NewGuid(), Guid.NewGuid());
+        // Act
+        var result = await _service.ExcluirPergunta(Guid.NewGuid(), Guid.NewGuid());
 
-            // Assert
-            Assert.True(result.HasError);
-            Assert.Contains("Pergunta não encontrada", result.Erros);
-        }
+        // Assert
+        Assert.True(result.HasError);
+        Assert.Contains("Já existem questionários cadastrados com esta pergunta", result.Erros);
+    }
 
-        [Fact]
-        [Trait("Categoria", "ExcluirPergunta")]
-        public async Task ExcluirPergunta_ShouldReturnErrorWhenQuestionUsedInQuiz()
-        {
-            // Arrange
-            _repositorioMock.Setup(x => x.ObterPerguntaPorId(It.IsAny<Guid>(), It.IsAny<Guid>()))
-                .ReturnsAsync(new Pergunta
-                {
-                    Questionarios = new List<Questionario> { new Questionario() }
-                });
+    [Fact]
+    [Trait("Categoria", "ExcluirPergunta")]
+    public async Task ExcluirPergunta_ShouldDeleteQuestion()
+    {
+        // Arrange
+        _repositorioMock.Setup(x => x.ObterPerguntaPorId(It.IsAny<Guid>(), It.IsAny<Guid>()))
+            .ReturnsAsync(new Pergunta
+            {
+                Questionarios = new List<Questionario>()
+            });
 
-            // Act
-            var result = await _service.ExcluirPergunta(Guid.NewGuid(), Guid.NewGuid());
+        // Act
+        var result = await _service.ExcluirPergunta(Guid.NewGuid(), Guid.NewGuid());
 
-            // Assert
-            Assert.True(result.HasError);
-            Assert.Contains("Já existem questionários cadastrados com esta pergunta", result.Erros);
-        }
-
-        [Fact]
-        [Trait("Categoria", "ExcluirPergunta")]
-        public async Task ExcluirPergunta_ShouldDeleteQuestion()
-        {
-            // Arrange
-            _repositorioMock.Setup(x => x.ObterPerguntaPorId(It.IsAny<Guid>(), It.IsAny<Guid>()))
-                .ReturnsAsync(new Pergunta
-                {
-                    Questionarios = new List<Questionario>()
-                });
-
-            // Act
-            var result = await _service.ExcluirPergunta(Guid.NewGuid(), Guid.NewGuid());
-
-            // Assert
-            Assert.False(result.HasError);
-            Assert.Empty(result.Erros);
-        }
+        // Assert
+        Assert.False(result.HasError);
+        Assert.Empty(result.Erros);
     }
 }
