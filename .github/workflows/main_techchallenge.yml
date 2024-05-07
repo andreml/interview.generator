@@ -25,8 +25,11 @@ jobs:
       - name: Iniciando container SQL para testes integrados
         run: docker-compose -f "docker-compose.yml" up -d --build
 
-      - name: Executando testes
-        run: dotnet test
+      - name: Testes Unitários
+        run: dotnet test **/*.UnitTests.csproj
+
+      - name: Testes Integrados
+        run: dotnet test **/*.IntegrationTests.csproj
 
       - name: Executando o publish da aplicação
         run: dotnet publish src/InterviewGenerator.Api/InterviewGenerator.Api.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
