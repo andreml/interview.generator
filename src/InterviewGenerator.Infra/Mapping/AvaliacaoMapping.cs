@@ -2,29 +2,28 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace InterviewGenerator.Infra.Mapping
+namespace InterviewGenerator.Infra.Mapping;
+
+public class AvaliacaoMapping : IEntityTypeConfiguration<Avaliacao>
 {
-    public class AvaliacaoMapping : IEntityTypeConfiguration<Avaliacao>
+    public void Configure(EntityTypeBuilder<Avaliacao> builder)
     {
-        public void Configure(EntityTypeBuilder<Avaliacao> builder)
-        {
-            builder.HasKey(x => x.Id);
+        builder.HasKey(x => x.Id);
 
-            builder
-                .Property(x => x.DataAplicacao)
-                .IsRequired();
+        builder
+            .Property(x => x.DataAplicacao)
+            .IsRequired();
 
-            builder
-                .Property(x => x.ObservacaoAplicador)
-                .HasColumnType("VARCHAR(500)");
+        builder
+            .Property(x => x.ObservacaoAplicador)
+            .HasColumnType("VARCHAR(500)");
 
-            builder
-                .Property(x => x.Nota)
-                .IsRequired()
-                .HasPrecision(10, 2);
+        builder
+            .Property(x => x.Nota)
+            .IsRequired()
+            .HasPrecision(10, 2);
 
-            builder
-                .HasOne(x => x.Candidato);
-        }
+        builder
+            .HasOne(x => x.Candidato);
     }
 }

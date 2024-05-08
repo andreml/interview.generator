@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
@@ -21,6 +21,15 @@ jobs:
 
       - name: Compilando aplicação
         run: dotnet build --configuration Release
+
+      - name: Iniciando container SQL Server para testes integrados
+        run: docker-compose -f "docker-compose.yml" up -d --build
+
+      - name: Testes Unitários
+        run: dotnet test tests/InterviewGenerator.UnitTests/InterviewGenerator.UnitTests.csproj
+
+      - name: Testes Integrados
+        run: dotnet test tests/InterviewGenerator.IntegrationTests/InterviewGenerator.IntegrationTests.csproj
 
       - name: Executando o publish da aplicação
         run: dotnet publish src/InterviewGenerator.Api/InterviewGenerator.Api.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp

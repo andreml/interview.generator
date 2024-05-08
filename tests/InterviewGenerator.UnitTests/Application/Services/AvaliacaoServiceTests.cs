@@ -5,192 +5,191 @@ using InterviewGenerator.UnitTests.Fixtures;
 using Moq;
 using Xunit;
 
-namespace InterviewGenerator.UnitTests.Application.Services
+namespace InterviewGenerator.UnitTests.Application.Services;
+
+[Collection(nameof(AvaliacaoTestFixtureCollection))]
+public class AvaliacaoServiceTests
 {
-    [Collection(nameof(AvaliacaoTestFixtureCollection))]
-    public class AvaliacaoServiceTests
+    private readonly AvaliacaoTestFixture _avaliacaoTestFixture;
+
+    private readonly Mock<IAvaliacaoRepositorio> _avaliacaoRepositorioMock;
+    private readonly Mock<IQuestionarioRepositorio> _questionarioRepositorioMock;
+    private readonly Mock<IUsuarioRepositorio> _usuarioRepositorioMock;
+
+    private readonly AvaliacaoService _service;
+
+    public AvaliacaoServiceTests(AvaliacaoTestFixture avaliacaoTestFixture)
     {
-        private readonly AvaliacaoTestFixture _avaliacaoTestFixture;
+        _avaliacaoTestFixture = avaliacaoTestFixture;
 
-        private readonly Mock<IAvaliacaoRepositorio> _avaliacaoRepositorioMock;
-        private readonly Mock<IQuestionarioRepositorio> _questionarioRepositorioMock;
-        private readonly Mock<IUsuarioRepositorio> _usuarioRepositorioMock;
+        _avaliacaoRepositorioMock = new Mock<IAvaliacaoRepositorio>();
+        _questionarioRepositorioMock = new Mock<IQuestionarioRepositorio>();
+        _usuarioRepositorioMock = new Mock<IUsuarioRepositorio>();
 
-        private readonly AvaliacaoService _service;
+        _service = new AvaliacaoService(_avaliacaoRepositorioMock.Object, _questionarioRepositorioMock.Object, _usuarioRepositorioMock.Object);
+    }
 
-        public AvaliacaoServiceTests(AvaliacaoTestFixture avaliacaoTestFixture)
-        {
-            _avaliacaoTestFixture = avaliacaoTestFixture;
+    [Fact]
+    [Trait("Categoria", "AdicionarAvaliacao")]
+    public async Task AdicionarAvaliacao_ShouldReturnErrorWhenQuizNotFound()
+    {
+        // Arrange
+        _questionarioRepositorioMock.Setup(x => x.ObterPorId(It.IsAny<Guid>()))
+            .ReturnsAsync(value: null);
 
-            _avaliacaoRepositorioMock = new Mock<IAvaliacaoRepositorio>();
-            _questionarioRepositorioMock = new Mock<IQuestionarioRepositorio>();
-            _usuarioRepositorioMock = new Mock<IUsuarioRepositorio>();
+        // Act
+        var result = await _service.AdicionarAvaliacao(_avaliacaoTestFixture.GerarAdicionarAvaliacaoDto());
 
-            _service = new AvaliacaoService(_avaliacaoRepositorioMock.Object, _questionarioRepositorioMock.Object, _usuarioRepositorioMock.Object);
-        }
+        // Assert
+        Assert.True(result.HasError);
+        Assert.Contains("Questionário não encontrado", result.Erros);
+    }
 
-        [Fact]
-        [Trait("Categoria", "AdicionarAvaliacao")]
-        public async Task AdicionarAvaliacao_ShouldReturnErrorWhenQuizNotFound()
-        {
-            // Arrange
-            _questionarioRepositorioMock.Setup(x => x.ObterPorId(It.IsAny<Guid>()))
-                .ReturnsAsync(value: null);
+    [Fact]
+    [Trait("Categoria", "AdicionarAvaliacao")]
+    public async Task AdicionarAvaliacao_ShouldReturnErrorWhenQuizAlreadySent()
+    {
+        // Arrange
+        var adicionarAvaliacaoDto = _avaliacaoTestFixture.GerarAdicionarAvaliacaoDto();
 
-            // Act
-            var result = await _service.AdicionarAvaliacao(_avaliacaoTestFixture.GerarAdicionarAvaliacaoDto());
-
-            // Assert
-            Assert.True(result.HasError);
-            Assert.Contains("Questionário não encontrado", result.Erros);
-        }
-
-        [Fact]
-        [Trait("Categoria", "AdicionarAvaliacao")]
-        public async Task AdicionarAvaliacao_ShouldReturnErrorWhenQuizAlreadySent()
-        {
-            // Arrange
-            var adicionarAvaliacaoDto = _avaliacaoTestFixture.GerarAdicionarAvaliacaoDto();
-
-            _questionarioRepositorioMock.Setup(x => x.ObterPorId(It.IsAny<Guid>()))
-                .ReturnsAsync(new Questionario
+        _questionarioRepositorioMock.Setup(x => x.ObterPorId(It.IsAny<Guid>()))
+            .ReturnsAsync(new Questionario
+            {
+                Avaliacoes = new List<Avaliacao>
                 {
-                    Avaliacoes = new List<Avaliacao>
+                    new Avaliacao
                     {
-                        new Avaliacao
+                        Candidato = new Usuario
                         {
-                            Candidato = new Usuario
-                            {
-                                Id = adicionarAvaliacaoDto.CandidatoId
-                            }
+                            Id = adicionarAvaliacaoDto.CandidatoId
                         }
                     }
-                });
+                }
+            });
 
-            // Act
-            var result = await _service.AdicionarAvaliacao(adicionarAvaliacaoDto);
+        // Act
+        var result = await _service.AdicionarAvaliacao(adicionarAvaliacaoDto);
 
-            // Assert
-            Assert.True(result.HasError);
-            Assert.Contains("Candidato já respondeu este questionário", result.Erros);
-        }
+        // Assert
+        Assert.True(result.HasError);
+        Assert.Contains("Candidato já respondeu este questionário", result.Erros);
+    }
 
-        [Fact]
-        [Trait("Categoria", "AdicionarAvaliacao")]
-        public async Task AdicionarAvaliacao_ShouldReturnErrorWhenQuestionNotAnswered()
-        {
-            // Arrange
-            _questionarioRepositorioMock.Setup(x => x.ObterPorId(It.IsAny<Guid>()))
-                .ReturnsAsync(new Questionario
+    [Fact]
+    [Trait("Categoria", "AdicionarAvaliacao")]
+    public async Task AdicionarAvaliacao_ShouldReturnErrorWhenQuestionNotAnswered()
+    {
+        // Arrange
+        _questionarioRepositorioMock.Setup(x => x.ObterPorId(It.IsAny<Guid>()))
+            .ReturnsAsync(new Questionario
+            {
+                Avaliacoes = new List<Avaliacao>(),
+                Perguntas = new List<Pergunta>
                 {
-                    Avaliacoes = new List<Avaliacao>(),
-                    Perguntas = new List<Pergunta>
+                    new Pergunta
                     {
-                        new Pergunta
-                        {
-                            Id = Guid.NewGuid()
-                        }
+                        Id = Guid.NewGuid()
                     }
-                });
+                }
+            });
 
-            // Act
-            var result = await _service.AdicionarAvaliacao(_avaliacaoTestFixture.GerarAdicionarAvaliacaoDto());
+        // Act
+        var result = await _service.AdicionarAvaliacao(_avaliacaoTestFixture.GerarAdicionarAvaliacaoDto());
 
-            // Assert
-            Assert.True(result.HasError);
-            Assert.Contains("Uma ou mais perguntas não foram respondidas", result.Erros);
-        }
+        // Assert
+        Assert.True(result.HasError);
+        Assert.Contains("Uma ou mais perguntas não foram respondidas", result.Erros);
+    }
 
-        [Fact]
-        [Trait("Categoria", "AdicionarAvaliacao")]
-        public async Task AdicionarAvaliacao_ShouldReturnErrorWhenQuestionWithInvalidAnswer()
+    [Fact]
+    [Trait("Categoria", "AdicionarAvaliacao")]
+    public async Task AdicionarAvaliacao_ShouldReturnErrorWhenQuestionWithInvalidAnswer()
+    {
+        // Arrange
+        var adicionarAvaliacaoDto = _avaliacaoTestFixture.GerarAdicionarAvaliacaoDto();
+
+        var questionario = new Questionario
         {
-            // Arrange
-            var adicionarAvaliacaoDto = _avaliacaoTestFixture.GerarAdicionarAvaliacaoDto();
+            Avaliacoes = new List<Avaliacao>()
+        };
 
-            var questionario = new Questionario
-            {
-                Avaliacoes = new List<Avaliacao>()
-            };
-
-            questionario.Perguntas = adicionarAvaliacaoDto.Respostas.Select(x => new Pergunta
-            {
-                Id = x.PerguntaId,
-                Alternativas = new List<Alternativa> { new Alternativa { Id = x.AlternativaId, Correta = true } }
-            }).ToList();
-
-            questionario.Perguntas[0].Alternativas[0].Id = Guid.NewGuid();
-
-            _questionarioRepositorioMock.Setup(x => x.ObterPorId(It.IsAny<Guid>()))
-                .ReturnsAsync(questionario);
-
-            // Act
-            var result = await _service.AdicionarAvaliacao(adicionarAvaliacaoDto);
-
-            // Assert
-            Assert.True(result.HasError);
-            Assert.Contains("Uma ou mais perguntas estão com respostas inválidas", result.Erros);
-        }
-
-        [Fact]
-        [Trait("Categoria", "AdicionarAvaliacao")]
-        public async Task AdicionarAvaliacao_ShouldCreateAssessment()
+        questionario.Perguntas = adicionarAvaliacaoDto.Respostas.Select(x => new Pergunta
         {
-            // Arrange
-            var adicionarAvaliacaoDto = _avaliacaoTestFixture.GerarAdicionarAvaliacaoDto();
+            Id = x.PerguntaId,
+            Alternativas = new List<Alternativa> { new Alternativa { Id = x.AlternativaId, Correta = true } }
+        }).ToList();
 
-            var questionario = new Questionario
-            {
-                Avaliacoes = new List<Avaliacao>()
-            };
+        questionario.Perguntas[0].Alternativas[0].Id = Guid.NewGuid();
 
-            questionario.Perguntas = adicionarAvaliacaoDto.Respostas.Select(x => new Pergunta
-            {
-                Id = x.PerguntaId,
-                Alternativas = new List<Alternativa> { new Alternativa { Id = x.AlternativaId, Correta = true } }
-            }).ToList();
+        _questionarioRepositorioMock.Setup(x => x.ObterPorId(It.IsAny<Guid>()))
+            .ReturnsAsync(questionario);
 
-            _questionarioRepositorioMock.Setup(x => x.ObterPorId(It.IsAny<Guid>()))
-                .ReturnsAsync(questionario);
+        // Act
+        var result = await _service.AdicionarAvaliacao(adicionarAvaliacaoDto);
 
-            // Act
-            var result = await _service.AdicionarAvaliacao(adicionarAvaliacaoDto);
+        // Assert
+        Assert.True(result.HasError);
+        Assert.Contains("Uma ou mais perguntas estão com respostas inválidas", result.Erros);
+    }
 
-            // Assert
-            Assert.False(result.HasError);
-            Assert.Empty(result.Erros);
-        }
+    [Fact]
+    [Trait("Categoria", "AdicionarAvaliacao")]
+    public async Task AdicionarAvaliacao_ShouldCreateAssessment()
+    {
+        // Arrange
+        var adicionarAvaliacaoDto = _avaliacaoTestFixture.GerarAdicionarAvaliacaoDto();
 
-        [Fact]
-        [Trait("Categoria", "AdicionarObservacaoAvaliacao")]
-        public async Task AdicionarObservacaoAvaliacao_ShouldReturnErrorWhenQuizNotFound()
+        var questionario = new Questionario
         {
-            // Arrange
-            _avaliacaoRepositorioMock.Setup(x => x.ObterAvaliacaoPorIdEUsuarioCriacaoQuestionario(It.IsAny<Guid>(), It.IsAny<Guid>()))
-                .ReturnsAsync(value: null);
+            Avaliacoes = new List<Avaliacao>()
+        };
 
-            // Act
-            var result = await _service.AdicionarObservacaoAvaliacao(_avaliacaoTestFixture.GerarAdicionarObservacaoAvaliadorDto());
-
-            // Assert
-            Assert.True(result.HasError);
-            Assert.Contains("Avaliação não existe", result.Erros);
-        }
-
-        [Fact]
-        [Trait("Categoria", "AdicionarObservacaoAvaliacao")]
-        public async Task AdicionarObservacaoAvaliacao_ShouldAddNote()
+        questionario.Perguntas = adicionarAvaliacaoDto.Respostas.Select(x => new Pergunta
         {
-            // Arrange
-            _avaliacaoRepositorioMock.Setup(x => x.ObterAvaliacaoPorIdEUsuarioCriacaoQuestionario(It.IsAny<Guid>(), It.IsAny<Guid>()))
-                .ReturnsAsync(new Avaliacao());
+            Id = x.PerguntaId,
+            Alternativas = new List<Alternativa> { new Alternativa { Id = x.AlternativaId, Correta = true } }
+        }).ToList();
 
-            // Act
-            var result = await _service.AdicionarObservacaoAvaliacao(_avaliacaoTestFixture.GerarAdicionarObservacaoAvaliadorDto());
+        _questionarioRepositorioMock.Setup(x => x.ObterPorId(It.IsAny<Guid>()))
+            .ReturnsAsync(questionario);
 
-            // Assert
-            Assert.False(result.HasError);
-            Assert.Empty(result.Erros);
-        }
+        // Act
+        var result = await _service.AdicionarAvaliacao(adicionarAvaliacaoDto);
+
+        // Assert
+        Assert.False(result.HasError);
+        Assert.Empty(result.Erros);
+    }
+
+    [Fact]
+    [Trait("Categoria", "AdicionarObservacaoAvaliacao")]
+    public async Task AdicionarObservacaoAvaliacao_ShouldReturnErrorWhenQuizNotFound()
+    {
+        // Arrange
+        _avaliacaoRepositorioMock.Setup(x => x.ObterAvaliacaoPorIdEUsuarioCriacaoQuestionario(It.IsAny<Guid>(), It.IsAny<Guid>()))
+            .ReturnsAsync(value: null);
+
+        // Act
+        var result = await _service.AdicionarObservacaoAvaliacao(_avaliacaoTestFixture.GerarAdicionarObservacaoAvaliadorDto());
+
+        // Assert
+        Assert.True(result.HasError);
+        Assert.Contains("Avaliação não existe", result.Erros);
+    }
+
+    [Fact]
+    [Trait("Categoria", "AdicionarObservacaoAvaliacao")]
+    public async Task AdicionarObservacaoAvaliacao_ShouldAddNote()
+    {
+        // Arrange
+        _avaliacaoRepositorioMock.Setup(x => x.ObterAvaliacaoPorIdEUsuarioCriacaoQuestionario(It.IsAny<Guid>(), It.IsAny<Guid>()))
+            .ReturnsAsync(new Avaliacao());
+
+        // Act
+        var result = await _service.AdicionarObservacaoAvaliacao(_avaliacaoTestFixture.GerarAdicionarObservacaoAvaliadorDto());
+
+        // Assert
+        Assert.False(result.HasError);
+        Assert.Empty(result.Erros);
     }
 }

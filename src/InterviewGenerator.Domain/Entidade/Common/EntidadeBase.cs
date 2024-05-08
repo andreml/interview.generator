@@ -1,10 +1,9 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace InterviewGenerator.Domain.Entidade.Common
+namespace InterviewGenerator.Domain.Entidade.Common;
+
+public class EntidadeBase
 {
-    public class EntidadeBase
-    {
-        [JsonPropertyOrder(1)]
-        [JsonPropertyName("Id")] public Guid Id { get; set; }
-    }
+    [JsonPropertyOrder(1)]
+    [JsonPropertyName("Id")] public Guid Id { get; set; }
 }

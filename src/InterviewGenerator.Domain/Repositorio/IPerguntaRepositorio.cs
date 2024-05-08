@@ -1,12 +1,11 @@
 ﻿using InterviewGenerator.Domain.Entidade;
 
-namespace InterviewGenerator.Domain.Repositorio
+namespace InterviewGenerator.Domain.Repositorio;
+
+public interface IPerguntaRepositorio : ICommonRepository<Pergunta>
 {
-    public interface IPerguntaRepositorio : ICommonRepository<Pergunta>
-    {
-        Task<bool> ExistePorDescricao(Guid usuarioCriacaoId, string descricao);
-        IEnumerable<Pergunta> ObterPerguntas(Guid usuarioCriacaoId, Guid perguntaId, string? areaConhecimento, string? descricao);
-        Task<Pergunta?> ObterPerguntaPorId(Guid usuarioCriacaoId, Guid perguntaId);
-        Task Excluir(Pergunta entity);
-    }
+    Task<bool> ExistePorDescricao(Guid usuarioCriacaoId, string descricao);
+    IEnumerable<Pergunta> ObterPerguntas(Guid usuarioCriacaoId, Guid perguntaId, string? areaConhecimento, string? descricao);
+    Task<Pergunta?> ObterPerguntaPorId(Guid usuarioCriacaoId, Guid perguntaId);
+    Task Excluir(Pergunta entity);
 }

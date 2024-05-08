@@ -1,9 +1,8 @@
 ﻿using InterviewGenerator.Domain.Entidade.Common;
 
-namespace InterviewGenerator.Application.Interfaces
+namespace InterviewGenerator.Application.Interfaces;
+
+public interface IMassTransitService
 {
-    public interface IMassTransitService
-    {
-        Task<ResponseBase> InserirMensagem(object modelMensagem, string fila);
-    }
+    Task<ResponseBase> InserirMensagem(object modelMensagem, string fila);
 }

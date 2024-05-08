@@ -1,9 +1,8 @@
 ﻿using InterviewGenerator.Domain.Entidade;
 
-namespace InterviewGenerator.Domain.Repositorio
+namespace InterviewGenerator.Domain.Repositorio;
+
+public interface IControleImportacaoPerguntasRepositorio : ICommonRepository<ControleImportacaoPerguntas>
 {
-    public interface IControleImportacaoPerguntasRepositorio : ICommonRepository<ControleImportacaoPerguntas>
-    {
-        Task<IEnumerable<ControleImportacaoPerguntas>> ObterControlesImportacao(Guid usuarioId);
-    }
+    Task<IEnumerable<ControleImportacaoPerguntas>> ObterControlesImportacao(Guid usuarioId);
 }
