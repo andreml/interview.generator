@@ -9,7 +9,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
 
@@ -19,8 +18,10 @@ jobs:
           dotnet-version: '7.x'
           include-prerelease: true
 
-      - name: Compilando aplicação
-        run: dotnet build --configuration Release
+      - name: Build e Publish
+        run: |
+          dotnet build
+          dotnet publish src/InterviewGenerator.Api/InterviewGenerator.Api.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Iniciando container SQL Server para testes integrados
         run: docker-compose -f "docker-compose.yml" up -d --build
@@ -30,9 +31,6 @@ jobs:
 
       - name: Testes Integrados
         run: dotnet test tests/InterviewGenerator.IntegrationTests/InterviewGenerator.IntegrationTests.csproj
-
-      - name: Executando o publish da aplicação
-        run: dotnet publish src/InterviewGenerator.Api/InterviewGenerator.Api.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Carregando os pacotes para o Job de Deploy
         uses: actions/upload-artifact@v3
@@ -52,6 +50,13 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: .net-app
+
+      - name: App Settings Variable Substitution
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: 'appsettings.json'
+        env:
+          ConnectionStrings.DataBase: ${{ secrets.CONNECTIONSTRING }}
 
       - name: Deploy para o Azure Web App
         id: deploy-to-webapp
