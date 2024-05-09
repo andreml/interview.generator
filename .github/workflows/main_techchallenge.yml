@@ -9,7 +9,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
 
@@ -23,9 +22,6 @@ jobs:
         run: |
           dotnet build
           dotnet publish src/InterviewGenerator.Api/InterviewGenerator.Api.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
-
-      - name: Replace Connection String
-        run: sed -i "s|{{DbConnectionString}}|${{ secrets.CONNECTIONSTRING }}|g" ${{env.DOTNET_ROOT}}/myapp/appsettings.json
 
       - name: Iniciando container SQL Server para testes integrados
         run: docker-compose -f "docker-compose.yml" up -d --build
@@ -54,6 +50,9 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: .net-app
+
+      - name: Replace Connection String
+        run: sed -i "s|{{DbConnectionString}}|${{ secrets.CONNECTIONSTRING }}|g" .net-app/appsettings.json
 
       - name: Deploy para o Azure Web App
         id: deploy-to-webapp
