@@ -25,7 +25,7 @@ jobs:
           dotnet publish src/InterviewGenerator.Api/InterviewGenerator.Api.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Replace Connection String
-        run: sed -i "s|{{DbConnectionString}}|${{ secrets.CONNECTIONSTRING }}|g" ./myapp/appsettings.json
+        run: sed -i "s|{{DbConnectionString}}|${{ secrets.CONNECTIONSTRING }}|g" ${{env.DOTNET_ROOT}}/myapp/appsettings.json
 
       - name: Iniciando container SQL Server para testes integrados
         run: docker-compose -f "docker-compose.yml" up -d --build
