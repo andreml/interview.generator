@@ -52,7 +52,7 @@ jobs:
           name: .net-app
 
       - name: Replace Connection String
-        run: sed -i "s|{{DbConnectionString}}|${{ secrets.CONNECTIONSTRING }}|g" .net-app/appsettings.json
+        run: sed -i "s|{{DbConnectionString}}|${{ secrets.CONNECTIONSTRING }}|g" appsettings.json
 
       - name: Deploy para o Azure Web App
         id: deploy-to-webapp
