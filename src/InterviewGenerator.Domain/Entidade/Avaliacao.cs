@@ -6,14 +6,16 @@ public class Avaliacao : EntidadeBase
 {
     public Usuario Candidato { get; set; } = default!;
     public Questionario Questionario { get; set; } = default!;
-    public DateTime DataAplicacao { get; set; }
+    public DateTime DataEnvio { get; set; }
+    public DateTime? DataResposta { get; set; }
     public string ObservacaoAplicador { get; set; } = default!;
-    public decimal Nota { get; set; }
-    public ICollection<RespostaAvaliacao> Respostas { get; set; } = default!;
+    public decimal? Nota { get; set; }
+    public ICollection<RespostaAvaliacao>? Respostas { get; set; } = default!;
+    public bool Respondida { get; set; }
 
     public Avaliacao()
     {
-        DataAplicacao = DateTime.Now;
+        DataEnvio = DateTime.Now;
     }
 
     public void AdicionarObservacao(string observacao) =>
@@ -22,7 +24,7 @@ public class Avaliacao : EntidadeBase
     public void CalcularNota()
     {
         var totalPerguntas = Questionario.Perguntas.Count;
-        var acertos = Respostas.Where(r => r.AlternativaEscolhida.Correta).Count();
+        var acertos = Respostas!.Where(r => r.AlternativaEscolhida.Correta).Count();
 
         Nota = decimal.Round(((decimal)acertos / totalPerguntas) * 100, 2);
     }

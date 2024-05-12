@@ -25,7 +25,7 @@ public class AvaliacaoController : BaseController
     /// <param name="QuestionarioId">Id do questionário (opcional)</param>
     /// <param name="nomeQuestionario">Nome do questionário (opcional)</param>
     /// <param name="nomeCandidato">Nome do candidato (opcional)</param>
-    [HttpGet]
+    [HttpGet()]
     [Authorize(Roles = $"{Perfis.Avaliador}")]
     [ProducesResponseType(typeof(IEnumerable<AvaliacaoViewModel>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -44,24 +44,46 @@ public class AvaliacaoController : BaseController
     }
 
     /// <summary>
-    /// Adiciona a Avaliação do candidato (Candidato)
+    /// Adiciona as respostas da Avaliação do candidato (Candidato)
     /// </summary>
-    [HttpPost]
+    [HttpGet("obterParaResponder/{avaliacaoId}")]
     [Authorize(Roles = $"{Perfis.Candidato}")]
-    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(IEnumerable<ResponderAvaliacaoViewModel>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ResponseErro), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> AdicionarAvaliacaoAsync(AdicionarAvaliacaoDto obj)
+    public async Task<IActionResult> ObterAvaliacaoParaResponderAsync([FromRoute] Guid avaliacaoId)
     {
         try
         {
-            obj.CandidatoId = ObterUsuarioIdLogado();
-            var result = await _avaliacaoService.AdicionarAvaliacao(obj);
+            var result = await _avaliacaoService.ObterAvaliacaoParaResponderAsync(ObterUsuarioIdLogado(), avaliacaoId);
 
             return Response(result);
         }
         catch (Exception e)
         {
-            return ResponseErro(e.Message, "Erro ao adicionar avaliação");
+            return ResponseErro(e.Message, "Erro ao responder avaliação");
+        }
+    }
+
+    /// <summary>
+    /// Adiciona as respostas da Avaliação do candidato (Candidato)
+    /// </summary>
+    [HttpPut("responder")]
+    [Authorize(Roles = $"{Perfis.Candidato}")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ResponseErro), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> ResponderAvaliacaoAsync(ResponderAvaliacaoDto obj)
+    {
+        try
+        {
+            obj.CandidatoId = ObterUsuarioIdLogado();
+            var result = await _avaliacaoService.ResponderAvaliacao(obj);
+
+            return Response(result);
+        }
+        catch (Exception e)
+        {
+            return ResponseErro(e.Message, "Erro ao responder avaliação");
         }
     }
 
@@ -84,6 +106,50 @@ public class AvaliacaoController : BaseController
         catch (Exception e)
         {
             return ResponseErro(e.Message, "Erro ao adicionar observação");
+        }
+    }
+
+    /// <summary>
+    /// Obtém Avaliações (pendentes e respondidas) do candidato (Candidato)
+    /// </summary>
+    [HttpGet("candidato")]
+    [Authorize(Roles = $"{Perfis.Candidato}")]
+    [ProducesResponseType(typeof(IEnumerable<AvaliacaoCandidatoViewModel>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> ObterAvaliacoesCandidato()
+    {
+        try
+        {
+            var result = await _avaliacaoService.ObterAvaliacoesCandidato(ObterUsuarioIdLogado());
+
+            return Response(result);
+        }
+        catch (Exception e)
+        {
+            return ResponseErro(e.Message, "Erro ao obter avaliações do candidato");
+        }
+    }
+
+    /// <summary>
+    /// Envia uma avaliação para um candidato responder (Avaliador)
+    /// </summary>
+    [HttpPost("enviar")]
+    [Authorize(Roles = $"{Perfis.Avaliador}")]
+    [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ResponseErro), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> EnviarAvaliacaoParaCandidatoAsync([FromBody] EnviarAvaliacaoParaCandidatoDto dto)
+    {
+        try
+        {
+            dto.UsuarioId = ObterUsuarioIdLogado();
+
+            var result = await _avaliacaoService.EnviarAvaliacaoParaCandidatoAsync(dto);
+
+            return Response(result);
+        }
+        catch (Exception e)
+        {
+            return ResponseErro(e.Message, "Erro ao obter avaliações do candidato");
         }
     }
 }

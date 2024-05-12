@@ -12,13 +12,6 @@ public class Questionario : EntidadeBase
 
     public List<Avaliacao> Avaliacoes { get; set; } = default!;
 
-    public decimal MaiorNota =>
-            Avaliacoes.Select(x => x.Nota).Max();
-
-    public decimal MediaNota =>
-        decimal.Round(Avaliacoes.Select(a => a.Nota).Average(), 2);
-
-
     public Questionario()
     {
         DataCriacao = DateTime.Now;
@@ -33,4 +26,17 @@ public class Questionario : EntidadeBase
     {
         Perguntas.Clear();
     }
-}
+
+    public decimal? MediaNota()
+    {
+        if (Avaliacoes is null || !Avaliacoes.Any(a => a.Respondida))
+            return null;
+
+        var media = Avaliacoes
+                        .Where(a => a.Respondida)
+                        .Select(a => a.Nota!.Value)
+                        .Average();
+
+        return decimal.Round(media, 2);
+    }
+}          

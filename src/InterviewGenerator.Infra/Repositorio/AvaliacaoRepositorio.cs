@@ -47,6 +47,24 @@ public class AvaliacaoRepositorio : IAvaliacaoRepositorio
                     .FirstOrDefaultAsync();
     }
 
+    public async Task<Avaliacao?> ObterAvaliacaoPorIdECandidato(Guid id, Guid candidatoId)
+    {
+        return await _dbSet
+                    .Include(x => x.Questionario)
+                        .ThenInclude(x => x.Perguntas)
+                            .ThenInclude(x => x.Alternativas)
+                    .Where(x => x.Id == id
+                           && x.Candidato.Id == candidatoId)
+                    .FirstOrDefaultAsync();
+    }
+
+    public async Task<ICollection<Avaliacao>> ObterAvaliacaoPorCandidatoId(Guid candidatoId)
+    {
+        return await _dbSet
+                    .Include(x => x.Questionario)
+                    .Where(x => x.Candidato.Id == candidatoId)
+                    .ToListAsync();
+    }
 
     public async Task Alterar(Avaliacao entity)
     {

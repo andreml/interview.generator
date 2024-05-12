@@ -112,49 +112,6 @@ public class QuestionarioController : BaseController
     }
 
     /// <summary>
-    /// Obém Questionário para realizar avaliação (Candidato)
-    /// </summary>
-    [HttpGet("ObterParaPreenchimento/{id}")]
-    [Authorize(Roles = $"{Perfis.Candidato}")]
-    [ProducesResponseType(typeof(QuestionarioViewModelCandidato), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> ObterQuestionarioParaPreenchimento([FromRoute] Guid id)
-    {
-        try
-        {
-            var result = await _questionarioService.ObterQuestionarioParaPreenchimento(ObterUsuarioIdLogado(), id);
-
-            return Response(result);
-        }
-        catch (Exception e)
-        {
-            return ResponseErro(e.Message, "Erro ao obter questionário");
-        }
-    }
-
-    /// <summary>
-    /// Obém estatísticas de um Questionário (Avaliador)
-    /// </summary>
-    /// <param name="id">Id do Questionário</param>
-    [HttpGet("Estatisticas/{id}")]
-    [Authorize(Roles = $"{Perfis.Avaliador}")]
-    [ProducesResponseType(typeof(QuestionarioEstatisticasViewModel), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> ObterEstatisticasQuestionario([FromRoute] Guid id)
-    {
-        try
-        {
-            var result = await _questionarioService.ObterEstatisticasQuestionario(ObterUsuarioIdLogado(), id);
-
-            return Response(result);
-        }
-        catch (Exception e)
-        {
-            return ResponseErro(e.Message, "Erro ao obter estatísticas do questionário");
-        }
-    }
-
-    /// <summary>
     /// Obém notas de candidatos de um Questionario (Avaliador)
     /// </summary>
     /// <param name="id">Id do Questionário</param>

@@ -3,11 +3,11 @@ using System.Text.Json.Serialization;
 
 namespace InterviewGenerator.Application.Dto;
 
-public class AdicionarAvaliacaoDto
+public class ResponderAvaliacaoDto
 {
     [JsonIgnore]
     public Guid CandidatoId { get; set; }
-    public Guid QuestionarioId { get; set; }
+    public Guid AvaliacaoId { get; set; }
     public ICollection<RespostaAvaliacaoDto> Respostas { get; set; } = default!;
 }
 
@@ -23,12 +23,12 @@ public class RespostaAvaliacaoDto
     public Guid AlternativaId { get; set; }
 }
 
-public class AdicionarAvaliacaoDtoValidator : AbstractValidator<AdicionarAvaliacaoDto>
+public class ResponderAvaliacaoDtoValidator : AbstractValidator<ResponderAvaliacaoDto>
 {
-    public AdicionarAvaliacaoDtoValidator()
+    public ResponderAvaliacaoDtoValidator()
     {
-        RuleFor(x => x.QuestionarioId)
-            .NotNull().NotEmpty().WithMessage("Questionário é obrigatório");
+        RuleFor(x => x.AvaliacaoId)
+            .NotNull().NotEmpty().WithMessage("AvaliaçãoId é obrigatório");
 
         RuleFor(x => x.Respostas)
             .NotNull().NotEmpty().WithMessage("Respostas são obrigatórias")

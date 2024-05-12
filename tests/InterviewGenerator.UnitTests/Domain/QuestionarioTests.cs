@@ -7,11 +7,13 @@ public class QuestionarioTests
 {
     [Theory]
     [MemberData(nameof(ObterQuestionarios))]
-    public void Questionario_NotaMaximaMedia(Questionario questionario, decimal notaMaximaEsperada, decimal notaMediaEsperada)
+    public void Questionario_NotaMaximaMedia(Questionario questionario, decimal? notaMediaEsperada)
     {
-        // Act & Assert
-        Assert.Equal(notaMaximaEsperada, questionario.MaiorNota);
-        Assert.Equal(notaMediaEsperada, questionario.MediaNota);
+        // Act
+        var mediaNota = questionario.MediaNota();
+
+        //Assert
+        Assert.Equal(notaMediaEsperada, mediaNota);
     }
 
     public static IEnumerable<object[]> ObterQuestionarios()
@@ -22,11 +24,12 @@ public class QuestionarioTests
             {
                 Avaliacoes = new List<Avaliacao>
                 {
-                    new Avaliacao { Nota = 100},
-                    new Avaliacao { Nota = 50},
-                    new Avaliacao { Nota = 20},
+                    new Avaliacao { Respondida = true, Nota = 100},
+                    new Avaliacao { Respondida = true, Nota = 50},
+                    new Avaliacao { Respondida = true, Nota = 20},
+                    new Avaliacao { Respondida = false, Nota = null},
                 }
-            }, 100, 56.67
+            }, (decimal)56.67
         };
 
         yield return new object[]
@@ -35,9 +38,9 @@ public class QuestionarioTests
             {
                 Avaliacoes = new List<Avaliacao>
                 {
-                    new Avaliacao { Nota = 74.03M},
+                    new Avaliacao { Respondida = true, Nota = 74.03M},
                 }
-            }, 74.03, 74.03
+            }, (decimal)74.03
         };
 
         yield return new object[]
@@ -46,12 +49,10 @@ public class QuestionarioTests
             {
                 Avaliacoes = new List<Avaliacao>
                 {
-                    new Avaliacao { Nota = 99.99M},
-                    new Avaliacao { Nota = 99.99M},
-                    new Avaliacao { Nota = 99.99M},
-                    new Avaliacao { Nota = 99.99M},
+                    new Avaliacao { Respondida = false, Nota = null},
+                    new Avaliacao { Respondida = false, Nota = null},
                 }
-            }, 99.99M, 99.99M
+            }, null!
         };
 
     }

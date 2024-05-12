@@ -8,5 +8,6 @@ public interface IUsuarioRepositorio : ICommonRepository<Usuario>
     Task<bool> ExisteUsuarioPorCpf(string cpf);
     Task<bool> ExisteUsuarioPorLogin(string login);
     Task<Usuario?> ObterUsuarioPorLoginESenha(string nome, string senha);
+    Task<Usuario?> ObterPorLogin(string login);
 
 }
