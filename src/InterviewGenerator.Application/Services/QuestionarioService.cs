@@ -33,7 +33,7 @@ public class QuestionarioService : IQuestionarioService
             return response;
         }
 
-        if (questionario.Avaliacoes != null && questionario.Avaliacoes.Count > 0)
+        if (questionario.Avaliacoes != null && questionario.Avaliacoes.Any())
         {
             response.AddErro("Não é possível alterar o questionário, existem avaliações feitas");
             return response;
@@ -116,7 +116,7 @@ public class QuestionarioService : IQuestionarioService
             return response;
         }
 
-        if (questionario.Avaliacoes != null && questionario.Avaliacoes.Count > 0)
+        if (questionario.Avaliacoes != null && questionario.Avaliacoes.Any())
         {
             response.AddErro("Não é possível excluir o questionário, existem avaliações enviadas");
             return response;
@@ -141,7 +141,7 @@ public class QuestionarioService : IQuestionarioService
             Id = x.Id,
             DataCriacao = x.DataCriacao,
             Nome = x.Nome,
-            AvaliacoesRespondidas = x.Avaliacoes.Count,
+            AvaliacoesEnviadas = x.Avaliacoes.Count,
             Perguntas = x.Perguntas.Select(p => new PerguntaQuestionarioViewModelAvaliador()
             {
                 Id = p.Id,
@@ -157,28 +157,6 @@ public class QuestionarioService : IQuestionarioService
 
         response.AddData(questionariosViewModel);
 
-        return response;
-    }
-
-    public async Task<ResponseBase<NotasQuestionariosViewModel>> ObterNotasQuestionario(Guid usuarioCriacaoId, Guid questionarioId)
-    {
-        var response = new ResponseBase<NotasQuestionariosViewModel>();
-
-        var questionario = await _questionarioRepositorio.ObterPorIdComAvaliacoesEPerguntas(usuarioCriacaoId, questionarioId);
-        if (questionario == null)
-            return response;
-
-        var notas = new NotasQuestionariosViewModel()
-        {
-            Id = questionario.Id,
-            MediaNota = questionario.MediaNota(),
-            Notas = questionario.Avaliacoes.Select(a => a.Respondida ?
-                        new AvaliacaoQuestionarioViewModel(a.Id, a.Candidato.Nome, a.Nota, a.DataEnvio, a.DataResposta)
-                        : new AvaliacaoQuestionarioViewModel(a.Id, a.Candidato.Nome, a.DataEnvio)
-                        ).ToList()
-        };
-
-        response.AddData(notas);
         return response;
     }
 }

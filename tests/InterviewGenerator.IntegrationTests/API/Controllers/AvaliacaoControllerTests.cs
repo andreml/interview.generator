@@ -56,7 +56,7 @@ public class AvaliacaoControllerTests : IClassFixture<ApiApplicationFactory<Prog
         };
 
         //Act
-        var postAvaliacao = await _client.PostAsync("avaliacao/enviar", JsonContent.Create(enviarAvaliacaoDto));
+        var postAvaliacao = await _client.PostAsync("avaliacao/enviarParaCandidato", JsonContent.Create(enviarAvaliacaoDto));
 
         //Assert
         Assert.Equal(HttpStatusCode.Created, postAvaliacao.StatusCode);
@@ -94,7 +94,7 @@ public class AvaliacaoControllerTests : IClassFixture<ApiApplicationFactory<Prog
             QuestionarioId = idQuestionario,
             LoginCandidato = _usuarioHelper.LoginCandidato
         };
-        var postAvaliacao = await _client.PostAsync("avaliacao/enviar", JsonContent.Create(enviarAvaliacaoDto));
+        var postAvaliacao = await _client.PostAsync("avaliacao/enviarParaCandidato", JsonContent.Create(enviarAvaliacaoDto));
         var idAvaliacao = await JsonHelper.LerDoJson<Guid>(postAvaliacao.Content);
 
         var putObservacaoAvaliacao = new AdicionarObservacaoAvaliadorDto()
@@ -108,12 +108,12 @@ public class AvaliacaoControllerTests : IClassFixture<ApiApplicationFactory<Prog
 
         //Assert
         Assert.Equal(HttpStatusCode.Created, postAvaliacao.StatusCode);
-        var getAvaliacoes = await _client.GetAsync($"Avaliacao?QuestionarioId={idQuestionario}");
-        var getAvaliacoesResponse = await JsonHelper.LerDoJson<ICollection<AvaliacaoViewModel>>(getAvaliacoes.Content);
+        var getAvaliacao = await _client.GetAsync($"Avaliacao/detalhes/{idAvaliacao}");
+        var getAvaliacoaosResponse = await JsonHelper.LerDoJson<AvaliacaoDetalheViewModel>(getAvaliacao.Content);
 
         Assert.Equal(HttpStatusCode.OK, putObservacao.StatusCode);
-        Assert.NotEmpty(getAvaliacoesResponse);
-        Assert.Equal(putObservacaoAvaliacao.ObservacaoAvaliador, getAvaliacoesResponse.FirstOrDefault()!.ObservacaoAvaliador);
+        Assert.NotNull(getAvaliacoaosResponse);
+        Assert.Equal(putObservacaoAvaliacao.ObservacaoAvaliador, getAvaliacoaosResponse.ObservacaoAvaliador);
     }
 
     [Fact]
@@ -148,7 +148,7 @@ public class AvaliacaoControllerTests : IClassFixture<ApiApplicationFactory<Prog
             QuestionarioId = idQuestionario,
             LoginCandidato = _usuarioHelper.LoginCandidato
         };
-        var postAvaliacao = await _client.PostAsync("avaliacao/enviar", JsonContent.Create(enviarAvaliacaoDto));
+        var postAvaliacao = await _client.PostAsync("avaliacao/enviarParaCandidato", JsonContent.Create(enviarAvaliacaoDto));
         var idAvaliacao = await JsonHelper.LerDoJson<Guid>(postAvaliacao.Content);
 
         token = await _usuarioHelper.ObterTokenUsuario(_client, Perfil.Candidato);

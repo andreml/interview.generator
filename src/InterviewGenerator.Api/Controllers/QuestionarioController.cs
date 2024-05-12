@@ -110,26 +110,4 @@ public class QuestionarioController : BaseController
             return ResponseErro(e.Message, "Erro ao obter questionários");
         }
     }
-
-    /// <summary>
-    /// Obém notas de candidatos de um Questionario (Avaliador)
-    /// </summary>
-    /// <param name="id">Id do Questionário</param>
-    [HttpGet("Notas/{id}")]
-    [Authorize(Roles = $"{Perfis.Avaliador}")]
-    [ProducesResponseType(typeof(NotasQuestionariosViewModel), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> ObterNotasQuestionario([FromRoute] Guid id)
-    {
-        try
-        {
-            var result = await _questionarioService.ObterNotasQuestionario(ObterUsuarioIdLogado(), id);
-
-            return Response(result);
-        }
-        catch (Exception e)
-        {
-            return ResponseErro(e.Message, "Erro ao obter notas do questionário");
-        }
-    }
 }

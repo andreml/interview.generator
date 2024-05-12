@@ -1,18 +1,17 @@
 ﻿namespace InterviewGenerator.Application.ViewModels;
 
-public class NotasQuestionariosViewModel
+public class AvaliacoesQuestionarioViewModel
 {
-    public Guid Id { get; set; }
-
+    public Guid IdQuestionario { get; set; }
     public decimal? MediaNota { get; set; }
-    public ICollection<AvaliacaoQuestionarioViewModel> Notas { get; set; } = default!;
-    public ICollection<AvaliacaoQuestionarioViewModel> QuestionariosPendentes { get; set; } = default!;
+    public ICollection<AvaliacaoViewModel> AvaliacoesRespondidas { get; set; } = default!;
+    public ICollection<AvaliacaoViewModel> AvaliacoesPendentes { get; set; } = default!;
 
 }
 
-public class AvaliacaoQuestionarioViewModel
+public class AvaliacaoViewModel
 {
-    public AvaliacaoQuestionarioViewModel(Guid idAvaliacao, string nomeCandidato, decimal? nota, DateTime dataEnvio, DateTime? dataResposta)
+    public AvaliacaoViewModel(Guid idAvaliacao, string nomeCandidato, decimal? nota, DateTime dataEnvio, DateTime? dataResposta)
     {
         IdAvaliacao = idAvaliacao;
         NomeCandidato = nomeCandidato;
@@ -21,7 +20,7 @@ public class AvaliacaoQuestionarioViewModel
         DataResposta = dataResposta;
     }
 
-    public AvaliacaoQuestionarioViewModel(Guid idAvaliacao, string nomeCandidato,DateTime dataEnvio)
+    public AvaliacaoViewModel(Guid idAvaliacao, string nomeCandidato,DateTime dataEnvio)
     {
         IdAvaliacao = idAvaliacao;
         NomeCandidato = nomeCandidato;

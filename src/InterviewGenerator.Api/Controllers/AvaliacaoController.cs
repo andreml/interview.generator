@@ -20,20 +20,40 @@ public class AvaliacaoController : BaseController
     public AvaliacaoController(IAvaliacaoService service) { _avaliacaoService = service; }
 
     /// <summary>
-    /// Obtém Avaliações feitas pelos Candidatos (Avaliador)
+    /// Obtém dados detalhados de uma avaliação (Avaliador)
     /// </summary>
-    /// <param name="QuestionarioId">Id do questionário (opcional)</param>
-    /// <param name="nomeQuestionario">Nome do questionário (opcional)</param>
-    /// <param name="nomeCandidato">Nome do candidato (opcional)</param>
-    [HttpGet()]
+    /// <param name="avaliacaoId">Id da avaliação </param>
+    [HttpGet("detalhes/{avaliacaoId}")]
     [Authorize(Roles = $"{Perfis.Avaliador}")]
-    [ProducesResponseType(typeof(IEnumerable<AvaliacaoViewModel>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IEnumerable<AvaliacaoDetalheViewModel>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> ObterAvaliacoesPorFiltroAsync([FromQuery] Guid QuestionarioId, [FromQuery] string? nomeQuestionario, [FromQuery] string? nomeCandidato)
+    public async Task<IActionResult> ObterDetalheAvaliacaoAsync([FromRoute] Guid avaliacaoId)
     {
         try
         {
-            var result = await _avaliacaoService.ObterAvaliacoesPorFiltro(ObterUsuarioIdLogado(), QuestionarioId, nomeQuestionario, nomeCandidato);
+            var result = await _avaliacaoService.ObterDetalheAvaliacaoAsync(ObterUsuarioIdLogado(), avaliacaoId);
+
+            return Response(result);
+        }
+        catch (Exception e)
+        {
+            return ResponseErro(e.Message, "Erro ao obter detalhes da avaliação");
+        }
+    }
+
+    /// <summary>
+    /// Obtém avaliações enviadas de um questionário (Avaliador)
+    /// </summary>
+    /// <param name="questionarioId">Id do questionário </param>
+    [HttpGet("enviadas/{questionarioId}")]
+    [Authorize(Roles = $"{Perfis.Avaliador}")]
+    [ProducesResponseType(typeof(AvaliacoesQuestionarioViewModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> ObterAvaliacoesEnviadasDeQuestionarioAsync([FromRoute] Guid questionarioId)
+    {
+        try
+        {
+            var result = await _avaliacaoService.ObterAvaliacoesEnviadasDeUmQuestionarioAsync(ObterUsuarioIdLogado(), questionarioId);
 
             return Response(result);
         }
@@ -44,7 +64,7 @@ public class AvaliacaoController : BaseController
     }
 
     /// <summary>
-    /// Adiciona as respostas da Avaliação do candidato (Candidato)
+    /// Obtém os dados de uma avaliação para submeter as respostas (Candidato)
     /// </summary>
     [HttpGet("obterParaResponder/{avaliacaoId}")]
     [Authorize(Roles = $"{Perfis.Candidato}")]
@@ -66,7 +86,7 @@ public class AvaliacaoController : BaseController
     }
 
     /// <summary>
-    /// Adiciona as respostas da Avaliação do candidato (Candidato)
+    /// Envia as respostas da Avaliação do candidato (Candidato)
     /// </summary>
     [HttpPut("responder")]
     [Authorize(Roles = $"{Perfis.Candidato}")]
@@ -133,7 +153,7 @@ public class AvaliacaoController : BaseController
     /// <summary>
     /// Envia uma avaliação para um candidato responder (Avaliador)
     /// </summary>
-    [HttpPost("enviar")]
+    [HttpPost("enviarParaCandidato")]
     [Authorize(Roles = $"{Perfis.Avaliador}")]
     [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ResponseErro), StatusCodes.Status400BadRequest)]

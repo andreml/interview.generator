@@ -28,4 +28,11 @@ public class Avaliacao : EntidadeBase
 
         Nota = decimal.Round(((decimal)acertos / totalPerguntas) * 100, 2);
     }
+
+    public void AdicionarRespostas(ICollection<RespostaAvaliacao> respostas)
+    {
+        Respostas = respostas;
+        Respondida = true;
+        DataResposta = DateTime.Now;
+    }
 }

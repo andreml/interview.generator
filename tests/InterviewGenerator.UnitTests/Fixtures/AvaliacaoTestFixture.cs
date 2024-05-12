@@ -35,6 +35,14 @@ public class AvaliacaoTestFixture
             AvaliacaoId = _faker.Random.Guid(),
             ObservacaoAvaliador = _faker.Random.String2(500)
         };
+
+    public EnviarAvaliacaoParaCandidatoDto GerarEnviarAvaliacaoParaCandidatoDto() =>
+        new()
+        {
+            UsuarioId = _faker.Random.Guid(),
+            LoginCandidato = _faker.Random.String2(10),
+            QuestionarioId = _faker.Random.Guid()
+        };
 }
 
 [CollectionDefinition("AvaliacaoTestFixtureCollection")]

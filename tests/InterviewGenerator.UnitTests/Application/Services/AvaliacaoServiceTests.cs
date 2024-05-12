@@ -1,5 +1,6 @@
 ﻿using InterviewGenerator.Application.Services;
 using InterviewGenerator.Domain.Entidade;
+using InterviewGenerator.Domain.Enum;
 using InterviewGenerator.Domain.Repositorio;
 using InterviewGenerator.UnitTests.Fixtures;
 using Moq;
@@ -37,7 +38,7 @@ public class AvaliacaoServiceTests
     public async Task ResponderAvaliacao_ShouldReturnErrorWhenQuizNotFound()
     {
         // Arrange
-        _avaliacaoRepositorioMock.Setup(x => x.ObterAvaliacaoPorIdECandidato(It.IsAny<Guid>(), It.IsAny<Guid>()))
+        _avaliacaoRepositorioMock.Setup(x => x.ObterPorIdECandidatoId(It.IsAny<Guid>(), It.IsAny<Guid>()))
             .ReturnsAsync(value: null);
 
         // Act
@@ -53,7 +54,7 @@ public class AvaliacaoServiceTests
     public async Task ResponderAvaliacao_ShouldReturnErrorWhenQuizAlreadyAnswered()
     {
         // Arrange
-        _avaliacaoRepositorioMock.Setup(x => x.ObterAvaliacaoPorIdECandidato(It.IsAny<Guid>(), It.IsAny<Guid>()))
+        _avaliacaoRepositorioMock.Setup(x => x.ObterPorIdECandidatoId(It.IsAny<Guid>(), It.IsAny<Guid>()))
             .ReturnsAsync(new Avaliacao
             {
                 Respondida = true
@@ -72,7 +73,7 @@ public class AvaliacaoServiceTests
     public async Task ResponderAvaliacao_ShouldReturnErrorWhenQuestionNotAnswered()
     {
         // Arrange
-        _avaliacaoRepositorioMock.Setup(x => x.ObterAvaliacaoPorIdECandidato(It.IsAny<Guid>(), It.IsAny<Guid>()))
+        _avaliacaoRepositorioMock.Setup(x => x.ObterPorIdECandidatoId(It.IsAny<Guid>(), It.IsAny<Guid>()))
             .ReturnsAsync(new Avaliacao
             {
                 Respondida = false,
@@ -116,7 +117,7 @@ public class AvaliacaoServiceTests
 
         questionario.Perguntas[0].Alternativas[0].Id = Guid.NewGuid();
 
-        _avaliacaoRepositorioMock.Setup(x => x.ObterAvaliacaoPorIdECandidato(It.IsAny<Guid>(), It.IsAny<Guid>()))
+        _avaliacaoRepositorioMock.Setup(x => x.ObterPorIdECandidatoId(It.IsAny<Guid>(), It.IsAny<Guid>()))
             .ReturnsAsync(new Avaliacao
             {
                 Respondida = false,
@@ -148,7 +149,7 @@ public class AvaliacaoServiceTests
             }).ToList()
         };
 
-        _avaliacaoRepositorioMock.Setup(x => x.ObterAvaliacaoPorIdECandidato(It.IsAny<Guid>(), It.IsAny<Guid>()))
+        _avaliacaoRepositorioMock.Setup(x => x.ObterPorIdECandidatoId(It.IsAny<Guid>(), It.IsAny<Guid>()))
             .ReturnsAsync(new Avaliacao
             {
                 Respondida = false,
@@ -168,7 +169,7 @@ public class AvaliacaoServiceTests
     public async Task AdicionarObservacaoAvaliacao_ShouldReturnErrorWhenQuizNotFound()
     {
         // Arrange
-        _avaliacaoRepositorioMock.Setup(x => x.ObterAvaliacaoPorIdEUsuarioCriacaoQuestionario(It.IsAny<Guid>(), It.IsAny<Guid>()))
+        _avaliacaoRepositorioMock.Setup(x => x.ObterPorIdEUsuarioCriacaoQuestionario(It.IsAny<Guid>(), It.IsAny<Guid>()))
             .ReturnsAsync(value: null);
 
         // Act
@@ -184,7 +185,7 @@ public class AvaliacaoServiceTests
     public async Task AdicionarObservacaoAvaliacao_ShouldAddNote()
     {
         // Arrange
-        _avaliacaoRepositorioMock.Setup(x => x.ObterAvaliacaoPorIdEUsuarioCriacaoQuestionario(It.IsAny<Guid>(), It.IsAny<Guid>()))
+        _avaliacaoRepositorioMock.Setup(x => x.ObterPorIdEUsuarioCriacaoQuestionario(It.IsAny<Guid>(), It.IsAny<Guid>()))
             .ReturnsAsync(new Avaliacao());
 
         // Act
@@ -193,5 +194,135 @@ public class AvaliacaoServiceTests
         // Assert
         Assert.False(result.HasError);
         Assert.Empty(result.Erros);
+    }
+
+    [Fact]
+    [Trait("Categoria", "EnviarAvaliacaoParaCandidatoAsync")]
+    public async Task EnviarAvaliacaoParaCandidatoAsync_ShouldReturnErrorWhenQuizNotFound()
+    {
+        // Arrange
+        _questionarioRepositorioMock.Setup(x => x.ObterPorIdEUsuarioCriacao(It.IsAny<Guid>(), It.IsAny<Guid>()))
+            .ReturnsAsync(value: null);
+
+        // Act
+        var result = await _service.EnviarAvaliacaoParaCandidatoAsync(_avaliacaoTestFixture.GerarEnviarAvaliacaoParaCandidatoDto());
+
+        // Assert
+        Assert.True(result.HasError);
+        Assert.Contains("Questionário não encontrado", result.Erros);
+    }
+
+    [Fact]
+    [Trait("Categoria", "EnviarAvaliacaoParaCandidatoAsync")]
+    public async Task EnviarAvaliacaoParaCandidatoAsync_ShouldReturnErrorWhenCandidateNotFound()
+    {
+        // Arrange
+        _questionarioRepositorioMock.Setup(x => x.ObterPorIdEUsuarioCriacao(It.IsAny<Guid>(), It.IsAny<Guid>()))
+            .ReturnsAsync(new Questionario());
+
+        _usuarioRepositorioMock.Setup(x => x.ObterPorLogin(It.IsAny<string>()))
+            .ReturnsAsync(value: null);
+
+        // Act
+        var result = await _service.EnviarAvaliacaoParaCandidatoAsync(_avaliacaoTestFixture.GerarEnviarAvaliacaoParaCandidatoDto());
+
+        // Assert
+        Assert.True(result.HasError);
+        Assert.Contains("Candidato não encontrado", result.Erros);
+    }
+
+    [Fact]
+    [Trait("Categoria", "EnviarAvaliacaoParaCandidatoAsync")]
+    public async Task EnviarAvaliacaoParaCandidatoAsync_ShouldReturnErrorWhenLoginIsNotCandidate()
+    {
+        // Arrange
+        _questionarioRepositorioMock.Setup(x => x.ObterPorIdEUsuarioCriacao(It.IsAny<Guid>(), It.IsAny<Guid>()))
+            .ReturnsAsync(new Questionario());
+
+        _usuarioRepositorioMock.Setup(x => x.ObterPorLogin(It.IsAny<string>()))
+            .ReturnsAsync(new Usuario
+            {
+                Perfil = Perfil.Avaliador
+            });
+
+        // Act
+        var result = await _service.EnviarAvaliacaoParaCandidatoAsync(_avaliacaoTestFixture.GerarEnviarAvaliacaoParaCandidatoDto());
+
+        // Assert
+        Assert.True(result.HasError);
+        Assert.Contains("Login não pertence a um usuário Candidato", result.Erros);
+    }
+
+    [Fact]
+    [Trait("Categoria", "EnviarAvaliacaoParaCandidatoAsync")]
+    public async Task EnviarAvaliacaoParaCandidatoAsync_ShouldReturnErrorWhenQuizAlreadySent()
+    {
+        // Arrange
+        var dto = _avaliacaoTestFixture.GerarEnviarAvaliacaoParaCandidatoDto();
+
+        _questionarioRepositorioMock.Setup(x => x.ObterPorIdEUsuarioCriacao(It.IsAny<Guid>(), It.IsAny<Guid>()))
+            .ReturnsAsync(new Questionario() { Id = dto.QuestionarioId });
+
+        _usuarioRepositorioMock.Setup(x => x.ObterPorLogin(It.IsAny<string>()))
+            .ReturnsAsync(new Usuario { Perfil = Perfil.Candidato });
+
+        _avaliacaoRepositorioMock.Setup(x => x.ObterPorCandidatoId(It.IsAny<Guid>()))
+            .ReturnsAsync(new List<Avaliacao>
+            {
+                new Avaliacao
+                {
+                    Questionario = new Questionario { Id = dto.QuestionarioId }
+                }
+            });
+
+        // Act
+        var result = await _service.EnviarAvaliacaoParaCandidatoAsync(dto);
+
+        // Assert
+        Assert.True(result.HasError);
+        Assert.Contains("Avaliação já enviada a esse candidato", result.Erros);
+    }
+
+    [Fact]
+    [Trait("Categoria", "EnviarAvaliacaoParaCandidatoAsync")]
+    public async Task EnviarAvaliacaoParaCandidatoAsync_ShouldSendQuiz()
+    {
+        // Arrange
+        var dto = _avaliacaoTestFixture.GerarEnviarAvaliacaoParaCandidatoDto();
+
+        _questionarioRepositorioMock.Setup(x => x.ObterPorIdEUsuarioCriacao(It.IsAny<Guid>(), It.IsAny<Guid>()))
+            .ReturnsAsync(new Questionario() { Id = dto.QuestionarioId });
+
+        _usuarioRepositorioMock.Setup(x => x.ObterPorLogin(It.IsAny<string>()))
+            .ReturnsAsync(new Usuario { Perfil = Perfil.Candidato });
+
+        _avaliacaoRepositorioMock.Setup(x => x.ObterPorCandidatoId(It.IsAny<Guid>()))
+            .ReturnsAsync(new List<Avaliacao>());
+
+        // Act
+        var result = await _service.EnviarAvaliacaoParaCandidatoAsync(dto);
+
+        // Assert
+        Assert.False(result.HasError);
+        Assert.Empty(result.Erros);
+    }
+
+    [Fact]
+    [Trait("Categoria", "ObterAvaliacaoParaResponderAsync")]
+    public async Task ObterAvaliacaoParaResponderAsync_ShouldReturnErrorWhenCandidateHasAlreadyResponded()
+    {
+        // Arrange
+        _avaliacaoRepositorioMock.Setup(x => x.ObterPorIdECandidatoId(It.IsAny<Guid>(), It.IsAny<Guid>()))
+            .ReturnsAsync(new Avaliacao
+            {
+                Respondida = true
+            });
+
+        // Act
+        var result = await _service.ObterAvaliacaoParaResponderAsync(Guid.NewGuid(), Guid.NewGuid());
+
+        // Assert
+        Assert.True(result.HasError);
+        Assert.Contains("Candidato já respondeu esta avaliação", result.Erros);
     }
 }
