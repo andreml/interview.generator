@@ -247,7 +247,7 @@ public class QuestionarioServiceTests
 
         // Assert
         Assert.True(result.HasError);
-        Assert.Contains("Não é possível excluir o questionário, existem avaliações feitas", result.Erros);
+        Assert.Contains("Não é possível excluir o questionário, existem avaliações enviadas", result.Erros);
     }
 
     [Fact]

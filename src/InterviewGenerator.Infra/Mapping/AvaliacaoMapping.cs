@@ -11,8 +11,16 @@ public class AvaliacaoMapping : IEntityTypeConfiguration<Avaliacao>
         builder.HasKey(x => x.Id);
 
         builder
-            .Property(x => x.DataAplicacao)
+            .Property(x => x.DataEnvio)
             .IsRequired();
+
+        builder
+            .Property(x => x.Respondida)
+            .IsRequired();
+
+        builder
+            .Property(x => x.DataResposta)
+            .IsRequired(false);
 
         builder
             .Property(x => x.ObservacaoAplicador)
@@ -20,7 +28,7 @@ public class AvaliacaoMapping : IEntityTypeConfiguration<Avaliacao>
 
         builder
             .Property(x => x.Nota)
-            .IsRequired()
+            .IsRequired(false)
             .HasPrecision(10, 2);
 
         builder

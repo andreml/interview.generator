@@ -10,8 +10,4 @@ public interface IQuestionarioService
     Task<ResponseBase> AlterarQuestionario(AlterarQuestionarioDto questionarioDto);
     Task<ResponseBase> ExcluirQuestionario(Guid usuarioCriacaoId, Guid idQuestionario);
     Task<ResponseBase<ICollection<QuestionarioViewModelAvaliador>>> ObterQuestionarios(Guid usuarioCriacaoId, Guid questionarioId, string? nome);
-    Task<ResponseBase<QuestionarioEstatisticasViewModel>> ObterEstatisticasQuestionario(Guid usuarioCriacaoId, Guid questionarioId);
-    Task<ResponseBase<QuestionarioViewModelCandidato>> ObterQuestionarioParaPreenchimento(Guid candidatoId, Guid questionarioId);
-    Task<ResponseBase<NotasQuestionariosViewModel>> ObterNotasQuestionario(Guid usuarioCriacaoId, Guid questionarioId);
-
 }

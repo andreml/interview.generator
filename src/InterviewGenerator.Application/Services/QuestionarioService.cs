@@ -13,7 +13,9 @@ public class QuestionarioService : IQuestionarioService
     private readonly IQuestionarioRepositorio _questionarioRepositorio;
     private readonly IPerguntaRepositorio _perguntaRepositorio;
 
-    public QuestionarioService(IQuestionarioRepositorio questionarioRepositorio, IPerguntaRepositorio perguntaRepositorio)
+    public QuestionarioService(
+                IQuestionarioRepositorio questionarioRepositorio, 
+                IPerguntaRepositorio perguntaRepositorio)
     {
         _questionarioRepositorio = questionarioRepositorio;
         _perguntaRepositorio = perguntaRepositorio;
@@ -31,7 +33,7 @@ public class QuestionarioService : IQuestionarioService
             return response;
         }
 
-        if (questionario.Avaliacoes != null && questionario.Avaliacoes.Count > 0)
+        if (questionario.Avaliacoes != null && questionario.Avaliacoes.Any())
         {
             response.AddErro("Não é possível alterar o questionário, existem avaliações feitas");
             return response;
@@ -114,9 +116,9 @@ public class QuestionarioService : IQuestionarioService
             return response;
         }
 
-        if (questionario.Avaliacoes != null && questionario.Avaliacoes.Count > 0)
+        if (questionario.Avaliacoes != null && questionario.Avaliacoes.Any())
         {
-            response.AddErro("Não é possível excluir o questionário, existem avaliações feitas");
+            response.AddErro("Não é possível excluir o questionário, existem avaliações enviadas");
             return response;
         }
 
@@ -139,7 +141,7 @@ public class QuestionarioService : IQuestionarioService
             Id = x.Id,
             DataCriacao = x.DataCriacao,
             Nome = x.Nome,
-            AvaliacoesRespondidas = x.Avaliacoes.Count,
+            AvaliacoesEnviadas = x.Avaliacoes.Count,
             Perguntas = x.Perguntas.Select(p => new PerguntaQuestionarioViewModelAvaliador()
             {
                 Id = p.Id,
@@ -155,96 +157,6 @@ public class QuestionarioService : IQuestionarioService
 
         response.AddData(questionariosViewModel);
 
-        return response;
-    }
-
-    public async Task<ResponseBase<QuestionarioViewModelCandidato>> ObterQuestionarioParaPreenchimento(Guid candidatoId, Guid questionarioId)
-    {
-        var response = new ResponseBase<QuestionarioViewModelCandidato>();
-
-        var questionario = await _questionarioRepositorio.ObterPorId(questionarioId);
-
-        if (questionario == null)
-            return response;
-
-        if (questionario.Avaliacoes.Where(a => a.Candidato.Id == candidatoId).Any())
-        {
-            response.AddErro("Candidato já enviou uma avaliação referente a este questionário");
-            return response;
-        }
-
-        var questionarioViewModel = new QuestionarioViewModelCandidato()
-        {
-            Id = questionario.Id,
-            Nome = questionario.Nome,
-            Perguntas = questionario.Perguntas.Select(p => new PerguntaQuestionarioViewModelCandidato()
-            {
-                Id = p.Id,
-                Descricao = p.Descricao,
-                Alternativas = p.Alternativas.Select(a => new AlternativaPerguntaQuestionarioViewModelCandidato()
-                {
-                    Id = a.Id,
-                    Descricao = a.Descricao
-                }).ToList().Randomizar()
-            }).ToList().Randomizar()
-        };
-
-        response.AddData(questionarioViewModel);
-
-        return response;
-    }
-
-    public async Task<ResponseBase<QuestionarioEstatisticasViewModel>> ObterEstatisticasQuestionario(Guid usuarioCriacaoId, Guid questionarioId)
-    {
-        var response = new ResponseBase<QuestionarioEstatisticasViewModel>();
-
-        var questionario = await _questionarioRepositorio.ObterPorIdComAvaliacoesEPerguntas(usuarioCriacaoId, questionarioId);
-        if (questionario == null)
-            return response;
-
-        var estatisticas = new QuestionarioEstatisticasViewModel()
-        {
-            Id = questionario.Id,
-            Nome = questionario.Nome,
-            AvaliacoesRespondidas = questionario.Avaliacoes.Count
-        };
-
-        if (estatisticas.AvaliacoesRespondidas > 0)
-        {
-            estatisticas.MediaNota = questionario.MediaNota;
-
-            var maiorNota = questionario.MaiorNota;
-
-            estatisticas.MaiorNota = new MaiorNotaViewModel()
-            {
-                Nota = maiorNota,
-                Candidatos = questionario.Avaliacoes
-                                            .Where(a => a.Nota == maiorNota)
-                                            .Select(a => a.Candidato.Nome)
-                                            .ToList()
-            };
-        }
-
-        response.AddData(estatisticas);
-        return response;
-    }
-
-    public async Task<ResponseBase<NotasQuestionariosViewModel>> ObterNotasQuestionario(Guid usuarioCriacaoId, Guid questionarioId)
-    {
-        var response = new ResponseBase<NotasQuestionariosViewModel>();
-
-        var questionario = await _questionarioRepositorio.ObterPorIdComAvaliacoesEPerguntas(usuarioCriacaoId, questionarioId);
-        if (questionario == null)
-            return response;
-
-        var notas = new NotasQuestionariosViewModel()
-        {
-            Id = questionario.Id,
-            Notas = questionario.Avaliacoes.Select(a =>
-                        new AvaliacaoQuestionarioViewModel(a.Id, a.Candidato.Nome, a.Nota)).ToList()
-        };
-
-        response.AddData(notas);
         return response;
     }
 }

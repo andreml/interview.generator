@@ -12,11 +12,11 @@ public class AvaliacaoTestFixture
         _faker = new Faker();
     }
 
-    public AdicionarAvaliacaoDto GerarAdicionarAvaliacaoDto() =>
+    public ResponderAvaliacaoDto GerarResponderAvaliacaoDto() =>
         new ()
         {
             CandidatoId = _faker.Random.Guid(),
-            QuestionarioId = _faker.Random.Guid(),
+            AvaliacaoId = _faker.Random.Guid(),
             Respostas = new List<RespostaAvaliacaoDto>
             {
                 new RespostaAvaliacaoDto(_faker.Random.Guid(), _faker.Random.Guid()),
@@ -34,6 +34,14 @@ public class AvaliacaoTestFixture
             UsuarioIdCriacaoQuestionario = _faker.Random.Guid(),
             AvaliacaoId = _faker.Random.Guid(),
             ObservacaoAvaliador = _faker.Random.String2(500)
+        };
+
+    public EnviarAvaliacaoParaCandidatoDto GerarEnviarAvaliacaoParaCandidatoDto() =>
+        new()
+        {
+            UsuarioId = _faker.Random.Guid(),
+            LoginCandidato = _faker.Random.String2(10),
+            QuestionarioId = _faker.Random.Guid()
         };
 }
 

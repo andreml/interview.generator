@@ -38,6 +38,11 @@ public class UsuarioRepositorio : IUsuarioRepositorio
         return  _dbSet.FirstOrDefaultAsync(u => u.Login == login && u.Senha == Encryptor.Encrypt(senha));
     }
 
+    public async Task<Usuario?> ObterPorLogin(string login)
+    {
+        return await _dbSet.FirstOrDefaultAsync(u => u.Login == login);
+    }
+
     public async Task<bool> ExisteUsuarioPorCpf(string cpf)
     {
         return await _dbSet.AnyAsync(u => u.Cpf == cpf);

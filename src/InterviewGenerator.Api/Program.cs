@@ -42,7 +42,7 @@ app.UseSwaggerUI(options =>
     options.RoutePrefix = "swagger";
 });
 
-app.UseCors("cors");
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

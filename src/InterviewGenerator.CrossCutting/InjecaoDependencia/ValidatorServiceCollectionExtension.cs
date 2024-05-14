@@ -21,8 +21,9 @@ public static class ValidatorServiceCollectionExtension
 
         service.AddScoped<IValidator<AdicionarQuestionarioDto>, AdicionarQuestionarioDtoValidator>();
         service.AddScoped<IValidator<AlterarQuestionarioDto>, AlterarQuestionarioDtoValidator>();
+        service.AddScoped<IValidator<EnviarAvaliacaoParaCandidatoDto>, EnviarAvaliacaoParaCandidatoDtoValidator>();
 
-        service.AddScoped<IValidator<AdicionarAvaliacaoDto>, AdicionarAvaliacaoDtoValidator>();
+        service.AddScoped<IValidator<ResponderAvaliacaoDto>, ResponderAvaliacaoDtoValidator>();
         service.AddScoped<IValidator<AdicionarObservacaoAvaliadorDto>, AdicionarObservacaoAvaliadorDtoValidator>();
 
         return service;

@@ -22,7 +22,7 @@ public class AvaliacaoRepositorio : IAvaliacaoRepositorio
         await _context.SaveChangesAsync();
     }
 
-    public async Task<ICollection<Avaliacao>> ObterAvaliacoesPorFiltro(Guid usuarioIdCriacaoQuestionario, Guid QuestionarioId, string? nomeQuestionario, string? nomeCandidato)
+    public async Task<Avaliacao?> ObterPorIdEUsuarioCriacaoQuestionarioAsync(Guid usuarioIdCriacaoQuestionario, Guid avaliacaoId)
     {
         return await _dbSet
                         .Include(x => x.Respostas)
@@ -31,15 +31,11 @@ public class AvaliacaoRepositorio : IAvaliacaoRepositorio
                             .ThenInclude(x => x.Pergunta)
                         .Include(x => x.Candidato)
                         .Include(x => x.Questionario)
-                        .Where(x => x.Questionario.UsuarioCriacaoId == usuarioIdCriacaoQuestionario
-                                    && (QuestionarioId == Guid.Empty || x.Questionario.Id == QuestionarioId)
-                                    && (string.IsNullOrEmpty(nomeQuestionario) || x.Questionario.Nome.Contains(nomeQuestionario))
-                                    && (string.IsNullOrEmpty(nomeCandidato) || x.Candidato.Nome.Contains(nomeCandidato))
-                               )
-                               .ToListAsync();
+                        .Where(x => x.Questionario.UsuarioCriacaoId == usuarioIdCriacaoQuestionario && x.Id == avaliacaoId)
+                        .FirstOrDefaultAsync();
     }
 
-    public async Task<Avaliacao?> ObterAvaliacaoPorIdEUsuarioCriacaoQuestionario(Guid id, Guid usuarioIdCriacaoQuestionario)
+    public async Task<Avaliacao?> ObterPorIdEUsuarioCriacaoQuestionario(Guid id, Guid usuarioIdCriacaoQuestionario)
     {
         return await _dbSet
                     .Where(x => x.Id == id
@@ -47,6 +43,33 @@ public class AvaliacaoRepositorio : IAvaliacaoRepositorio
                     .FirstOrDefaultAsync();
     }
 
+    public async Task<Avaliacao?> ObterPorIdECandidatoId(Guid id, Guid candidatoId)
+    {
+        return await _dbSet
+                    .Include(x => x.Questionario)
+                        .ThenInclude(x => x.Perguntas)
+                            .ThenInclude(x => x.Alternativas)
+                    .Where(x => x.Id == id
+                           && x.Candidato.Id == candidatoId)
+                    .FirstOrDefaultAsync();
+    }
+
+    public async Task<ICollection<Avaliacao>> ObterPorCandidatoId(Guid candidatoId)
+    {
+        return await _dbSet
+                    .Include(x => x.Questionario)
+                    .Where(x => x.Candidato.Id == candidatoId)
+                    .ToListAsync();
+    }
+
+    public async Task<ICollection<Avaliacao>> ObterPorUsuarioCriacaoEQuestionarioId(Guid usuarioCriacaoId, Guid questionarioId)
+    {
+        return await _dbSet
+                    .Include(x => x.Questionario)
+                    .Where(x => x.Questionario.UsuarioCriacaoId == usuarioCriacaoId 
+                            && x.Questionario.Id == questionarioId)
+                    .ToListAsync();
+    }
 
     public async Task Alterar(Avaliacao entity)
     {

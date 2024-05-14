@@ -41,14 +41,25 @@ public class QuestionarioRepositorio : IQuestionarioRepositorio
                         .FirstOrDefaultAsync();
     }
 
-    public async Task<Questionario?> ObterPorId(Guid questionarioId)
+    public async Task<Questionario?> ObterPorIdEUsuarioCriacao(Guid usuarioCriacaoId, Guid questionarioId)
     {
         return await _dbSet
                         .Include(x => x.Avaliacoes)
                             .ThenInclude(x => x.Candidato)
                         .Include(x => x.Perguntas)
                             .ThenInclude(x => x.Alternativas)
-                        .Where(x => x.Id == questionarioId)
+                        .Where(x => x.Id == questionarioId && x.UsuarioCriacaoId == usuarioCriacaoId)
+                        .FirstOrDefaultAsync();
+    }
+
+    public async Task<Questionario?> ObterPorIdEUsuarioCandidato(Guid questionarioId, Guid candidatoId)
+    {
+        return await _dbSet
+                        .Include(x => x.Avaliacoes)
+                            .ThenInclude(x => x.Candidato)
+                        .Include(x => x.Perguntas)
+                            .ThenInclude(x => x.Alternativas)
+                        .Where(x => x.Id == questionarioId && x.Avaliacoes.Any(a => a.Candidato.Id == candidatoId))
                         .FirstOrDefaultAsync();
     }
 

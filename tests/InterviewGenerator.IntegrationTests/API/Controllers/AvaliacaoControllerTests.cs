@@ -23,17 +23,20 @@ public class AvaliacaoControllerTests : IClassFixture<ApiApplicationFactory<Prog
     }
 
     [Fact]
-    public async Task GivenValidQuiz_WhenAddingQuiz_ThenShouldAddQuiz()
+    public async Task GivenValidQuiz_WhenSendingQuiz_ThenShouldSendQuiz()
     {
         //Arrange
+        //criar usuario Candidato
+        await _usuarioHelper.ObterTokenUsuario(_client, Perfil.Candidato);
+
         var token = await _usuarioHelper.ObterTokenUsuario(_client, Perfil.Avaliador);
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-        await _client.PostAsync("/Pergunta", JsonContent.Create(ObterPerguntaParaAdicionar("PerguntaTesteAvaliacao: Pergunta Um", "TesteAvaliacao")));
-        await _client.PostAsync("/Pergunta", JsonContent.Create(ObterPerguntaParaAdicionar("PerguntaTesteAvaliacao: Pergunta Dois", "TesteAvaliacao")));
-        await _client.PostAsync("/Pergunta", JsonContent.Create(ObterPerguntaParaAdicionar("PerguntaTesteAvaliacao: Pergunta Tres", "TesteAvaliacao")));
+        await _client.PostAsync("/Pergunta", JsonContent.Create(ObterPerguntaParaAdicionar("PerguntaTesteEnvioAvaliacao: Pergunta Um", "TesteAvaliacao")));
+        await _client.PostAsync("/Pergunta", JsonContent.Create(ObterPerguntaParaAdicionar("PerguntaTesteEnvioAvaliacao: Pergunta Dois", "TesteAvaliacao")));
+        await _client.PostAsync("/Pergunta", JsonContent.Create(ObterPerguntaParaAdicionar("PerguntaTesteEnvioAvaliacao: Pergunta Tres", "TesteAvaliacao")));
 
-        var getperguntas = await _client.GetAsync("/Pergunta?descricao=PerguntaTesteAvaliacao");
+        var getperguntas = await _client.GetAsync("/pergunta?descricao=PerguntaTesteEnvioAvaliacao");
         var perguntas = await JsonHelper.LerDoJson<IEnumerable<PerguntaViewModel>>(getperguntas.Content);
 
         var addQuestionarioDto = new AdicionarQuestionarioDto()
@@ -46,55 +49,39 @@ public class AvaliacaoControllerTests : IClassFixture<ApiApplicationFactory<Prog
         postQuestionario.EnsureSuccessStatusCode();
         var idQuestionario = await JsonHelper.LerDoJson<Guid>(postQuestionario.Content);
 
-        token = await _usuarioHelper.ObterTokenUsuario(_client, Perfil.Candidato);
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
-        var getQuestionario = await _client.GetAsync($"/Questionario/ObterParaPreenchimento/{idQuestionario}");
-        var questionario = await JsonHelper.LerDoJson<QuestionarioViewModelCandidato>(getQuestionario.Content);
-
-        var auxSkip = 0;
-        var adicionarAvaliacaoDto = new AdicionarAvaliacaoDto()
+        var enviarAvaliacaoDto = new EnviarAvaliacaoParaCandidatoDto()
         {
-            QuestionarioId = questionario.Id,
-            Respostas = perguntas.Select(p => new RespostaAvaliacaoDto(
-                                                    p.Id,
-                                                    p.Alternativas.Skip(auxSkip++).FirstOrDefault()!.Id)
-                                         ).ToList()
+            QuestionarioId = idQuestionario,
+            LoginCandidato = _usuarioHelper.LoginCandidato
         };
 
         //Act
-        var postAvaliacao = await _client.PostAsync("Avaliacao", JsonContent.Create(adicionarAvaliacaoDto));
+        var postAvaliacao = await _client.PostAsync("avaliacao/enviarParaCandidato", JsonContent.Create(enviarAvaliacaoDto));
 
         //Assert
-        token = await _usuarioHelper.ObterTokenUsuario(_client, Perfil.Avaliador);
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
-        var getAvaliacoes = await _client.GetAsync($"Avaliacao?QuestionarioId={idQuestionario}");
-        var getAvaliacoesResponse = await JsonHelper.LerDoJson<ICollection<AvaliacaoViewModel>>(getAvaliacoes.Content);
-
         Assert.Equal(HttpStatusCode.Created, postAvaliacao.StatusCode);
-        Assert.NotEmpty(getAvaliacoesResponse);
-        Assert.Equal(questionario.Nome, getAvaliacoesResponse.FirstOrDefault()!.NomeQuestionario);
-        Assert.Equal(questionario.Perguntas.Count, getAvaliacoesResponse.FirstOrDefault()!.Respostas.Count());
     }
 
     [Fact]
     public async Task GivenValidQuiz_WhenAddingNote_ThenShouldAddNote()
     {
         //Arrange
+        //criar usuario Candidato
+        await _usuarioHelper.ObterTokenUsuario(_client, Perfil.Candidato);
+
         var token = await _usuarioHelper.ObterTokenUsuario(_client, Perfil.Avaliador);
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-        await _client.PostAsync("/Pergunta", JsonContent.Create(ObterPerguntaParaAdicionar("PerguntaTesteObservação: Pergunta Um", "TesteObservação")));
-        await _client.PostAsync("/Pergunta", JsonContent.Create(ObterPerguntaParaAdicionar("PerguntaTesteObservação: Pergunta Dois", "TesteObservação")));
-        await _client.PostAsync("/Pergunta", JsonContent.Create(ObterPerguntaParaAdicionar("PerguntaTesteObservação: Pergunta Tres", "TesteObservação")));
+        await _client.PostAsync("/Pergunta", JsonContent.Create(ObterPerguntaParaAdicionar("PerguntaTesteObservação: Pergunta Um", "TesteAvaliacao")));
+        await _client.PostAsync("/Pergunta", JsonContent.Create(ObterPerguntaParaAdicionar("PerguntaTesteObservação: Pergunta Dois", "TesteAvaliacao")));
+        await _client.PostAsync("/Pergunta", JsonContent.Create(ObterPerguntaParaAdicionar("PerguntaTesteObservação: Pergunta Tres", "TesteAvaliacao")));
 
-        var getperguntas = await _client.GetAsync("/Pergunta?descricao=PerguntaTesteObservação");
+        var getperguntas = await _client.GetAsync("/pergunta?descricao=PerguntaTesteObservação");
         var perguntas = await JsonHelper.LerDoJson<IEnumerable<PerguntaViewModel>>(getperguntas.Content);
 
         var addQuestionarioDto = new AdicionarQuestionarioDto()
         {
-            Nome = "Questionario Teste Observação",
+            Nome = "Questionario Teste Observacao",
             Perguntas = perguntas.Select(x => x.Id).ToList()
         };
 
@@ -102,46 +89,86 @@ public class AvaliacaoControllerTests : IClassFixture<ApiApplicationFactory<Prog
         postQuestionario.EnsureSuccessStatusCode();
         var idQuestionario = await JsonHelper.LerDoJson<Guid>(postQuestionario.Content);
 
-        token = await _usuarioHelper.ObterTokenUsuario(_client, Perfil.Candidato);
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
-        var getQuestionario = await _client.GetAsync($"/Questionario/ObterParaPreenchimento/{idQuestionario}");
-        var questionario = await JsonHelper.LerDoJson<QuestionarioViewModelCandidato>(getQuestionario.Content);
-
-        var auxSkip = 0;
-        var adicionarAvaliacaoDto = new AdicionarAvaliacaoDto()
+        var enviarAvaliacaoDto = new EnviarAvaliacaoParaCandidatoDto()
         {
-            QuestionarioId = questionario.Id,
-            Respostas = perguntas.Select(p => new RespostaAvaliacaoDto(
-                                                    p.Id,
-                                                    p.Alternativas.Skip(auxSkip++).FirstOrDefault()!.Id)
-                                         ).ToList()
+            QuestionarioId = idQuestionario,
+            LoginCandidato = _usuarioHelper.LoginCandidato
         };
-
-        var postAvaliacao = await _client.PostAsync("Avaliacao", JsonContent.Create(adicionarAvaliacaoDto));
-
-        token = await _usuarioHelper.ObterTokenUsuario(_client, Perfil.Avaliador);
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
-        var getAvaliacoes = await _client.GetAsync($"Avaliacao?QuestionarioId={idQuestionario}");
-        var getAvaliacoesResponse = await JsonHelper.LerDoJson<ICollection<AvaliacaoViewModel>>(getAvaliacoes.Content);
+        var postAvaliacao = await _client.PostAsync("avaliacao/enviarParaCandidato", JsonContent.Create(enviarAvaliacaoDto));
+        var idAvaliacao = await JsonHelper.LerDoJson<Guid>(postAvaliacao.Content);
 
         var putObservacaoAvaliacao = new AdicionarObservacaoAvaliadorDto()
         {
-            AvaliacaoId = getAvaliacoesResponse.FirstOrDefault()!.Id,
+            AvaliacaoId = idAvaliacao,
             ObservacaoAvaliador = "Observação teste"
         };
 
         //Act
-        var putObservacao = await _client.PutAsync("/Avaliacao/AdicionarObservacao", JsonContent.Create(putObservacaoAvaliacao));
+        var putObservacao = await _client.PutAsync("/avaliacao/adicionarObservacao", JsonContent.Create(putObservacaoAvaliacao));
 
         //Assert
-        getAvaliacoes = await _client.GetAsync($"Avaliacao?QuestionarioId={idQuestionario}");
-        getAvaliacoesResponse = await JsonHelper.LerDoJson<ICollection<AvaliacaoViewModel>>(getAvaliacoes.Content);
+        Assert.Equal(HttpStatusCode.Created, postAvaliacao.StatusCode);
+        var getAvaliacao = await _client.GetAsync($"Avaliacao/detalhes/{idAvaliacao}");
+        var getAvaliacoaosResponse = await JsonHelper.LerDoJson<AvaliacaoDetalheViewModel>(getAvaliacao.Content);
 
         Assert.Equal(HttpStatusCode.OK, putObservacao.StatusCode);
-        Assert.NotEmpty(getAvaliacoesResponse);
-        Assert.Equal(putObservacaoAvaliacao.ObservacaoAvaliador, getAvaliacoesResponse.FirstOrDefault()!.ObservacaoAvaliador);
+        Assert.NotNull(getAvaliacoaosResponse);
+        Assert.Equal(putObservacaoAvaliacao.ObservacaoAvaliador, getAvaliacoaosResponse.ObservacaoAvaliador);
+    }
+
+    [Fact]
+    public async Task GivenValidAnswer_WhenAnsweringQuiz_ThenShouldReturnSuccess()
+    {
+        //Arrange
+        //criar usuario Candidato
+        await _usuarioHelper.ObterTokenUsuario(_client, Perfil.Candidato);
+
+        var token = await _usuarioHelper.ObterTokenUsuario(_client, Perfil.Avaliador);
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+        await _client.PostAsync("/Pergunta", JsonContent.Create(ObterPerguntaParaAdicionar("PerguntaTesteRespostaAvaliacao: Pergunta Um", "TesteAvaliacao")));
+        await _client.PostAsync("/Pergunta", JsonContent.Create(ObterPerguntaParaAdicionar("PerguntaTesteRespostaAvaliacao: Pergunta Dois", "TesteAvaliacao")));
+        await _client.PostAsync("/Pergunta", JsonContent.Create(ObterPerguntaParaAdicionar("PerguntaTesteRespostaAvaliacao: Pergunta Tres", "TesteAvaliacao")));
+
+        var getperguntas = await _client.GetAsync("/pergunta?descricao=PerguntaTesteRespostaAvaliacao");
+        var perguntas = await JsonHelper.LerDoJson<IEnumerable<PerguntaViewModel>>(getperguntas.Content);
+
+        var addQuestionarioDto = new AdicionarQuestionarioDto()
+        {
+            Nome = "Questionario Teste Resposta Avaliacao",
+            Perguntas = perguntas.Select(x => x.Id).ToList()
+        };
+
+        var postQuestionario = await _client.PostAsync("/Questionario", JsonContent.Create(addQuestionarioDto));
+        postQuestionario.EnsureSuccessStatusCode();
+        var idQuestionario = await JsonHelper.LerDoJson<Guid>(postQuestionario.Content);
+
+        var enviarAvaliacaoDto = new EnviarAvaliacaoParaCandidatoDto()
+        {
+            QuestionarioId = idQuestionario,
+            LoginCandidato = _usuarioHelper.LoginCandidato
+        };
+        var postAvaliacao = await _client.PostAsync("avaliacao/enviarParaCandidato", JsonContent.Create(enviarAvaliacaoDto));
+        var idAvaliacao = await JsonHelper.LerDoJson<Guid>(postAvaliacao.Content);
+
+        token = await _usuarioHelper.ObterTokenUsuario(_client, Perfil.Candidato);
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+        var getUusuario = await _client.GetAsync("usuario");
+        var usuario = await JsonHelper.LerDoJson<UsuarioViewModel>(getUusuario.Content);
+
+        var respostaAvaliacaoDto = new ResponderAvaliacaoDto
+        {
+            AvaliacaoId = idAvaliacao,
+            CandidatoId = usuario.Id,
+            Respostas = perguntas.Select(p => new RespostaAvaliacaoDto(p.Id, p.Alternativas.FirstOrDefault()!.Id)).ToList()
+        };
+
+        //Act
+        var putAvaliacao = await _client.PutAsync("avaliacao/responder", JsonContent.Create(respostaAvaliacaoDto));
+
+        //Assert
+        Assert.Equal(HttpStatusCode.Created, postAvaliacao.StatusCode);
     }
 
     private static AdicionarPerguntaDto ObterPerguntaParaAdicionar(string descricao, string areaConhecimento) =>
