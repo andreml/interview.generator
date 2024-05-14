@@ -23,15 +23,24 @@ builder.Services.AddMvc(options =>
 });
 builder.Services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("cors",
+                          policy =>
+                          {
+                              policy.AllowAnyHeader().AllowCredentials().AllowAnyOrigin().AllowAnyMethod().SetIsOriginAllowed((host) => true);
+                          });
+});
+
 var app = builder.Build();
 
 
-    app.UseSwagger();
-    app.UseSwaggerUI(options =>
-    {
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1.0.0.1");
-        options.RoutePrefix = "swagger";
-    });
+app.UseSwagger();
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1.0.1.0");
+    options.RoutePrefix = "swagger";
+});
 
 
 app.UseHttpsRedirection();
