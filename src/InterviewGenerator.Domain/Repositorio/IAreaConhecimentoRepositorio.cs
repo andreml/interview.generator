@@ -9,4 +9,5 @@ public interface IAreaConhecimentoRepositorio : ICommonRepository<AreaConhecimen
     Task<AreaConhecimento?> ObterPorIdEUsuarioId(Guid usuarioCriacaoId, Guid id);
     Task<AreaConhecimento?> ObterPorDescricaoEUsuarioId(Guid usuarioCriacaoId, string descricao);
     Task<IEnumerable<AreaConhecimento>> ObterAreaConhecimentoComPerguntas(Guid usuarioCriacaoId, Guid areaConhecimentoId, string? descricao);
+    Task<int> ObterCountAsync(Guid usuarioCriacaoId);
 }

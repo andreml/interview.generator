@@ -15,6 +15,7 @@ public static class ServicesServiceCollectionExtension
         service.AddScoped<IAreaConhecimentoService, AreaConhecimentoService>();
         service.AddScoped<IImportacaoPerguntasService, ImportacaoPerguntaService>();
         service.AddScoped<IMassTransitService, MassTransitService>();
+        service.AddScoped<IDashService, DashService>();
 
         return service;
     }
