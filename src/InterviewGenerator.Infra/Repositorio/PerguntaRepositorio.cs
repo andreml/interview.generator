@@ -48,6 +48,11 @@ public class PerguntaRepositorio : IPerguntaRepositorio
                     );
     }
 
+    public async Task<int> ObterCountAsync(Guid usuarioCriacaoId) =>
+        await _dbSet
+                .Where(p => p.UsuarioCriacaoId == usuarioCriacaoId)
+                .CountAsync();
+
     public async Task Alterar(Pergunta entity)
     {
         _dbSet.Update(entity);

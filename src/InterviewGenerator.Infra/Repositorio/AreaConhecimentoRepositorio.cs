@@ -62,4 +62,9 @@ public class AreaConhecimentoRepositorio : IAreaConhecimentoRepositorio
                                 && (string.IsNullOrEmpty(descricao) || x.Descricao.Contains(descricao)))
                         .ToListAsync();
     }
+
+    public async Task<int> ObterCountAsync(Guid usuarioCriacaoId) =>
+        await _dbSet
+                .Where(a => a.UsuarioCriacaoId == usuarioCriacaoId)
+                .CountAsync();
 }
