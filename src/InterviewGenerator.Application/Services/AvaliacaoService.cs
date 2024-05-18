@@ -143,7 +143,8 @@ public class AvaliacaoService : IAvaliacaoService
             NomeQuestionario = a.Questionario.Nome,
             DataEnvio = a.DataEnvio,
             DataResposta = a.DataResposta,
-            Nota = a.Nota
+            Nota = a.Nota,
+            Respondido = a.Respondida
         }).ToList();
 
         response.AddData(avaliacoesCandidatoViewModel);
