@@ -14,7 +14,6 @@ O Sistema permite cadastrar perguntas categorizadas em áreas de conhecimento, c
 - [@lirajon1988](https://github.com/lirajon1988)
 - [@andreml](https://github.com/andreml)
 - [@Daniellyaraujo](https://github.com/Daniellyaraujo)
-- [@RobertoSRMJunior](https://github.com/RobertoSRMJunior)
 
 ## DDD
 
@@ -23,6 +22,69 @@ O Sistema permite cadastrar perguntas categorizadas em áreas de conhecimento, c
 ## Stack utilizada
 
 **Back-end:** .Net 7, MSSQL, EF Core, FluentValidation e XUnit
+
+## Entidades e requisitos
+Identificamos as seguintes entidades de domínio em nosso projeto:
+
+### Usuário
+**Definição:** usuários habilitados para uso do sistema
+
+#### Perfis para cadastro de usuário
+O usuário do sistema pode ter apenas um dos dois perfis abaixo:
+-	Candidato: perfil habilitado para responder as avaliações enviadas pelo avaliador
+-	Avaliador: perfil habilitado a fazer os cadastros de perguntas, alternativas, questionários e avaliações para envio
+  
+#### Principais validações para cadastro de usuário
+-	Um usuário pode ter apenas um perfil cadastrado
+
+### Pergunta
+
+**Definição:** uma pergunta cadastrada com um conjunto de alternativas
+
+#### Principais validações para cadastro de pergunta
+
+- Uma **pergunta** deve ter apenas uma **alternativa** correta
+- Uma **pergunta** deve ter entre 3 e 5 **alternativas**
+- Uma **pergunta** deve ter apenas uma **área de conhecimento** Cadastrada
+- Não é possível excluir uma **pergunta** se ela já foi utilizada em um **questionário**
+
+### Questionário
+
+**Definição:** Conjunto de perguntas selecionadas para criação de um questionário
+
+#### Principais validações para cadastro de questionário:
+
+- Um **questionário** deve ter no mínimo 3 **perguntas** e no máximo 50 **perguntas**
+- Um **questionário** não pode ser alterado se já estiver atrelado a uma **avaliação**
+- Um **questionário** não pode ser apagado se já estiver atrelado a uma **avaliação**
+
+### Avaliação
+
+**Definição:** seleção de um questionário que será enviado a um candidato, que deverá responder e devolver ao avaliador
+
+#### Principais validações para cadastro de avaliação
+
+- Para cadastrar uma **avaliação** nova, deve ser selecionado um **questionário** e um **candidato**
+- Uma **avaliação** pode ser enviada a um **candidato** apenas uma vez
+
+#### Principais validações para um candidato responder a uma avaliação
+
+- Um **candidato** pode responder uma avaliação somente uma vez
+- Um **candidato** pode visualizar apenas **avaliações** cadastradas para ele próprio
+
+### Alternativa
+
+**Definição:** Conjunto de possíveis respostas para uma pergunta
+
+### Área de conhecimento
+
+**Definição:** Classificação para uma pergunta para facilitar sua localização
+
+### Resposta avaliação
+
+**Definição:** resposta de uma pergunta que será respondida pelo candidato
+
+###
 
 ## Funcionalidades
 
