@@ -29,7 +29,7 @@ O front-end que funciona em conjunto com esse projeto está no repositório a se
 
 ## Entidades e requisitos
 
-Documentos relacionados as entidades e requisitos desse projeto encontram-se na pasta fluxos, nesse mesmo respositório. Abaixo, segue um resumo das entidades de domínio que identificamos em nosso projeto:
+Documentos relacionados as entidades e requisitos desse projeto encontram-se na pasta <a href='https://github.com/andreml/interview.generator/tree/main/Documentos'>Documentos</a>, nesse mesmo respositório. Abaixo, segue um resumo das entidades de domínio que identificamos em nosso projeto:
 
 ### Usuário
 **Definição:** usuários habilitados para uso do sistema
