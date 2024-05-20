@@ -41,18 +41,18 @@ O usuário do sistema pode ter apenas um dos dois perfis abaixo:
 
 **Definição:** uma pergunta cadastrada com um conjunto de alternativas
 
-#### Principais validações para cadastro de pergunta
+#### Critérios de aceite para cadastro de pergunta
 
 - Uma **pergunta** deve ter apenas uma **alternativa** correta
 - Uma **pergunta** deve ter entre 3 e 5 **alternativas**
-- Uma **pergunta** deve ter apenas uma **área de conhecimento** Cadastrada
+- Uma **pergunta** deve ter apenas uma **área de conhecimento**
 - Não é possível excluir uma **pergunta** se ela já foi utilizada em um **questionário**
 
 ### Questionário
 
 **Definição:** Conjunto de perguntas selecionadas para criação de um questionário
 
-#### Principais validações para cadastro de questionário:
+#### Critérios de aceite para cadastro de questionário:
 
 - Um **questionário** deve ter no mínimo 3 **perguntas** e no máximo 50 **perguntas**
 - Um **questionário** não pode ser alterado se já estiver atrelado a uma **avaliação**
@@ -62,12 +62,12 @@ O usuário do sistema pode ter apenas um dos dois perfis abaixo:
 
 **Definição:** seleção de um questionário que será enviado a um candidato, que deverá responder e devolver ao avaliador
 
-#### Principais validações para cadastro de avaliação
+#### Critérios de aceite para cadastro de avaliação
 
 - Para cadastrar uma **avaliação** nova, deve ser selecionado um **questionário** e um **candidato**
 - Uma **avaliação** pode ser enviada a um **candidato** apenas uma vez
 
-#### Principais validações para um candidato responder a uma avaliação
+#### Critérios de aceite para um candidato responder a uma avaliação
 
 - Um **candidato** pode responder uma avaliação somente uma vez
 - Um **candidato** pode visualizar apenas **avaliações** cadastradas para ele próprio
@@ -76,13 +76,25 @@ O usuário do sistema pode ter apenas um dos dois perfis abaixo:
 
 **Definição:** Conjunto de possíveis respostas para uma pergunta
 
+#### Critérios de aceite para cadastro de alternativa
+
+- Uma **alternativa** não pode ser repetida em uma **pergunta**
+
 ### Área de conhecimento
 
 **Definição:** Classificação para uma pergunta para facilitar sua localização
 
-### Resposta avaliação
+#### Critérios de aceite para cadastro de área de conhecimento
 
-**Definição:** resposta de uma pergunta que será respondida pelo candidato
+- Uma **área de conhecimento** pode ser incluída junto com uma **pergunta**
+
+### Resposta da avaliação
+
+**Definição:** a alternativa selecionada para uma pergunta que será respondida pelo candidato
+
+#### Critérios de aceite para resposta de avaliação
+
+- Somente podem ser informada uma **resposta da avaliação** para uma **pergunta** de acordo com as **alternativas** cadastradas na **pergunta**
 
 ###
 
