@@ -23,8 +23,13 @@ O Sistema permite cadastrar perguntas categorizadas em áreas de conhecimento, c
 
 **Back-end:** .Net 7, MSSQL, EF Core, FluentValidation e XUnit
 
+## Front-end
+
+O front-end que funciona em conjunto com esse projeto está no repositório a seguir: <a href='https://github.com/andreml/interview.web'>Front-end</a>
+
 ## Entidades e requisitos
-Identificamos as seguintes entidades de domínio em nosso projeto:
+
+Documentos relacionados as entidades e requisitos desse projeto encontram-se na pasta fluxos, nesse mesmo respositório. Abaixo, segue um resumo das entidades de domínio que identificamos em nosso projeto:
 
 ### Usuário
 **Definição:** usuários habilitados para uso do sistema
