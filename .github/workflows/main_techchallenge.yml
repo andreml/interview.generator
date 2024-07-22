@@ -43,8 +43,8 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          docker build -f src/InterviewGenerator.Api/Dockerfile -t skillcheckregistry.azurecr.io/skillcheck-api:latest .
-          docker push skillcheckregistry.azurecr.io/skillcheck-api:latest
+          docker build -f src/InterviewGenerator.Api/Dockerfile -t skillcheckregistry.azurecr.io/skillcheck-api:${{ github.sha }} .
+          docker push skillcheckregistry.azurecr.io/skillcheck-api:${{ github.sha }}
 
       - name: Set up Kubernetes
         uses: azure/setup-kubectl@v1
