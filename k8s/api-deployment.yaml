@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: skillcheck-api
-        image: skillcheckregistry.azurecr.io/skillcheck-api:latest
+        image: skillcheckregistry.azurecr.io/skillcheck-api:${{ github.sha }}
         resources:
           requests:
             memory: "64Mi"
