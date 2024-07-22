@@ -15,5 +15,12 @@ spec:
       containers:
       - name: skillcheck-api
         image: skillcheckregistry.azurecr.io/skillcheck-api:latest
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
         ports:
         - containerPort: 80
