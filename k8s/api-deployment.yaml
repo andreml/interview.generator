@@ -24,7 +24,3 @@ spec:
             cpu: "500m"
         ports:
         - containerPort: 80
-      volumes:
-        - name: config-volume
-          configMap:
-            name: skillcheck-config
