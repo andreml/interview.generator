@@ -54,5 +54,8 @@ jobs:
       - name: Get AKS credentials
         run: az aks get-credentials --resource-group rg-skillcheck --name cluster-skillcheck
 
+      - name: Apply ConfigMap
+        run: kubectl apply -f k8s/configmap.yaml
+
       - name: Deploy to AKS
         run: kubectl apply -f k8s/api-deployment.yaml
