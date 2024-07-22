@@ -35,6 +35,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="Arquivos\modelo_importacao_perguntas.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
