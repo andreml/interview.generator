@@ -9,8 +9,18 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: 'Production'
+
     steps:
       - uses: actions/checkout@v4
+
+      - name: App Settings Variable Substitution
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: 'src/InterviewGenerator.Api/appsettings.json'
+        env:
+          ConnectionStrings.DataBase: ${{ secrets.CONNECTIONSTRING }}
 
       - name: Configurando a versão do .NET
         uses: actions/setup-dotnet@v1
