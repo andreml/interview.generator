@@ -24,6 +24,9 @@ jobs:
       - name: Debug Secrets
         run: echo ${{ secrets.AZCREDENTIALS }}
 
+      - name: Debug Secrets
+        run: echo ${{ secrets.CONNECTIONSTRING }}
+
       - name: Login to Azure
         uses: azure/login@v1
         with:
