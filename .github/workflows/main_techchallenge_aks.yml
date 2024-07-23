@@ -21,10 +21,13 @@ jobs:
       - name: Build with dotnet
         run: dotnet build --configuration Release
 
+      - name: Debug Secrets
+        run: echo ${{ secrets.AZCREDENTIALS }}
+
       - name: Login to Azure
         uses: azure/login@v1
         with:
-          creds: "${{ secrets.AZCREDENTIALS }}" 
+          creds: ${{ secrets.AZCREDENTIALS }}
 
       - name: Login to ACR
         run: az acr login --name skillcheckregistry
