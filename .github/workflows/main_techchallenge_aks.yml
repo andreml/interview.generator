@@ -24,19 +24,7 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v1
         with:
-          creds: |
-            {
-              "clientId": "bff559dc-aa45-4a83-934b-34fdd91ca46a",
-              "clientSecret": "sqa8Q~oL24mDFtDqbhayh89pqRHh7U.d2aZPjaBc",
-              "subscriptionId": "f4636e27-86f1-468c-8435-9f35e126e89f",
-              "tenantId": "11dbbfe2-89b8-4549-be10-cec364e59551",
-              "activeDirectoryEndpointUrl": "https://login.microsoftonline.com",
-              "resourceManagerEndpointUrl": "https://management.azure.com/",
-              "activeDirectoryGraphResourceId": "https://graph.windows.net/",
-              "sqlManagementEndpointUrl": "https://management.core.windows.net:8443/",
-              "galleryEndpointUrl": "https://gallery.azure.com/",
-              "managementEndpointUrl": "https://management.core.windows.net/"
-            }   
+          creds: "${{ secrets.AZCREDENTIALS }}" 
 
       - name: Login to ACR
         run: az acr login --name skillcheckregistry
@@ -55,4 +43,4 @@ jobs:
         run: az aks get-credentials --resource-group rg-skillcheck --name cluster-skillcheck
 
       - name: Deploy to AKS
-        run: kubectl apply -f k8s/api-deployment.yaml -n skillcheck-ns
+        run: kubectl apply -f k8s/api-deployment.yaml
