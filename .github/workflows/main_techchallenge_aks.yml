@@ -6,6 +6,10 @@ on:
       - main
   workflow_dispatch:
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -46,4 +50,4 @@ jobs:
         run: az aks get-credentials --resource-group rg-skillcheck --name cluster-skillcheck
 
       - name: Deploy to AKS
-        run: kubectl apply -f k8s/api-deployment.yaml
+        run: kubectl apply -f k8s/api-deployment.yaml -n skillcheck-ns
