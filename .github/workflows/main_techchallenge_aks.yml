@@ -1,5 +1,6 @@
 name: Build e deploy para o AKS
 
+
 on:
   push:
     branches:
@@ -12,41 +13,43 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Configurando a versão do .NET
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '7.x'
-          include-prerelease: true
-
-      - name: Build with dotnet
-        run: dotnet build --configuration Release
-
-      - name: Debug Secrets
-        run: echo ${{ secrets.AZCREDENTIALS }}
-
-      - name: Debug Secrets
-        run: echo ${{ secrets.CONNECTIONSTRING }}
-
-      - name: Login to Azure
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZCREDENTIALS }}
-
-      - name: Login to ACR
-        run: az acr login --name skillcheckregistry
-
-      - name: Build and push Docker image
+      - name: Set up secret file
+        env:
+          DEBUG_AZ: ${{ secrets.AZCREDENTIALS }}
+          DEBUG_CONNSTR: ${{ secrets.CONNECTIONSTRING }}
         run: |
-          docker build -f src/InterviewGenerator.Api/Dockerfile -t skillcheckregistry.azurecr.io/skillcheck-api:latest .
-          docker push skillcheckregistry.azurecr.io/skillcheck-api:latest
+          echo $DEBUG_AZ >> secrets.txt
+          echo $DEBUG_CONNSTR >> secrets.txt
 
-      - name: Set up Kubernetes
-        uses: azure/setup-kubectl@v1
-        with:
-          version: 'latest'
+      # - name: Configurando a versão do .NET
+      #   uses: actions/setup-dotnet@v1
+      #   with:
+      #     dotnet-version: '7.x'
+      #     include-prerelease: true
 
-      - name: Get AKS credentials
-        run: az aks get-credentials --resource-group rg-skillcheck --name cluster-skillcheck
+      # - name: Build with dotnet
+      #   run: dotnet build --configuration Release
 
-      - name: Deploy to AKS
-        run: kubectl apply -f k8s/api-deployment.yaml
+      # - name: Login to Azure
+      #   uses: azure/login@v1
+      #   with:
+      #     creds: ${{ secrets.AZCREDENTIALS }}
+
+      # - name: Login to ACR
+      #   run: az acr login --name skillcheckregistry
+
+      # - name: Build and push Docker image
+      #   run: |
+      #     docker build -f src/InterviewGenerator.Api/Dockerfile -t skillcheckregistry.azurecr.io/skillcheck-api:latest .
+      #     docker push skillcheckregistry.azurecr.io/skillcheck-api:latest
+
+      # - name: Set up Kubernetes
+      #   uses: azure/setup-kubectl@v1
+      #   with:
+      #     version: 'latest'
+
+      # - name: Get AKS credentials
+      #   run: az aks get-credentials --resource-group rg-skillcheck --name cluster-skillcheck
+
+      # - name: Deploy to AKS
+      #   run: kubectl apply -f k8s/api-deployment.yaml
