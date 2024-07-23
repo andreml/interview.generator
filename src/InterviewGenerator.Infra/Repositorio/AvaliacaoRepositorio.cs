@@ -24,10 +24,10 @@ public class AvaliacaoRepositorio : IAvaliacaoRepositorio
 
     public async Task<Avaliacao?> ObterPorIdEUsuarioCriacaoQuestionarioAsync(Guid usuarioIdCriacaoQuestionario, Guid avaliacaoId)
     {
-        return await _dbSet
-                        .Include(x => x.Respostas)
-                            .ThenInclude(x => x.AlternativaEscolhida)
-                        .Include(x => x.Respostas)
+        return await _dbSet!
+                        .Include(x => x.Respostas)!
+                            .ThenInclude(x => x.AlternativaEscolhida)!
+                        .Include(x => x.Respostas)!
                             .ThenInclude(x => x.Pergunta)
                         .Include(x => x.Candidato)
                         .Include(x => x.Questionario)
