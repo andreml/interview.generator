@@ -1,6 +1,5 @@
 name: Build e deploy para o AKS
 
-
 on:
   push:
     branches:
@@ -14,6 +13,8 @@ jobs:
       name: 'Production'
 
     steps:
+      - uses: actions/checkout@v4
+
       - name: Configurando a versão do .NET
         uses: actions/setup-dotnet@v1
         with:
@@ -46,4 +47,3 @@ jobs:
 
       - name: Deploy to AKS
         run: kubectl apply -f k8s/api-deployment.yaml
-
