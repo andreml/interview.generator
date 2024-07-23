@@ -26,12 +26,11 @@ jobs:
         run: dotnet build --configuration Release
 
       - name: Login to Azure
-        uses: azure/login@v2
+        uses: azure/login@v1
         with:
           client-id: "bff559dc-aa45-4a83-934b-34fdd91ca46a"
           tenant-id: "11dbbfe2-89b8-4549-be10-cec364e59551"
           subscription-id: "f4636e27-86f1-468c-8435-9f35e126e89f"
-          enable-AzPSSession: true
 
       - name: Login to ACR
         run: az acr login --name skillcheckregistry
