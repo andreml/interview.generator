@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -18,41 +18,51 @@ jobs:
           dotnet-version: '7.x'
           include-prerelease: true
 
-      - name: Build with dotnet
-        run: dotnet build --configuration Release
-
-      - name: Login to Azure
-        uses: azure/login@v1
-        with:
-          creds: |
-            {
-                "clientId": "bff559dc-aa45-4a83-934b-34fdd91ca46a",
-                "clientSecret": "sqa8Q~oL24mDFtDqbhayh89pqRHh7U.d2aZPjaBc",
-                "subscriptionId": "f4636e27-86f1-468c-8435-9f35e126e89f",
-                "tenantId": "11dbbfe2-89b8-4549-be10-cec364e59551",
-                "activeDirectoryEndpointUrl": "https://login.microsoftonline.com",
-                "resourceManagerEndpointUrl": "https://management.azure.com/",
-                "activeDirectoryGraphResourceId": "https://graph.windows.net/",
-                "sqlManagementEndpointUrl": "https://management.core.windows.net:8443/",
-                "galleryEndpointUrl": "https://gallery.azure.com/",
-                "managementEndpointUrl": "https://management.core.windows.net/"
-            }
-
-      - name: Login to ACR
-        run: az acr login --name skillcheckregistry
-
-      - name: Build and push Docker image
+      - name: Build e Publish
         run: |
-          docker build -f src/InterviewGenerator.Api/Dockerfile -t skillcheckregistry.azurecr.io/skillcheck-api:latest .
-          docker push skillcheckregistry.azurecr.io/skillcheck-api:latest
+          dotnet build
+          dotnet publish src/InterviewGenerator.Api/InterviewGenerator.Api.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
-      - name: Set up Kubernetes
-        uses: azure/setup-kubectl@v1
+      - name: Iniciando container SQL Server para testes integrados
+        run: docker-compose -f "docker-compose.yml" up -d --build
+
+      - name: Testes Unitários
+        run: dotnet test tests/InterviewGenerator.UnitTests/InterviewGenerator.UnitTests.csproj
+
+      - name: Testes Integrados
+        run: dotnet test tests/InterviewGenerator.IntegrationTests/InterviewGenerator.IntegrationTests.csproj
+
+      - name: Carregando os pacotes para o Job de Deploy
+        uses: actions/upload-artifact@v3
         with:
-          version: 'latest'
+          name: .net-app
+          path: ${{env.DOTNET_ROOT}}/myapp
 
-      - name: Get AKS credentials
-        run: az aks get-credentials --resource-group rg-skillcheck --name cluster-skillcheck
+  deploy:
+    runs-on: windows-latest
+    needs: build
+    environment:
+      name: 'Production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
-      - name: Deploy to AKS
-        run: kubectl apply -f k8s/api-deployment.yaml
+    steps:
+      - name: Download do artefato para o build job
+        uses: actions/download-artifact@v3
+        with:
+          name: .net-app
+
+      - name: App Settings Variable Substitution
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: 'appsettings.json'
+        env:
+          ConnectionStrings.DataBase: ${{ secrets.CONNECTIONSTRING }}
+
+      - name: Deploy para o Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'techchallenge'
+          slot-name: 'Production'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_807F19EC175144CFA128B491B6EEBBAD }}
+          package: .
