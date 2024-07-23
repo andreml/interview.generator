@@ -13,16 +13,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up secret file
+      - name: Set env as secret
         env:
-          DEBUG_AZ: ${{ secrets.AZCREDENTIALS }}
-          DEBUG_CONNSTR: ${{ secrets.CONNECTIONSTRING }}
+          MY_VAL: ${{ secrets.CONNECTIONSTRING }}
         run: |
-          echo $DEBUG_AZ >> secrets.txt
-          echo $DEBUG_CONNSTR >> secrets.txt
-
-      - name: Run tmate
-        uses: mxschmitt/action-tmate@v2
+          import os
+          for q in (os.getenv("MY_VAL")):
+            print(q)
+        shell: python
 
       # - name: Configurando a versão do .NET
       #   uses: actions/setup-dotnet@v1
