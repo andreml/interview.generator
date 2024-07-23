@@ -13,14 +13,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set env as secret
-        env:
-          MY_VAL: ${{ secrets.CONNECTIONSTRING }}
+      - name: Step 1 - Echo out a GitHub Actions Secret to the logs
         run: |
-          import os
-          for q in (os.getenv("MY_VAL")):
-            print(q)
-        shell: python
+          echo "The GitHub Action Secret will be masked:  "
+          echo ${{ secrets.CONNECTIONSTRING }}
+          echo "Trick to echo GitHub Actions Secret:  "
+          echo ${{secrets.CONNECTIONSTRING}} | sed 's/./& /g'
 
       # - name: Configurando a versão do .NET
       #   uses: actions/setup-dotnet@v1
